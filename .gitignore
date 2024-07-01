@@ -1,0 +1,74 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+*.lib
+*.a
+
+# Executables
+*.exe
+*.out
+*.app
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+CMakeScripts/
+Testing/
+
+# Xcode
+*.xcworkspace/
+*.xcuserdatad/
+
+# Eclipse
+.settings/
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# Qt Creator
+*.pro.user
+*.pro.user.*
+*.qmake.stash
+
+# Compiled files
+*.cod
+*.elf
+*.map
+*.exp
+
+# Package files
+*.jar
+*.war
+*.ear
+*.log
+
+# vim
+*.swp
+*.swo
+*.swn
+
+# User-specific files
+*.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Dependency directories
+_bin/
+_bin64/
+_obj/
+_lib/
+_lib64/
+lib/
+lib64/
