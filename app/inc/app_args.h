@@ -77,41 +77,6 @@ namespace app
     extern const LONG ToolbarWidth; // Ширина окна toolbar
     // его дочерние окна ...
 
-    // Окно для ввода множества точек отсекателя
-    extern WinApiWindow clipper_set_wnd;
-    // управляющие кнопки
-    extern HWND clipper_add_hwnd;
-    extern HWND clipper_del_hwnd;
-    extern HWND clipper_erase_hwnd;
-    // окна вывода номер точки (дочерние)
-    extern std::vector<HWND> clipper_nomer_hwnd_arr;
-    // окна ввода точек (дочерние)
-    extern std::vector<HWND> clipper_input_hwnd_arr;
-
-    // Окно для ввода множества отрезков
-    extern WinApiWindow poly_set_wnd;
-    // управляющие кнопки
-    extern HWND poly_add_hwnd;
-    extern HWND poly_del_hwnd;
-    extern HWND poly_erase_hwnd;
-    // окна вывода номер точки (дочерние)
-    extern std::vector<HWND> poly_nomer_hwnd_arr;
-    // окна ввода точек (дочерние)
-    extern std::vector<HWND> poly_input_hwnd_arr;
-
-    // Окно графики
-    extern WinApiWindow DrawAreaWnd;
-
-    // Окно под графикой для статистики
-    extern WinApiWindow DrawAreaInfoWnd;
-    // Высота окна информации о графическом окне
-    extern const LONG DrawAreaInfoHeight;
-
-    // его дочернии окна
-    extern HWND coordX_info_hwnd;
-    extern HWND coordY_info_hwnd;
-    extern HWND scale_info_hwnd;
-
     // шрифты
     extern WinApiFont Fonts;
 }

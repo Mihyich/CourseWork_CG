@@ -12,12 +12,6 @@
 
 #include "app_args.h"
 
-#include "formater.h"
-#include "input_wnd_checker.h"
-#include "input_data_check.h"
-#include "resource.h"
-#include "user_msgs.h"
-
 #define IDB_SURFACE_FUNC 1
 
 #define IDB_X_LIMIT 2

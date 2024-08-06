@@ -10,26 +10,10 @@ void repos_child_wnds()
     width = get_rect_width(rect);
     height = get_rect_height(rect);
 
-    ShowWindow(app::DrawAreaInfoWnd.hWnd, SW_SHOW);
-
     MoveWindow(
         app::ToolbarWnd.hWnd,
         0, 0,
         app::ToolbarWidth, height,
-        TRUE
-    );
-
-    MoveWindow(
-        app::DrawAreaWnd.hWnd,
-        app::ToolbarWidth, 0,
-        width - app::ToolbarWidth, height - app::DrawAreaInfoHeight,
-        TRUE
-    );
-
-    MoveWindow(
-        app::DrawAreaInfoWnd.hWnd,
-        app::ToolbarWidth, height - app::DrawAreaInfoHeight,
-        width - app::ToolbarWidth, app::DrawAreaInfoHeight,
         TRUE
     );
 }
@@ -53,28 +37,6 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         SendMessage(
             hWnd, WM_SETICON, ICON_SMALL,
             (LPARAM)LoadIcon(app::hInst, MAKEINTRESOURCE(IDI_ICON_APP_32))
-        );
-
-        // Создать окно DrawArea
-        app::DrawAreaWnd.Create(
-            nullptr, app::hInst, SW_SHOWNORMAL,
-            DrawAreaWndProc, L"DrawArea", nullptr,
-            0, 0,
-            CS_HREDRAW | CS_VREDRAW,
-            WS_CHILD | WS_VISIBLE | WS_BORDER,
-            0,
-            hWnd
-        );
-
-        // Создать окно информации о графическом окне
-        app::DrawAreaInfoWnd.Create(
-            nullptr, app::hInst, SW_SHOWNORMAL,
-            DrawAreaInfoWndProc, L"DrawAreaInfo", nullptr,
-            0, 0,
-            CS_HREDRAW | CS_VREDRAW,
-            WS_CHILD | WS_VISIBLE | WS_BORDER,
-            0,
-            hWnd
         );
 
         // Создать окно Toolbar
@@ -139,27 +101,6 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         case ID_FILE_EXIT:
         {
             PostQuitMessage(0); // это вызовет WM_DESTROY у всех-всех окон
-            return EXIT_SUCCESS;
-        }
-
-        // сбросить перемещение 
-        case ID_RND_CENTER:
-        {
-            SendMessage(app::DrawAreaWnd.hWnd, WM_COMMAND, (WPARAM)ID_RND_CENTER, 0);
-            return EXIT_SUCCESS;
-        }
-
-        // сбросить масштаб
-        case ID_RND_SCALE:
-        {
-            SendMessage(app::DrawAreaWnd.hWnd, WM_COMMAND, (WPARAM)ID_RND_SCALE, 0);
-            return EXIT_SUCCESS;
-        }
-
-        // Сбросить перемещение и масштаб
-        case ID_RND_ALL:
-        {
-            SendMessage(app::DrawAreaWnd.hWnd, WM_COMMAND, (WPARAM)ID_RND_ALL, 0);
             return EXIT_SUCCESS;
         }
 
