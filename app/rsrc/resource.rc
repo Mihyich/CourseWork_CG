@@ -1,0 +1,42 @@
+// Reopen with encoding <Windows 1251> !!!
+// Using visual studio Code
+// Do not know other methods to fix it
+// But even compilator has strongest dependence on what encoding is compiling
+// Another words: You got some shit in running app instead of Russian letters
+
+#include <windows.h>
+#include "resource.h"
+
+// иконки
+IDI_ICON_APP_32 ICON "AppIcon32.ico"
+
+// главное меню
+IDR_MAINMENU MENU
+BEGIN
+    POPUP "Графика"
+    BEGIN
+        POPUP "Сбросить"
+        BEGIN
+            MENUITEM "Перемещение", ID_RND_CENTER
+            MENUITEM "Масштаб",     ID_RND_SCALE
+            MENUITEM SEPARATOR
+            MENUITEM "Все",         ID_RND_ALL
+        END
+    END
+    POPUP "O программе"
+    BEGIN
+        POPUP "Информация"
+        BEGIN
+            MENUITEM "Автор",       ID_FILE_AUTOR
+            MENUITEM "Задание",     ID_FILE_TASK
+            POPUP "Инструкция"
+            BEGIN
+                MENUITEM "Ввод", ID_INFO_INPUT
+                MENUITEM "Формат", ID_INFO_FORMAT
+                MENUITEM "Система координат", ID_INFO_COORD_SYSTEM
+            END
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "Выход",           ID_FILE_EXIT
+    END
+END
