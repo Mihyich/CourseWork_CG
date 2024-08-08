@@ -6,12 +6,12 @@ void repos_child_wnds()
     LONG width;
     LONG height;
 
-    GetClientRect(app::MainWnd.hWnd, &rect);
+    GetClientRect(app::MainWnd.getHwnd(), &rect);
     width = get_rect_width(rect);
     height = get_rect_height(rect);
 
     MoveWindow(
-        app::ToolbarWnd.hWnd,
+        app::ToolbarWnd.getHwnd(),
         0, 0,
         app::ToolbarWidth, height,
         TRUE
