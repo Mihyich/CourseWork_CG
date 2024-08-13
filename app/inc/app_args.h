@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "winapi_window.h"
+#include "winapi_GLwindow.h"
 #include "winapi_font.h"
 
 #define AUTOR \
@@ -76,6 +77,9 @@ namespace app
     extern WinApiWindow ToolbarWnd;
     extern const LONG ToolbarWidth; // Ширина окна toolbar
     // его дочерние окна ...
+
+    // Рендер окно
+    extern WinApiGLWindow RenderWnd;
 
     // шрифты
     extern WinApiFont Fonts;
