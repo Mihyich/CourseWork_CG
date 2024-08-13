@@ -45,7 +45,7 @@ INT WinApiWindow::MainLoop()
     return 0;
 }
 
-void WinApiWindow::peek_msgs(void) const
+void WinApiWindow::PeekLoop(void) const
 {
     MSG msg;
 
@@ -73,17 +73,7 @@ HWND WinApiWindow::getHwnd()
     return this->hWnd;
 }
 
-INT WinApiWindow::getWidth()
-{
-    return rect.right - rect.left;
-}
-
-INT WinApiWindow::getHeight()
-{
-    return rect.bottom - rect.top;
-}
-
-DWORD WinApiWindow::get_last_error()
+DWORD WinApiWindow::getLastError()
 {
     return this->error;
 }
@@ -109,6 +99,7 @@ BOOL WinApiWindow::CreateWndProcess(
 		DWORD windowStyleEx,
 		HWND hParent)
 {
+    RECT rect = {0, 0, 0, 0};
     BOOL result = WINDOW_CREATED;
 
     // регистрация класса окна
@@ -125,9 +116,8 @@ BOOL WinApiWindow::CreateWndProcess(
         reset_and_free_data();
         error = GetLastError();
 
-		MessageBox(NULL,
-			L"ErrorWndClassRg", L"ErrorWndTitle",
-			MB_OK | MB_ICONERROR);
+		MessageBox(NULL, L"Class registration failed.",
+            L"Window creation", MB_OK | MB_ICONERROR);
 
 		result = ERR_WNDCLASS_GEN;
 	}
@@ -153,9 +143,8 @@ BOOL WinApiWindow::CreateWndProcess(
             reset_and_free_data();
             error = GetLastError();
 
-            MessageBox(NULL,
-			L"ErrorWndCreate", L"ErrorWndTitle",
-			MB_OK | MB_ICONERROR);
+            MessageBox(NULL, L"Window creation failed.",
+                L"Window creation", MB_OK | MB_ICONERROR);
 
             result = ERR_WINDOW_GEN;
         }
@@ -167,6 +156,10 @@ BOOL WinApiWindow::CreateWndProcess(
             {
                 reset_and_free_data();
                 error = GetLastError();
+
+                MessageBox(NULL, L"Show window failed.",
+                    L"Window creation", MB_OK | MB_ICONERROR);
+
                 result = ERR_WNDSHOW;
             }
             else
