@@ -6,7 +6,8 @@
                 "${workspaceFolder}/app/inc/",
                 "${workspaceFolder}/app/src/",
                 "${workspaceFolder}/LA/inc/",
-                "${workspaceFolder}/WINAPI/inc/"
+                "${workspaceFolder}/WINAPI/inc/",
+                "C:/assimp/include/"
             ],
             "defines": [
                 "_DEBUG",
