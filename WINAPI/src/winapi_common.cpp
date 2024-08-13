@@ -44,3 +44,10 @@ void LaunchAsyncApp(LPCWSTR programPath)
         CloseHandle(pi.hThread);
     }
 }
+
+UINT GetWindowShowMode(HWND hwnd)
+{
+    WINDOWPLACEMENT wndPlacement;
+    wndPlacement.length = sizeof(WINDOWPLACEMENT);
+    return GetWindowPlacement(hwnd, &wndPlacement) ? wndPlacement.showCmd : 0;
+}

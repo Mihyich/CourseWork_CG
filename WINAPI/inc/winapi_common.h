@@ -14,4 +14,6 @@ void LaunchAsyncApp(LPCWSTR programPath);
 
 void GetAlignCenterRect(INT width, INT height, RECT *rect);
 
+UINT GetWindowShowMode(HWND hwnd);
+
 #endif // WINAPI_COMMON_H
