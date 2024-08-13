@@ -11,13 +11,14 @@ LA_INC := LA\inc
 LA_SRC := LA\src
 WINAPI_INC := WINAPI\inc
 WINAPI_SRC := WINAPI\src
+ASSIMP_INC := C:\assimp\include
 OUT := out
 OUT_R := $(OUT)\Release
 OUT_D := $(OUT)\Debug
 
 # флаги
 CFLAGS := -std=c99 -Wall -Wextra -Wpedantic -DUNICODE -D_UNICODE
-CPPFLAGS := -std=c++11 -Wall -Wextra -Wpedantic -DUNICODE -D_UNICODE
+CPPFLAGS := -std=c++14 -Wall -Wextra -Wpedantic -DUNICODE -D_UNICODE
 RSRCFLAGS := -I$(INC)
 
 # условная сборка
@@ -65,7 +66,7 @@ WINAPI_OBJ := $(patsubst $(WINAPI_SRC)/%.cpp,$(OUT)/%.o,$(filter %.cpp,$(WINAPI_
 
 # линковка программы (порядок библиотек имеет значение)
 app.exe : $(APP_OBJ) $(OUT)/resource.o WINAPI.lib LA.lib
-	$(CCPP) -mwindows -o $@ $^ -lgdi32
+	$(CCPP) -mwindows -o $@ $^ -lgdi32 -lopengl32 -Lc:\assimp\build\bin -lassimp-5
 
 # линковка библиотеки
 LA.lib : $(LA_OBJ)
@@ -83,7 +84,7 @@ WINAPI.lib : $(WINAPI_OBJ) LA.lib
 
 # компиляция файлов основной программы
 $(APP_OBJ) : $(OUT)/%.o : $(SRC)/%.cpp | out_folder
-	$(CCPP) $(CPPFLAGS) -I$(INC) -I$(LA_INC) -I$(WINAPI_INC) -c $< -o $@
+	$(CCPP) $(CPPFLAGS) -I$(INC) -I$(LA_INC) -I$(WINAPI_INC) -I$(ASSIMP_INC) -c $< -o $@
 
 # компиляция библиотеки
 $(LA_OBJ) : $(OUT)/%.o : $(LA_SRC)/%.c | out_folder
