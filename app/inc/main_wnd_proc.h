@@ -4,6 +4,7 @@
 #include <Windows.h>
 #include "winapi_window.h"
 #include "toolbar_wnd_proc.h"
+#include "render_wnd_proc.h"
 #include "resource.h"
 #include "app_args.h"
 

@@ -10,12 +10,25 @@ void repos_child_wnds()
     width = get_rect_width(rect);
     height = get_rect_height(rect);
 
-    MoveWindow(
-        app::ToolbarWnd.getHwnd(),
-        0, 0,
-        app::ToolbarWidth, height,
-        TRUE
-    );
+    if (app::ToolbarWnd.getHwnd())
+    {
+        MoveWindow(
+            app::ToolbarWnd.getHwnd(),
+            0, 0,
+            app::ToolbarWidth, height,
+            TRUE
+        );
+    }
+
+    if (app::RenderWnd.getHwnd())
+    {
+        MoveWindow(
+            app::RenderWnd.getHwnd(),
+            app::ToolbarWidth, 0,
+            width - app::ToolbarWidth, height,
+            TRUE
+        );
+    }
 }
 
 LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -23,6 +36,8 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     // Про главное окно
     MINMAXINFO* lpMinMaxInfo; // Системная структура для ограничения масштабирования род. окна
     int rs_int; // вспомогательная переменная
+
+    static UINT_PTR timerId;
 
     switch (uMsg)
 	{
@@ -49,6 +64,26 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             0,
             hWnd
         );
+
+        // Создание рендер окно
+        app::RenderWnd.Create(
+            nullptr, app::hInst, SW_SHOWNORMAL,
+            RenderWndProc, L"GLRenderer", nullptr,
+            0, 0,
+            CS_VREDRAW | CS_HREDRAW | CS_OWNDC,
+            WS_CHILD | WS_VISIBLE | WS_BORDER,
+            0,
+            hWnd
+        );
+
+        if (app::RenderWnd.CreateOpenGLContext() != OPENGL_CONTEXT_CREATED)
+        {
+            MessageBox(NULL, L"Не удалось создать контекст OpenGL",
+                L"OpenGL",
+                MB_OK | MB_ICONERROR);
+        }
+
+        timerId = SetTimer(hWnd, 1, 41, NULL);
 
         return EXIT_SUCCESS;
     }
@@ -136,6 +171,13 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         default:
             return DefWindowProc(hWnd, uMsg, wParam, lParam);
         }
+    }
+
+    case WM_TIMER:
+    {
+        InvalidateRect(app::RenderWnd.getHwnd(), NULL, FALSE);
+        UpdateWindow(app::RenderWnd.getHwnd());
+        return EXIT_SUCCESS;
     }
 
     // При нажатии на крестик
