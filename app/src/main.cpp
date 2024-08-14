@@ -1,6 +1,10 @@
 #include <windows.h>
+
 #include "main_wnd_proc.h"
+
 #include "winapi_window.h"
+#include "winapi_console.h"
+
 #include "app_args.h"
 
 INT WINAPI WinMain(
@@ -11,6 +15,8 @@ INT WINAPI WinMain(
 )
 {
     UNREFERENCED_PARAMETER(hPrevInstance);
+
+    WinApiConsole Console;
 
     // инициализация труднодоступных переменных
     app::hInst = hInstance;
@@ -36,6 +42,8 @@ INT WINAPI WinMain(
         CLEARTYPE_QUALITY, VARIABLE_PITCH, L"Arial",
         L"Arial30");
 
+    Console.create();
+
     // Создание родительского окна
     app::MainWnd.Create(
         L"Лабораторная 10",
@@ -58,6 +66,8 @@ INT WINAPI WinMain(
 
     // Уничтожить шрифты
     app::Fonts.destroy();
+
+    Console.destroy();
 
     return EXIT_SUCCESS;
 }
