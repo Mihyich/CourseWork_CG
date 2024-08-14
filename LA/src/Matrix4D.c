@@ -797,19 +797,20 @@ void __cdecl mat4_set_look_at(pmat4 m, cpvec3 pos, cpvec3 dst, cpvec3 up)
 
     vec3_diff(dst, pos, &f);         // f = dst - pos
     vec3_normalize(&f);              // f = normalize(f)
-    vec3_vector_product(&f, up, &s); // s = f x up
+    vec3_vector_product(up, &f, &s); // s = up x f
     vec3_normalize(&s);              // s = normalize(s)
-    vec3_vector_product(&s, &f, &u); // u = s x f
+    vec3_vector_product(&f, &s, &u); // u = f x s
+    vec3_normalize(&u); 
 
-    spos = vec3_dot_product(&s, pos);
-    upos = vec3_dot_product(&u, pos);
-    fpos = vec3_dot_product(&f, pos);
+    spos = -dot3(s.x, u.x, f.x, pos->x, pos->y, pos->z);
+    upos = -dot3(s.y, u.y, f.y, pos->x, pos->y, pos->z);
+    fpos = -dot3(s.z, u.z, f.z, pos->x, pos->y, pos->z);
 
     mat4_set(m,
-        s.x, u.x, -f.x, 0.0f,
-        s.y, u.y, -f.y, 0.0f,
-        s.z, u.z, -f.z, 0.0f,
-        -spos, -upos, fpos, 1.0f
+        s.x, s.y, s.z, 0.0f,
+        u.x, u.y, u.z, 0.0f,
+        f.x, f.y, f.z, 0.0f,
+        spos, upos, fpos, 1.0f
     );
 }
 
