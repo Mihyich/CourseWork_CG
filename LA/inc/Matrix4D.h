@@ -99,6 +99,8 @@ void __cdecl mat4_set_ortho_projection(pmat4 m, float l, float r, float b, float
 
 void __cdecl mat4_set_perspective_projection(pmat4 m, float w, float h, float n, float f, float fov);
 
+void __cdecl mat4_set_look_at(pmat4 m, cpvec3 pos, cpvec3 dst, cpvec3 up);
+
 void __cdecl mat4_set_scale_to_point(pmat4 m, cpvec3 scale, cpvec3 point);
 
 void __cdecl mat4_set_rotate_around_point(pmat4 m, cpvec3 axis, cpvec3 point, float rad);
