@@ -7,8 +7,6 @@
 
 #include "winapi_window.h"
 #include "winapi_common.h"
-#include "winapi_choose_color_dialog.h"
-#include "winapi_render.h"
 
 #include "app_args.h"
 

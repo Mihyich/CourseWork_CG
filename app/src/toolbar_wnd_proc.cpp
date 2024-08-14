@@ -18,17 +18,6 @@ LRESULT CALLBACK ToolbarWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
             }
         }
 
-        case WM_PAINT:
-        {
-            // PAINTSTRUCT ps;
-            // HDC hDc = BeginPaint(hWnd, &ps);
-            // // отрисовка
-            // EndPaint(hWnd, &ps);
-
-            // Отработать другие отрисовки, за которые я не ручаюсь
-            return DefWindowProc(hWnd, uMsg, wParam, lParam);
-        }
-
         default:
             return DefWindowProc(hWnd, uMsg, wParam, lParam);
     }
