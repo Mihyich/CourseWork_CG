@@ -76,12 +76,15 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             hWnd
         );
 
+        // Создание контекнста OpenGL
         if (app::RenderWnd.CreateOpenGLContext() != OPENGL_CONTEXT_CREATED)
         {
             MessageBox(NULL, L"Не удалось создать контекст OpenGL",
                 L"OpenGL",
                 MB_OK | MB_ICONERROR);
         }
+
+        SendMessage(app::RenderWnd.getHwnd(), WM_INIT_GL_OPTIONS, 0, 0);
 
         timerId = SetTimer(hWnd, 1, 41, NULL);
 
