@@ -1,9 +1,9 @@
 #include "shader.h"
 
 // Начальный номер созданий объектов шейдера - 1
-int shader::shader_nomer = 1;
+int Shader::shader_nomer = 1;
 
-GLint shader::create_shader(const GLchar *source, GLint shader_type, GLuint *shader_id)
+GLint Shader::create_shader(const GLchar *source, GLint shader_type, GLuint *shader_id)
 {
     // статус компиляции
     GLint compile_status;
@@ -23,7 +23,7 @@ GLint shader::create_shader(const GLchar *source, GLint shader_type, GLuint *sha
     return compile_status ? SHADER_COMPILED : ERR_SHADER_COMPILE;
 }
 
-GLboolean shader::delete_shader(const GLuint program_id, const GLuint shader_id)
+GLboolean Shader::delete_shader(const GLuint program_id, const GLuint shader_id)
 {
     GLint delete_status;
 
@@ -38,7 +38,7 @@ GLboolean shader::delete_shader(const GLuint program_id, const GLuint shader_id)
     return delete_status;
 }
 
-GLint shader::create_shader_report(const GLuint shader_id, std::string *const info)
+GLint Shader::create_shader_report(const GLuint shader_id, std::string *const info)
 {
     GLint result;
 
@@ -69,7 +69,7 @@ GLint shader::create_shader_report(const GLuint shader_id, std::string *const in
     return result;
 }
 
-GLint shader::create_program_report(const GLuint program_id, std::string *const info)
+GLint Shader::create_program_report(const GLuint program_id, std::string *const info)
 {
     GLint result;
 
@@ -99,13 +99,13 @@ GLint shader::create_program_report(const GLuint program_id, std::string *const 
     return result;
 }
 
-shader::shader()
+Shader::Shader()
 {
     name += std::to_string(shader_nomer);
     ++shader_nomer;
 }
 
-shader::~shader()
+Shader::~Shader()
 {
     delete_shader(GL_VERTEX_SHADER);
     delete_shader(GL_TESS_CONTROL_SHADER);
@@ -116,12 +116,12 @@ shader::~shader()
     delete_program();
 }
 
-void shader::set_shader_name(const char *name)
+void Shader::set_shader_name(const char *name)
 {
     this->name.assign(name);
 }
 
-GLint shader::create_from_file(const char *file_name, GLint shader_type)
+GLint Shader::create_from_file(const char *file_name, GLint shader_type)
 {
     std::ifstream file;
     std::string source;
@@ -140,34 +140,34 @@ GLint shader::create_from_file(const char *file_name, GLint shader_type)
     return create_from_code(source.c_str(), shader_type);
 }
 
-GLint shader::create_from_code(const GLchar *source, GLint shader_type)
+GLint Shader::create_from_code(const GLchar *source, GLint shader_type)
 {
     switch (shader_type)
     {
     case GL_VERTEX_SHADER:
-        return shader::create_shader(source, GL_VERTEX_SHADER, &vertex_shader_id);
+        return Shader::create_shader(source, GL_VERTEX_SHADER, &vertex_shader_id);
 
     case GL_TESS_CONTROL_SHADER:
-        return shader::create_shader(source, GL_TESS_CONTROL_SHADER, &tess_control_shader_id);
+        return Shader::create_shader(source, GL_TESS_CONTROL_SHADER, &tess_control_shader_id);
 
     case GL_TESS_EVALUATION_SHADER:
-        return shader::create_shader(source, GL_TESS_EVALUATION_SHADER, &tess_evaluation_shader_id);
+        return Shader::create_shader(source, GL_TESS_EVALUATION_SHADER, &tess_evaluation_shader_id);
 
     case GL_GEOMETRY_SHADER:
-        return shader::create_shader(source, GL_GEOMETRY_SHADER, &geometry_shader_id);
+        return Shader::create_shader(source, GL_GEOMETRY_SHADER, &geometry_shader_id);
 
     case GL_FRAGMENT_SHADER:
-        return shader::create_shader(source, GL_FRAGMENT_SHADER, &fragment_shader_id);
+        return Shader::create_shader(source, GL_FRAGMENT_SHADER, &fragment_shader_id);
 
     case GL_COMPUTE_SHADER:
-        return shader::create_shader(source, GL_COMPUTE_SHADER, &compute_shader_id);
+        return Shader::create_shader(source, GL_COMPUTE_SHADER, &compute_shader_id);
 
     default:
         return ERR_SHADER_TYPE;
     }
 }
 
-GLint shader::link_program()
+GLint Shader::link_program()
 {
     // статус сборки программы
     GLint link_status;
@@ -201,22 +201,22 @@ GLint shader::link_program()
     glLinkProgram(program_id);
 
     // Удаление ненужных более шейдерный объектов
-    if (!shader::delete_shader(program_id, vertex_shader_id))
+    if (!Shader::delete_shader(program_id, vertex_shader_id))
         return ERR_DELETE_SHADER;
 
-    if (!shader::delete_shader(program_id, tess_control_shader_id))
+    if (!Shader::delete_shader(program_id, tess_control_shader_id))
         return ERR_DELETE_SHADER;
 
-    if (!shader::delete_shader(program_id, tess_evaluation_shader_id))
+    if (!Shader::delete_shader(program_id, tess_evaluation_shader_id))
         return ERR_DELETE_SHADER;
 
-    if (!shader::delete_shader(program_id, geometry_shader_id))
+    if (!Shader::delete_shader(program_id, geometry_shader_id))
         return ERR_DELETE_SHADER;
 
-    if (!shader::delete_shader(program_id, fragment_shader_id))
+    if (!Shader::delete_shader(program_id, fragment_shader_id))
         return ERR_DELETE_SHADER;
 
-    if (!shader::delete_shader(program_id, compute_shader_id))
+    if (!Shader::delete_shader(program_id, compute_shader_id))
         return ERR_DELETE_SHADER;
 
     // проверить статус сборки
@@ -225,34 +225,34 @@ GLint shader::link_program()
     return link_status ? PROGRAM_LINKED : ERR_PROGRAM_LINK;
 }
 
-GLboolean shader::delete_shader(GLint shader_type)
+GLboolean Shader::delete_shader(GLint shader_type)
 {
     switch (shader_type)
     {
     case GL_VERTEX_SHADER:
-        return shader::delete_shader(program_id, vertex_shader_id);
+        return Shader::delete_shader(program_id, vertex_shader_id);
 
     case GL_TESS_CONTROL_SHADER:
-        return shader::delete_shader(program_id, tess_control_shader_id);
+        return Shader::delete_shader(program_id, tess_control_shader_id);
 
     case GL_TESS_EVALUATION_SHADER:
-        return shader::delete_shader(program_id, tess_evaluation_shader_id);
+        return Shader::delete_shader(program_id, tess_evaluation_shader_id);
 
     case GL_GEOMETRY_SHADER:
-        return shader::delete_shader(program_id, geometry_shader_id);
+        return Shader::delete_shader(program_id, geometry_shader_id);
 
     case GL_FRAGMENT_SHADER:
-        return shader::delete_shader(program_id, fragment_shader_id);
+        return Shader::delete_shader(program_id, fragment_shader_id);
 
     case GL_COMPUTE_SHADER:
-        return shader::delete_shader(program_id, compute_shader_id);
+        return Shader::delete_shader(program_id, compute_shader_id);
 
     default:
         return GL_FALSE;
     }
 }
 
-GLboolean shader::delete_program()
+GLboolean Shader::delete_program()
 {
     GLint delete_status;
 
@@ -266,49 +266,49 @@ GLboolean shader::delete_program()
     return delete_status;
 }
 
-GLvoid shader::report(GLubyte type)
+GLvoid Shader::report(GLubyte type)
 {
     std::string info;
     std::string message;
 
     if ((type & REPORT_VS) == REPORT_VS &&
-        shader::create_shader_report(vertex_shader_id, &info))
+        Shader::create_shader_report(vertex_shader_id, &info))
     {
         message += info;
     }
 
     if ((type & REPORT_TCS) == REPORT_TCS &&
-        shader::create_shader_report(tess_control_shader_id, &info))
+        Shader::create_shader_report(tess_control_shader_id, &info))
     {
         message += info;
     }
 
     if ((type & REPORT_TES) == REPORT_TES &&
-        shader::create_shader_report(tess_evaluation_shader_id, &info))
+        Shader::create_shader_report(tess_evaluation_shader_id, &info))
     {
         message += info;
     }
 
     if ((type & REPORT_GS) == REPORT_GS &&
-        shader::create_shader_report(geometry_shader_id, &info))
+        Shader::create_shader_report(geometry_shader_id, &info))
     {
         message += info;
     }
 
     if ((type & REPORT_FS) == REPORT_FS &&
-        shader::create_shader_report(fragment_shader_id, &info))
+        Shader::create_shader_report(fragment_shader_id, &info))
     {
         message += info;
     }
 
     if ((type & REPORT_CS) == REPORT_CS &&
-        shader::create_shader_report(compute_shader_id, &info))
+        Shader::create_shader_report(compute_shader_id, &info))
     {
         message += info;
     }
 
     if ((type & REPORT_PROG) == REPORT_PROG &&
-        shader::create_program_report(program_id, &info))
+        Shader::create_program_report(program_id, &info))
     {
         message += info;
     }
@@ -319,7 +319,7 @@ GLvoid shader::report(GLubyte type)
     std::cout << message.c_str();
 }
 
-GLvoid shader::report(const wchar_t *const wfile_name, GLubyte type)
+GLvoid Shader::report(const wchar_t *const wfile_name, GLubyte type)
 {
     char *file_name = NULL;
     
@@ -330,50 +330,50 @@ GLvoid shader::report(const wchar_t *const wfile_name, GLubyte type)
     delete[] file_name;
 }
 
-GLvoid shader::report(const char *const file_name, GLubyte type)
+GLvoid Shader::report(const char *const file_name, GLubyte type)
 {
     std::ofstream file;
     std::string info;
     std::string message;
 
     if ((type & REPORT_VS) == REPORT_VS &&
-        shader::create_shader_report(vertex_shader_id, &info))
+        Shader::create_shader_report(vertex_shader_id, &info))
     {
         message += info;
     }
 
     if ((type & REPORT_TCS) == REPORT_TCS &&
-        shader::create_shader_report(tess_control_shader_id, &info))
+        Shader::create_shader_report(tess_control_shader_id, &info))
     {
         message += info;
     }
 
     if ((type & REPORT_TES) == REPORT_TES &&
-        shader::create_shader_report(tess_evaluation_shader_id, &info))
+        Shader::create_shader_report(tess_evaluation_shader_id, &info))
     {
         message += info;
     }
 
     if ((type & REPORT_GS) == REPORT_GS &&
-        shader::create_shader_report(geometry_shader_id, &info))
+        Shader::create_shader_report(geometry_shader_id, &info))
     {
         message += info;
     }
 
     if ((type & REPORT_FS) == REPORT_FS &&
-        shader::create_shader_report(fragment_shader_id, &info))
+        Shader::create_shader_report(fragment_shader_id, &info))
     {
         message += info;
     }
 
     if ((type & REPORT_CS) == REPORT_CS &&
-        shader::create_shader_report(compute_shader_id, &info))
+        Shader::create_shader_report(compute_shader_id, &info))
     {
         message += info;
     }
 
     if ((type & REPORT_PROG) == REPORT_PROG &&
-        shader::create_program_report(program_id, &info))
+        Shader::create_program_report(program_id, &info))
     {
         message += info;
     }
@@ -391,12 +391,12 @@ GLvoid shader::report(const char *const file_name, GLubyte type)
     file.close();
 }
 
-GLvoid shader::use(void) const
+GLvoid Shader::use(void) const
 {
     glUseProgram(program_id);
 }
 
-GLvoid shader::init_uniforms(void)
+GLvoid Shader::init_uniforms(void)
 {       
     GLint uniform_count; // Количество униформ
     GLint uniform_max_length; // Максимальная длина имени униформы
@@ -426,7 +426,7 @@ GLvoid shader::init_uniforms(void)
     delete[] uniform_name;
 }
 
-GLvoid shader::init_attribs(void)
+GLvoid Shader::init_attribs(void)
 {
     GLint attrib_count; // Количество атрибутов
     GLint attrib_max_length; // Максимальная длина имени атрибута
@@ -458,13 +458,13 @@ GLvoid shader::init_attribs(void)
     delete[] attrib_name;
 }
 
-GLvoid shader::init_attribs_and_uniforms(void)
+GLvoid Shader::init_attribs_and_uniforms(void)
 {
     init_uniforms();
     init_attribs();
 }
 
-GLvoid shader::print_uniforms(bool extra_info) const
+GLvoid Shader::print_uniforms(bool extra_info) const
 {
     int index = 0;
     shader_linker::const_iterator it = uniforms.begin();
@@ -518,7 +518,7 @@ GLvoid shader::print_uniforms(bool extra_info) const
     std::cout << '\n';
 }
 
-GLvoid shader::print_attribs(bool extra_info) const
+GLvoid Shader::print_attribs(bool extra_info) const
 {
     size_t index = 0;
     shader_linker::const_iterator it = attribs.begin();
@@ -564,29 +564,29 @@ GLvoid shader::print_attribs(bool extra_info) const
     std::cout << '\n';
 }
 
-GLint shader::find_uniform_location(const GLchar *name) const
+GLint Shader::find_uniform_location(const GLchar *name) const
 {
     return glGetUniformLocation(program_id, name);
 }
 
-GLint shader::find_attrib_location(const GLchar *name) const
+GLint Shader::find_attrib_location(const GLchar *name) const
 {
     return glGetAttribLocation(program_id, name);
 }
 
-GLint shader::get_uniform_location(const GLchar *name) const
+GLint Shader::get_uniform_location(const GLchar *name) const
 {
     shader_linker::const_iterator it = uniforms.find(name);
     return it != uniforms.end() ? it->second : SHADER_LOCATION_NOT_FOUNDED;
 }
 
-GLint shader::get_attrib_location(const GLchar *name) const
+GLint Shader::get_attrib_location(const GLchar *name) const
 {
     shader_linker::const_iterator it = attribs.find(name);
     return it != uniforms.end() ? it->second : SHADER_LOCATION_NOT_FOUNDED;
 }
 
-const char *shader::get_name(void) const
+const char *Shader::get_name(void) const
 {
     return &name[0];
 }

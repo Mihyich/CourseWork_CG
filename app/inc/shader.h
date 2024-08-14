@@ -35,7 +35,7 @@
 // Связь данных о униформе/атрибуте через их имя
 typedef std::map<std::string, GLint> shader_linker;
 
-class shader
+class Shader
 {
 private:
     // айди шейдера
@@ -84,8 +84,8 @@ private:
     static GLint create_program_report(const GLuint program_id, std::string *const info);
 
 public:
-    shader();
-    ~shader();
+    Shader();
+    ~Shader();
 
     /// @brief Присвоить шейдерной программе имя
     /// Упрощает чтение отладочной информации
