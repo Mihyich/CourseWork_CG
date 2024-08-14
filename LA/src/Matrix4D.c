@@ -793,7 +793,7 @@ void __cdecl mat4_set_perspective_projection(pmat4 m, float w, float h, float n,
 void __cdecl mat4_set_look_at(pmat4 m, cpvec3 pos, cpvec3 dst, cpvec3 up)
 {
     vec3 f, s, u;
-    float dot_s_pos, dot_u_pos, dot_f_pos;
+    float spos, upos, fpos;
 
     vec3_diff(dst, pos, &f);         // f = dst - pos
     vec3_normalize(&f);              // f = normalize(f)
@@ -801,15 +801,15 @@ void __cdecl mat4_set_look_at(pmat4 m, cpvec3 pos, cpvec3 dst, cpvec3 up)
     vec3_normalize(&s);              // s = normalize(s)
     vec3_vector_product(&s, &f, &u); // u = s x f
 
-    vec3_dot(&dot_s_pos, &s, pos);
-    vec3_dot(&dot_u_pos, &u, pos);
-    vec3_dot(&dot_f_pos, &f, pos);
+    spos = vec3_dot_product(&s, pos);
+    upos = vec3_dot_product(&u, pos);
+    fpos = vec3_dot_product(&f, pos);
 
     mat4_set(m,
         s.x, u.x, -f.x, 0.0f,
         s.y, u.y, -f.y, 0.0f,
         s.z, u.z, -f.z, 0.0f,
-        -dot_s_pos, -dot_u_pos, dot_f_pos, 1.0f
+        -spos, -upos, fpos, 1.0f
     );
 }
 
