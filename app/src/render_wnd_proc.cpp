@@ -62,6 +62,14 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case WM_INIT_GL_OPTIONS:
     {
+        shader.set_shader_name("shader");
+        shader.create_from_file("Shaders/vertex.glsl", GL_VERTEX_SHADER);
+        shader.create_from_file("Shaders/fragment.glsl", GL_FRAGMENT_SHADER);
+        shader.link_program();
+        shader.init_attribs_and_uniforms();
+        shader.print_uniforms();
+        shader.print_attribs();
+
         GenPlaneMesh(planeVAO, planeVBO, planeEBO);
         SetupOpenGLServices();
         return EXIT_SUCCESS;
