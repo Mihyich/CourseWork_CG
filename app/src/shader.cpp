@@ -458,7 +458,7 @@ GLvoid Shader::init_attribs(void)
     delete[] attrib_name;
 }
 
-GLvoid Shader::init_attribs_and_uniforms(void)
+GLvoid Shader::init_uniforms_and_attribs(void)
 {
     init_uniforms();
     init_attribs();
@@ -469,7 +469,7 @@ GLvoid Shader::print_uniforms(bool extra_info) const
     int index = 0;
     shader_linker::const_iterator it = uniforms.begin();
 
-    printf(" %s - uniforms, count = %zu:\n", &name[0], uniforms.size());
+    printf("%s - uniforms, count = %zu:\n", &name[0], uniforms.size());
 
     if (extra_info)
     {
@@ -490,30 +490,30 @@ GLvoid Shader::print_uniforms(bool extra_info) const
         {
             glGetProgramResourceiv(program_id, GL_UNIFORM, index, 13, props, 13, nullptr, params);
 
-            printf("   #%d: uniform from \"%s\"\n", index++, &name[0]);
-            printf("    {\n");
-            printf("      GL_NAME:        \"%s\"\n", &it->first[0]);
-            printf("      GL_NAME_LENGTH: %d\n", params[0]);
-            printf("      GL_TYPE:        0x%x\n", params[1]);
-            printf("      GL_ARRAY_SIZE:  %d\n", params[2]);
-            printf("      GL_LOCATION:    %d\n", params[3]);
-            printf("      GL_BLOCK_INDEX: %d\n", params[4]);
-            printf("      GL_IS_ROW_MAJOR: %d\n", params[5]);
-            printf("      GL_ATOMIC_COUNTER_BUFFER_INDEX: %d\n", params[6]);
-            printf("      GL_REFERENCED_BY_VERTEX_SHADER:          %d\n", params[7]);
-            printf("      GL_REFERENCED_BY_TESS_CONTROL_SHADER:    %d\n", params[8]);
-            printf("      GL_REFERENCED_BY_TESS_EVALUATION_SHADER: %d\n", params[9]);
-            printf("      GL_REFERENCED_BY_GEOMETRY_SHADER:        %d\n", params[10]);
-            printf("      GL_REFERENCED_BY_FRAGMENT_SHADER:        %d\n", params[11]);
-            printf("      GL_REFERENCED_BY_COMPUTE_SHADER:         %d\n", params[12]);
-            printf("    }\n");
+            printf("\n\t#%d: uniform from \"%s\"\n", index++, &name[0]);
+            printf("\t{\n");
+            printf("\t\tGL_NAME:        \"%s\"\n", &it->first[0]);
+            printf("\t\tGL_NAME_LENGTH: %d\n", params[0]);
+            printf("\t\tGL_TYPE:        0x%x\n", params[1]);
+            printf("\t\tGL_ARRAY_SIZE:  %d\n", params[2]);
+            printf("\t\tGL_LOCATION:    %d\n", params[3]);
+            printf("\t\tGL_BLOCK_INDEX: %d\n", params[4]);
+            printf("\t\tGL_IS_ROW_MAJOR: %d\n", params[5]);
+            printf("\t\tGL_ATOMIC_COUNTER_BUFFER_INDEX: %d\n", params[6]);
+            printf("\t\tGL_REFERENCED_BY_VERTEX_SHADER:          %d\n", params[7]);
+            printf("\t\tGL_REFERENCED_BY_TESS_CONTROL_SHADER:    %d\n", params[8]);
+            printf("\t\tGL_REFERENCED_BY_TESS_EVALUATION_SHADER: %d\n", params[9]);
+            printf("\t\tGL_REFERENCED_BY_GEOMETRY_SHADER:        %d\n", params[10]);
+            printf("\t\tGL_REFERENCED_BY_FRAGMENT_SHADER:        %d\n", params[11]);
+            printf("\t\tGL_REFERENCED_BY_COMPUTE_SHADER:         %d\n", params[12]);
+            printf("\t}\n");
         }
 
         glUseProgram(0);
     }
     else
         for (; it != uniforms.end(); ++it)
-            printf("   #%d: Name: \"%s\", Location: %d\n", index++, &it->first[0], it->second);
+            printf("\t#%d: Name: \"%s\", Location: %d\n", index++, &it->first[0], it->second);
 
     std::cout << '\n';
 }
@@ -523,7 +523,7 @@ GLvoid Shader::print_attribs(bool extra_info) const
     size_t index = 0;
     shader_linker::const_iterator it = attribs.begin();
 
-    printf(" %s - Attrbis, count = %zu:\n", &name[0], attribs.size());
+    printf("%s - Attrbis, count = %zu:\n", &name[0], attribs.size());
 
     if (extra_info && attribs.size())
     {
@@ -545,13 +545,13 @@ GLvoid Shader::print_attribs(bool extra_info) const
             glGetActiveAttrib(program_id, index, attrib_max_length, nullptr, &size, &type, attrib_name);
             attrib_location = glGetAttribLocation(program_id, attrib_name);
 
-            printf("   #%lld: attribute from \"%s\"\n", index, &name[0]);
-            printf("    {\n");
-            printf("      Name: \"%s\"\n", attrib_name);
-            printf("      Size: %d\n", size);
-            printf("      Type: %u\n", type);
-            printf("      Location: %d\n", attrib_location);
-            printf("    }\n");
+            printf("\n\t#%lld: attribute from \"%s\"\n", index, &name[0]);
+            printf("\t{\n");
+            printf("\t\tName: \"%s\"\n", attrib_name);
+            printf("\t\tSize: %d\n", size);
+            printf("\t\tType: %u\n", type);
+            printf("\t\tLocation: %d\n", attrib_location);
+            printf("\t}\n");
         }
 
         delete[] attrib_name;
@@ -559,9 +559,15 @@ GLvoid Shader::print_attribs(bool extra_info) const
     }
     else
         for (; it != attribs.end(); ++it)
-            printf("   #%lld: Name: \"%s\", Location: %d\n", index++, &it->first[0], it->second);
+            printf("\t#%lld: Name: \"%s\", Location: %d\n", index++, &it->first[0], it->second);
 
     std::cout << '\n';
+}
+
+GLvoid Shader::print_uniforms_and_attribs(bool uniform_extra_info, bool attribs_extra_info) const
+{
+    print_uniforms(uniform_extra_info);
+    print_attribs(attribs_extra_info);
 }
 
 GLint Shader::find_uniform_location(const GLchar *name) const
