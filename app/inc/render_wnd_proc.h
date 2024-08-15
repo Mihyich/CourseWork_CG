@@ -11,6 +11,8 @@
 #include "Matrix4D.h"
 #include "Quaternion.h"
 
+#include "ModelLoader.h"
+
 #include "winapi_GLextensions.h"
 #include "winapi_mat_ext.h"
 

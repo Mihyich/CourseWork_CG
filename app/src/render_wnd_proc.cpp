@@ -73,6 +73,12 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static GLuint planeEBO = 0;
     static Matrix4D planeModel;
 
+    static GLuint modelVAO = 0;
+    static GLuint modelVBO = 0;
+    static GLuint modelEBO = 0;
+    static GLsizei modelIndexCount = 0;
+    static Matrix4D modelModel;
+
     static Shader shader;
 
     static float v = 0.0f;
@@ -86,18 +92,25 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader.create_from_file("Shaders/vertex.glsl", GL_VERTEX_SHADER);
         shader.create_from_file("Shaders/fragment.glsl", GL_FRAGMENT_SHADER);
         shader.link_program();
-        shader.init_attribs_and_uniforms();
-        shader.print_uniforms();
-        shader.print_attribs();
+        shader.init_uniforms_and_attribs();
+        shader.print_uniforms_and_attribs();
 
         mat4_set_look_at(&view, &view_pos, &view_dst, &view_up);
-        mat4_set_perspective_projection(&projection, 800, 600, proj_near, proj_far, proj_fov);
+        mat4_set_perspective_projection(&projection, 800, 600, proj_near, proj_far, proj_fov); // изначально перспектива наугад
 
         GenPlaneMesh(planeVAO, planeVBO, planeEBO);
-        // mat4_set_translate(&planeModel, 0.f, -0.5f, 0.0f);
         mat4_set_ordinary(&planeModel);
 
+        GenModelMesh("Models/Cube.obj", modelVAO, modelVBO, modelEBO, modelIndexCount);
+        mat4_set_translate(&modelModel, 0, 2, 0);
+
         SetupOpenGLServices();
+
+        shader.use();
+        uniform_matrix4f(shader.get_uniform_location("model"), &planeModel);
+        uniform_matrix4f(shader.get_uniform_location("view"), &view);
+        uniform_matrix4f(shader.get_uniform_location("projection"), &projection);
+
         return EXIT_SUCCESS;
     }
 
@@ -106,8 +119,20 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         GetClientRect(hWnd, &client_rect);
         client_width = get_rect_width(client_rect);
         client_height = get_rect_height(client_rect);
-        mat4_set_perspective_projection(&projection, client_width, client_height, proj_near, proj_far, proj_fov);
+
+        if (glUniformMatrix4fv != nullptr && glUseProgram != nullptr)
+        {
+            shader.use();
+            mat4_set_perspective_projection(&projection, client_width, client_height, proj_near, proj_far, proj_fov);
+            uniform_matrix4f(shader.get_uniform_location("projection"), &projection);
+        }
+        else
+        {
+            mat4_set_ordinary(&projection);
+        }
+
         glViewport(0, 0, client_width, client_height);
+
         return EXIT_SUCCESS;
     }
 
@@ -155,7 +180,9 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
             }
 
+            shader.use();
             mat4_set_look_at(&view, &view_pos, &view_dst, &view_up);
+            uniform_matrix4f(shader.get_uniform_location("view"), &view);
         }
 
         return EXIT_SUCCESS;
@@ -171,12 +198,15 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shader.use();
+        
         uniform_matrix4f(shader.get_uniform_location("model"), &planeModel);
-        uniform_matrix4f(shader.get_uniform_location("view"), &view);
-        uniform_matrix4f(shader.get_uniform_location("projection"), &projection);
-
         glBindVertexArray(planeVAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+        uniform_matrix4f(shader.get_uniform_location("model"), &modelModel);
+        glBindVertexArray(modelVAO);
+        glDrawElements(GL_TRIANGLES, modelIndexCount, GL_UNSIGNED_INT, 0);
+
         glBindVertexArray(0);
 
         SwapBuffers(hdc);
