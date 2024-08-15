@@ -58,136 +58,58 @@ private:
 
     std::map<std::string, GLint> unifs;
 
-    /// @brief Создать шейдер по предоставленному коду
-    /// @param source Код шейдера в фомате utf-8
-    /// @param shader_type Тип шейдера, который должен быть гарантированно корректным
-    /// @param shader_id Айди созданного шейдера
-    /// @return Коды возврата
     GLint create_shader(const GLchar *source, GLint shader_type, GLuint *shader_id);
 
-    /// @brief Удаление шейдера
-    /// @param program_id Айди програмы, к которой прикреплен шейдер
-    /// @param shader_id Айди удаляемого шейдера
-    /// @return Флаг удаления: GL_TRUE/GL_FALSE
     static GLboolean delete_shader(const GLuint program_id, const GLuint shader_id);
 
-    /// @brief Получить текстовую информацию о шейдере
-    /// @param shader_id Айди шейдера
-    /// @param info указатель на тектовую информацию
-    /// @return Длина текстовой информации
     static GLint create_shader_report(const GLuint shader_id, std::string *const info);
 
-    /// @brief Получить текстовую информацию о шейдерной программе
-    /// @param program_id Айди шейлерной программы
-    /// @param info указатель на тектовую информацию
-    /// @return Длина текстовой информации
     static GLint create_program_report(const GLuint program_id, std::string *const info);
 
 public:
     Shader();
     ~Shader();
 
-    /// @brief Присвоить шейдерной программе имя
-    /// Упрощает чтение отладочной информации
-    /// @param name
     void set_shader_name(const char *name);
 
-    /// @brief Скомпилировать шейдер опр. типа по исходному коду из текстового файла
-    /// @param file_name Путь к файлу с исходным кодом шейдера в utf-8
-    /// @param shader_type Тип шейдера
-    /// @return Коды возврата
     GLint create_from_file(const char *file_name, GLint shader_type);
 
-    /// @brief Скомпилировать шейдер опр. типа по исходному коду
-    /// @param source Исходный код в utf-8 формате
-    /// @param shader_type Тип шейдера
-    /// @return Коды возврата
     GLint create_from_code(const GLchar *source, GLint shader_type);
 
-    /// @brief Сборка программы из созданных и скомпилированных шейдеров.
-    /// В сборке учавствуют все успешно скомпилированные шейдеры
-    /// Гарантируется удалание шейдерных объектов после завершения
-    /// процесса сборки шейдеров.
-    /// @return Коды возврата
     GLint link_program();
 
-    /// @brief Удаление шейдера
-    /// @param shader_type Тип шейдера
-    /// @return Флаг удаления: GL_TRUE/GL_FALSE
     GLboolean delete_shader(GLint shader_type);
 
-    /// @brief Удаление шейдерной программы
-    /// @return Флаг удаления: GL_TRUE/GL_FALSE
     GLboolean delete_program();
 
-    /// @brief Вывести информацию о определенных шейдерах и/или программе
-    /// в консоль
-    /// @param file_name Путь к файлу для записи
-    /// @param type Какой отчет делать. Активировать соответстующие биты
-    /// с помощью REPORT_VS, REPORT_TCS, REPORT_TES, REPORT_GS, REPORT_FS,
-    /// REPORT_CS, REPORT_PROG.
     GLvoid report(GLubyte type);
 
-    /// @brief Вывести информацию о определенных шейдерах и/или программе
-    /// в файл
-    /// @param file_name Путь к файлу для записи
-    /// @param type Какой отчет делать. Активировать соответстующие биты
-    /// с помощью REPORT_VS, REPORT_TCS, REPORT_TES, REPORT_GS, REPORT_FS,
-    /// REPORT_CS, REPORT_PROG.
     GLvoid report(const wchar_t *const wfile_name, GLubyte type);
 
-    /// @brief Вывести информацию о определенных шейдерах и/или программе
-    /// в файл
-    /// @param file_name Путь к файлу для записи
-    /// @param type Какой отчет делать. Активировать соответстующие биты
-    /// с помощью REPORT_VS, REPORT_TCS, REPORT_TES, REPORT_GS, REPORT_FS,
-    /// REPORT_CS, REPORT_PROG.
     GLvoid report(const char *const file_name, GLubyte type);
 
-    /// @brief Активировать шейдерную программу
     GLvoid use(void) const;
 
-    /// @brief Инициализировать данные о униформах
     GLvoid init_uniforms(void);
 
-    /// @brief Инициализировать данные о атрибутах
     GLvoid init_attribs(void);
 
-    /// @brief Инициализировать данные о униформах и атрибутах
-    GLvoid init_attribs_and_uniforms(void);
+    GLvoid init_uniforms_and_attribs(void);
 
-    /// @breif Вывод униформ из словаря
-    /// @param extra_info - Нужно ли выводить дополнительную информацию
     GLvoid print_uniforms(bool extra_info = false) const;
 
-    /// @breif Вывод атрибут
-    /// @param extra_info - Нужно ли выводить дополнительную информацию
     GLvoid print_attribs(bool extra_info = false) const;
 
-    /// @brief Получить расположение униформы по ее названию в шейдере
-    /// @param name - Название униформы
-    /// @return Расположение униформы
+    GLvoid print_uniforms_and_attribs(bool uniform_extra_info = false, bool attribs_extra_info = false) const;
+
     GLint find_uniform_location(const GLchar *name) const;
 
-    /// @brief Получить расположение атрибута по его названию в шейдере
-    /// @param name - Название атрибута
-    /// @return Расположение атрибута
     GLint find_attrib_location(const GLchar *name) const;
 
-    /// @brief Получить расположение униформы по ее названию из созданного
-    /// словаря для униформ
-    /// @param name - Название униформы
-    /// @return Расположение униформы
     GLint get_uniform_location(const GLchar *name) const;
 
-    /// @brief Получить расположение атрибута по его названию из созданного
-    /// словаря для атрибутов
-    /// @param name - Название атрибута
-    /// @return Расположение атрибута
     GLint get_attrib_location(const GLchar *name) const;
 
-    /// @brief Получить имя шейдера
-    /// @return Указатель на имя
     const char *get_name(void) const;
 };
 
