@@ -36,7 +36,7 @@ public:
 
     void r_button_up();
 
-    void move(LPARAM lParam);
+    void move();
 
     void wheel(WPARAM wParam);
 

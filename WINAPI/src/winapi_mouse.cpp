@@ -7,24 +7,23 @@ void WinApiMouse::init(HWND hWnd)
 
 void WinApiMouse::l_button_down()
 {
-    l_last_pos = l_cur_pos;
-    l_delta_pos.x = l_delta_pos.y = 0.f;
-
     GetCursorPos(&this->l_cur_pos);
     ScreenToClient(this->hWnd, &this->l_cur_pos);
 
+    l_last_pos = l_cur_pos;
+    l_delta_pos.x = l_delta_pos.y = 0.f;
     l_tracking = true;
 }
 
 void WinApiMouse::l_button_up()
 {
+    l_delta_pos.x = l_delta_pos.y = 0.f;
     l_tracking = false;
 }
 
 void WinApiMouse::r_button_down()
 {
     r_last_pos = r_cur_pos;
-    r_delta_pos.x = r_delta_pos.y = 0.f;
 
     GetCursorPos(&this->r_cur_pos);
     ScreenToClient(this->hWnd, &this->r_cur_pos);
@@ -34,15 +33,16 @@ void WinApiMouse::r_button_down()
 
 void WinApiMouse::r_button_up()
 {
+    r_delta_pos.x = r_delta_pos.y = 0.f;
     r_tracking = false;
 }
 
-void WinApiMouse::move(LPARAM lParam)
+void WinApiMouse::move()
 {
     l_last_pos = l_cur_pos;
 
-    l_cur_pos.x = LOWORD(lParam);
-    l_cur_pos.y = HIWORD(lParam);
+    GetCursorPos(&this->l_cur_pos);
+    ScreenToClient(this->hWnd, &this->l_cur_pos);
 
     l_delta_pos.x = l_cur_pos.x - l_last_pos.x;
     l_delta_pos.y = l_cur_pos.y - l_last_pos.y;
