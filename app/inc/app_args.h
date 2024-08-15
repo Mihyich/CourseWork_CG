@@ -75,7 +75,7 @@ namespace app
 
     // Окно инструментов
     extern WinApiWindow ToolbarWnd;
-    extern const LONG ToolbarWidth; // Ширина окна toolbar
+    extern LONG ToolbarWidth; // Ширина окна toolbar
     // его дочерние окна ...
 
     // Рендер окно
