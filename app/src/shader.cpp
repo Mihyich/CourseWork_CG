@@ -274,42 +274,49 @@ GLvoid Shader::report(GLubyte type)
     if ((type & REPORT_VS) == REPORT_VS &&
         Shader::create_shader_report(vertex_shader_id, &info))
     {
+        message += "Vertex shader \"" + name + "\":\n";
         message += info;
     }
 
     if ((type & REPORT_TCS) == REPORT_TCS &&
         Shader::create_shader_report(tess_control_shader_id, &info))
     {
+        message += "Tess Control shader \"" + name + "\":\n";
         message += info;
     }
 
     if ((type & REPORT_TES) == REPORT_TES &&
         Shader::create_shader_report(tess_evaluation_shader_id, &info))
     {
+        message += "Tess Evaluation shader \"" + name + "\":\n";
         message += info;
     }
 
     if ((type & REPORT_GS) == REPORT_GS &&
         Shader::create_shader_report(geometry_shader_id, &info))
     {
+        message += "Geometry shader \"" + name + "\":\n";
         message += info;
     }
 
     if ((type & REPORT_FS) == REPORT_FS &&
         Shader::create_shader_report(fragment_shader_id, &info))
     {
+        message += "Fragment shader \"" + name + "\":\n";
         message += info;
     }
 
     if ((type & REPORT_CS) == REPORT_CS &&
         Shader::create_shader_report(compute_shader_id, &info))
     {
+        message += "Compute shader \"" + name + "\":\n";
         message += info;
     }
 
     if ((type & REPORT_PROG) == REPORT_PROG &&
         Shader::create_program_report(program_id, &info))
     {
+        message += "Program \"" + name + "\":\n";
         message += info;
     }
 
