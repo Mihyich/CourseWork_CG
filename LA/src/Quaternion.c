@@ -71,22 +71,22 @@ void __cdecl quat_inverse(pquat q)
 void __cdecl quat_compose(pquat q1, cpquat q2)
 {
     const float w = q1->w;
-	const float x = q1->x;
-	const float y = q1->y;
-	const float z = q1->z;
+    const float x = q1->x;
+    const float y = q1->y;
+    const float z = q1->z;
 
-	q1->x = w * q2->x + x * q2->w + y * q2->z - z * q2->y;
-	q1->y = w * q2->y - x * q2->z + y * q2->w + z * q2->x;
-	q1->z = w * q2->z + x * q2->y - y * q2->x + z * q2->w;
     q1->w = w * q2->w - x * q2->x - y * q2->y - z * q2->z;
+    q1->x = w * q2->x + x * q2->w + y * q2->z - z * q2->y;
+    q1->y = w * q2->y - x * q2->z + y * q2->w + z * q2->x;
+    q1->z = w * q2->z + x * q2->y - y * q2->x + z * q2->w;
 }
 
 void __cdecl quat_compose_res(cpquat q1, cpquat q2, pquat res)
 {
-    res->x = q1->w * q2->x + q1->x * q2->w + q1->y * q2->z - q1->z * q2->y;
-	res->y = q1->w * q2->y - q1->x * q2->z + q1->y * q2->w + q1->z * q2->x;
-	res->z = q1->w * q2->z + q1->x * q2->y - q1->y * q2->x + q1->z * q2->w;
     res->w = q1->w * q2->w - q1->x * q2->x - q1->y * q2->y - q1->z * q2->z;
+    res->x = q1->w * q2->x + q1->x * q2->w + q1->y * q2->z - q1->z * q2->y;
+    res->y = q1->w * q2->y - q1->x * q2->z + q1->y * q2->w + q1->z * q2->x;
+    res->z = q1->w * q2->z + q1->x * q2->y - q1->y * q2->x + q1->z * q2->w;
 }
 
 void __cdecl quat_set_rotate(pquat q, float x, float y, float z, float rad)
@@ -110,8 +110,8 @@ void __cdecl quat_set_rotate_degrees(pquat q, float x, float y, float z, float d
 void __cdecl quat_rotate_vec(pvec3 v, cpquat q)
 {
     quat quat_res = *q;
-	quat quat_vec = (quat){ v->x, v->y, v->z, 0.f };
-	quat quat_con = (quat){ -q->x, -q->y, -q->z, q->w };
+    quat quat_vec = (quat){ v->x, v->y, v->z, 0.f };
+    quat quat_con = (quat){ -q->x, -q->y, -q->z, q->w };
 
     quat_compose(&quat_vec, &quat_con);
     quat_compose(&quat_res, &quat_vec);
