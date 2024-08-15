@@ -7,6 +7,8 @@
 #include <iostream>
 #include <vector>
 
+#include "winapi_GLextensions.h"
+
 struct Vertex
 {
     aiVector3D position;
@@ -14,5 +16,7 @@ struct Vertex
 };
 
 bool LoadModel(const std::string& filePath, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices);
+
+bool GenModelMesh(const std::string& filePath, GLuint &VAO, GLuint &VBO, GLuint &EBO, GLsizei &index_count);
 
 #endif // MODELLOADER_H
