@@ -793,25 +793,33 @@ void __cdecl mat4_set_perspective_projection(pmat4 m, float w, float h, float n,
 void __cdecl mat4_set_look_at(pmat4 m, cpvec3 pos, cpvec3 dst, cpvec3 up)
 {
     vec3 f, s, u;
+    vec3 tu = {0, 0, 1};
     float spos, upos, fpos;
+    float d;
 
-    // Вычисляем вектор направления
-    vec3_diff(dst, pos, &f);    // f = dst - pos
-    vec3_normalize(&f);         // f = normalize(f)
+    vec3_diff(dst, pos, &f);         // f = dst - pos
+    vec3_normalize(&f);              // f = normalize(f)
 
-    // Вычисляем правый вектор
-    vec3_vector_product(up, &f, &s); // s = up x f
+    d = vec3_dot_product(&up, &f);
+
+    // s = up x f (защита от коллинеарности)
+    if (is_equal(d, -1) || is_equal(d, 1))
+    {
+        vec3_vector_product(&tu, &f, &s);
+    }
+    else
+    {
+        vec3_vector_product(up, &f, &s);
+    }
+
     vec3_normalize(&s);              // s = normalize(s)
 
-    // Вычисляем вектор вверх
     vec3_vector_product(&f, &s, &u); // u = f x s
 
-    // Вычисляем dot products для трансляции
     spos = -dot3(s.x, s.y, s.z, pos->x, pos->y, pos->z);
     upos = -dot3(u.x, u.y, u.z, pos->x, pos->y, pos->z);
     fpos = -dot3(f.x, f.y, f.z, pos->x, pos->y, pos->z);
 
-    // Устанавливаем матрицу "взгляда"
     mat4_set(m,
         s.x, u.x, f.x, 0.0f,
         s.y, u.y, f.y, 0.0f,
