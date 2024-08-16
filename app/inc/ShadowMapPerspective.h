@@ -1,5 +1,5 @@
-#ifndef SHADOWMAP_H
-#define SHADOWMAP_H
+#ifndef SHADOW_MAP_PERSPECTIVE_H
+#define SHADOW_MAP_PERSPECTIVE_H
 
 #include "Vector3D.h"
 #include "Matrix4D.h"
@@ -14,9 +14,8 @@
 struct ShadowMapPerspectiveRenderData
 {
     DepthBuffer* depthBuffer; 
-    GLfloat bias;
-    GLsizei client_width;
-    GLsizei client_height;
+    GLsizei* client_width;
+    GLsizei* client_height;
 
     Shader* shaderDepthPass;
     Shader* shaderRenderPass;
@@ -28,15 +27,13 @@ struct ShadowMapPerspectiveRenderData
     mat4* lightView;
     mat4* lightProjection;
 
-    GLuint quadVAO;
-    GLsizei quadVerticesCount;
+    GLuint* quadVAO;
 
-    GLuint planeVAO;
-    GLsizei planeIndexCount;
+    GLuint* planeVAO;
     mat4* planeModel;
 
-    GLuint modelVAO;
-    GLsizei modelIndexCount;
+    GLuint* modelVAO;
+    GLsizei* modelIndexCount;
     mat4* modelModel;
 };
 
@@ -45,4 +42,4 @@ void ShadowMapPerspective(ShadowMapPerspectiveRenderData& data);
 void ShadowMapPerspectiveDebug(ShadowMapPerspectiveRenderData& data);
 
 
-#endif // SHADOWMAP_H
+#endif // SHADOW_MAP_PERSPECTIVE_H
