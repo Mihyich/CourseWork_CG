@@ -765,7 +765,7 @@ void __cdecl mat4_set_ortho_projection(pmat4 m, float l, float r, float b, float
 
 void __cdecl mat4_set_perspective_projection(pmat4 m, float w, float h, float n, float f, float fov)
 {
-	const float inv_k = 1.f / (w / h);
+    const float inv_k = 1.f / (w / h);
 	const float inv_tangent = 1.f / tanf(fov / 2.f);
 	const float dif = f - n;
 
@@ -781,12 +781,12 @@ void __cdecl mat4_set_perspective_projection(pmat4 m, float w, float h, float n,
 
     m->z_basis.x = 0.f;
     m->z_basis.y = 0.f;
-    m->z_basis.z = f / dif;
+    m->z_basis.z = (n + f) / dif;
     m->z_basis.w = 1.f;
 
     m->w_basis.x = 0.f;
     m->w_basis.y = 0.f;
-    m->w_basis.z = -f * n / dif;
+    m->w_basis.z = -2.f * n * f / dif;
     m->w_basis.w = 0.f;
 }
 
@@ -795,12 +795,12 @@ void __cdecl mat4_set_look_at(pmat4 m, cpvec3 pos, cpvec3 dst, cpvec3 up)
     vec3 f, s, u;
     vec3 tu = {0, 0, 1};
     float spos, upos, fpos;
-    float d;
+    double d;
 
     vec3_diff(dst, pos, &f);         // f = dst - pos
     vec3_normalize(&f);              // f = normalize(f)
 
-    d = vec3_dot_product(&up, &f);
+    d = dot3((double)up->x, (double)up->y, (double)up->z, (double)f.x, (double)f.y, (double)f.z);
 
     // s = up x f (защита от коллинеарности)
     if (is_equal(d, -1) || is_equal(d, 1))
