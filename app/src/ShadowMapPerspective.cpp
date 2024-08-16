@@ -11,15 +11,15 @@ void DepthPass(ShadowMapPerspectiveRenderData& data)
     uniform_matrix4f(data.shaderDepthPass->get_uniform_location("view"), data.lightView);
     uniform_matrix4f(data.shaderDepthPass->get_uniform_location("projection"), data.lightProjection);
 
-    glBindVertexArray(data.modelVAO);
+    glBindVertexArray(*data.modelVAO);
     uniform_matrix4f(data.shaderDepthPass->get_uniform_location("model"), data.modelModel);
-    glDrawElements(GL_TRIANGLES, data.modelIndexCount, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, *data.modelIndexCount, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
 
 void RenderPass(ShadowMapPerspectiveRenderData& data)
 {
-    glViewport(0, 0, data.client_width, data.client_height);
+    glViewport(0, 0, *data.client_width, *data.client_height);
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -33,18 +33,22 @@ void RenderPass(ShadowMapPerspectiveRenderData& data)
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, data.depthBuffer->Texture);
 
-    glBindVertexArray(data.planeVAO);
-    uniform_matrix4f(data.shaderRenderPass->get_uniform_location("model"), data.planeModel);
-    glDrawElements(GL_TRIANGLES, data.planeIndexCount, GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
+    glBindVertexArray(*data.modelVAO);
+    uniform_matrix4f(data.shaderRenderPass->get_uniform_location("model"), data.modelModel);
+    glDrawElements(GL_TRIANGLES, *data.modelIndexCount, GL_UNSIGNED_INT, 0);
 
+    glBindVertexArray(*data.planeVAO);
+    uniform_matrix4f(data.shaderRenderPass->get_uniform_location("model"), data.planeModel);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+    glBindVertexArray(0);
 }
 
 void DebugPass(ShadowMapPerspectiveRenderData& data)
 {
     mat4 quadModel; mat4_set_ordinary(&quadModel);
 
-    glViewport(0, 0, data.client_width, data.client_height);
+    glViewport(0, 0, *data.client_width, *data.client_height);
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -55,8 +59,9 @@ void DebugPass(ShadowMapPerspectiveRenderData& data)
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, data.depthBuffer->Texture);
 
-    glBindVertexArray(data.quadVAO);
-    glDrawArrays(GL_TRIANGLES, 0, data.quadVerticesCount);
+    glBindVertexArray(*data.quadVAO);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    
     glBindVertexArray(0);
 }
 
