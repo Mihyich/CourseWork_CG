@@ -2,10 +2,10 @@
 
 bool GenDepthFrameBuffer(DepthBuffer &DB, GLsizei width, GLsizei height)
 {
-    GLuint depthMapFBO;
-    glGenFramebuffers(1, &depthMapFBO);
+    GLuint depthMap = 0;
+    GLuint depthMapFBO = 0;
+    float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
 
-    GLuint depthMap;
     glGenTextures(1, &depthMap);
     glBindTexture(GL_TEXTURE_2D, depthMap);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
@@ -13,9 +13,9 @@ bool GenDepthFrameBuffer(DepthBuffer &DB, GLsizei width, GLsizei height)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-    float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
     glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
+    glGenFramebuffers(1, &depthMapFBO);
     glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
     glDrawBuffer(GL_NONE);
