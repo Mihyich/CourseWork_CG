@@ -13,9 +13,9 @@ extern "C"
 #define PI 3.141592f
 #define RAD_PER_DEGREE 0.017453f // PI / 180
 
-#define is_equal(src, target) (fabsf((src) - (target)) < EPSILON)
+#define is_equal(src, target) (fabs((src) - (target)) < EPSILON)
 
-#define is_equal_zero(src) (fabsf(src) < EPSILON)
+#define is_equal_zero(src) (fabs(src) < EPSILON)
 
 #define degrees_to_radians(degrees) ((degrees) * RAD_PER_DEGREE)
 
