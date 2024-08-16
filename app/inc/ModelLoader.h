@@ -15,8 +15,8 @@ struct Vertex
     aiVector3D normal;
 };
 
-bool LoadModel(const std::string& filePath, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices);
+bool LoadModel(const std::string& filePath, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, bool CCW = false);
 
-bool GenModelMesh(const std::string& filePath, GLuint &VAO, GLuint &VBO, GLuint &EBO, GLsizei &index_count);
+bool GenModelMesh(const std::string& filePath, GLuint &VAO, GLuint &VBO, GLuint &EBO, GLsizei &index_count, bool CCW = false);
 
 #endif // MODELLOADER_H

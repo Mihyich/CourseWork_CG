@@ -1,6 +1,6 @@
 #include "ModelLoader.h"
 
-bool LoadModel(const std::string& filePath, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices)
+bool LoadModel(const std::string& filePath, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, bool CCW)
 {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_JoinIdenticalVertices);
@@ -34,21 +34,30 @@ bool LoadModel(const std::string& filePath, std::vector<Vertex>& vertices, std::
         aiFace& face = mesh->mFaces[i];
         if (face.mNumIndices == 3)
         {
-            indices.push_back(face.mIndices[0]);
-            indices.push_back(face.mIndices[1]);
-            indices.push_back(face.mIndices[2]);
+            if (CCW)
+            {
+                indices.push_back(face.mIndices[2]);
+                indices.push_back(face.mIndices[1]);
+                indices.push_back(face.mIndices[0]);
+            }
+            else
+            {
+                indices.push_back(face.mIndices[0]);
+                indices.push_back(face.mIndices[1]);
+                indices.push_back(face.mIndices[2]);
+            }
         }
     }
 
     return true;
 }
 
-bool GenModelMesh(const std::string& filePath, GLuint &VAO, GLuint &VBO, GLuint &EBO, GLsizei &index_count)
+bool GenModelMesh(const std::string& filePath, GLuint &VAO, GLuint &VBO, GLuint &EBO, GLsizei &index_count, bool CCW)
 {
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
 
-    if (!LoadModel(filePath, vertices, indices))
+    if (!LoadModel(filePath, vertices, indices, CCW))
         return false;
 
     if (VAO)
