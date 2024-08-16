@@ -20,7 +20,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     float currentDepth = projCoords.z;
 
     // Проверка на тень
-    float shadow = currentDepth > closestDepth + 0.005 ? 1.0 : 0.0;
+    float shadow = step(closestDepth + 0.005, currentDepth);
 
     return shadow;
 }
