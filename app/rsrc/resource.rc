@@ -10,15 +10,15 @@
 // иконки
 IDI_ICON_APP_32 ICON "AppIcon32.ico"
 
-// главное меню
+// Главное меню
 IDR_MAINMENU MENU
 BEGIN
     POPUP "Файл"
     BEGIN
         MENUITEM "Новое окно", IDM_NEW_WINDOW
         MENUITEM SEPARATOR
-        MENUITEM "Сделать фото", IDM_TAKE_FOTO
-        MENUITEM "Сканировать тень ", IDM_SCAN_SHADOW
+        MENUITEM "Сделать снимок", IDM_TAKE_FOTO
+        MENUITEM "Сканировать тень", IDM_SCAN_SHADOW
         MENUITEM SEPARATOR
         MENUITEM "Запустить тестирование", IDM_LAUNCH_TESTING
         MENUITEM SEPARATOR
@@ -48,17 +48,17 @@ BEGIN
         POPUP "Окно интсрументов"
         BEGIN
             MENUITEM "Показать", IDB_SHOW_TOOLBAR
-            MENUITEM "Скыть", IDB_HIDE_TOOLBAR
+            MENUITEM "Скрыть", IDB_HIDE_TOOLBAR
         END
         MENUITEM SEPARATOR
-        POPUP "Окно графики"
+        POPUP "Окно графики"
         BEGIN
             MENUITEM "Показать", IDB_SHOW_RENDERWND
-            MENUITEM "Скыть", IDB_HIDE_RENDERWND
+            MENUITEM "Скрыть", IDB_HIDE_RENDERWND
         END
     END
 
-    POPUP "O программе"
+    POPUP "О программе"
     BEGIN
         POPUP "Информация"
         BEGIN
@@ -72,7 +72,7 @@ BEGIN
 END
 
 // Диалог загрузки модели
-// IDD_LOAD_MODEL DIALOGEX 0, 0, 200, 300
-// STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_CLIPCHILDREN | WS_CLIPSIBLINGS
-// CAPTION "Визитка"
-// FONT 10, "Arial"
+IDD_MODEL_LOADER DIALOGEX 0, 0, 200, 300
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_CLIPCHILDREN | WS_CLIPSIBLINGS
+CAPTION "Загрузка модели"
+FONT 10, "Arial"
