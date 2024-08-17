@@ -33,9 +33,7 @@ void repos_child_wnds()
 
 LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-    // Про главное окно
     MINMAXINFO* lpMinMaxInfo; // Системная структура для ограничения масштабирования род. окна
-    int rs_int; // вспомогательная переменная
 
     static UINT_PTR timerId;
 
@@ -107,72 +105,48 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         return EXIT_SUCCESS;
     }
 
-    // Обработки нажатий вообще всего чего можно
     case WM_COMMAND:
     {
         switch (LOWORD(wParam))
         {
         
-        // Меню о авторе
-        case ID_FILE_AUTOR:
-        {
-            MessageBox(
-                hWnd, AUTOR_CAPTION,
-                AUTOR, MB_OK
-            );
+            case IDM_EXIT:
+            {
+                int res = MessageBox(
+                    hWnd, L"Вы уверены, что хотите закрыть приложение?",
+                    L"Выход", MB_YESNO | MB_ICONQUESTION
+                );
 
-            return EXIT_SUCCESS;
-        }
+                if (res == IDYES)
+                    PostQuitMessage(0);
 
-        // Меню о задаче
-        case ID_FILE_TASK:
-        {
-            MessageBox(
-                hWnd, TASK_CAPTION,
-                TASK_NOMER, MB_OK
-            );
+                return EXIT_SUCCESS;
+            }
 
-            return EXIT_SUCCESS;
-        }
+            case IDB_WIREFRAME_ON:
+            {
+                SendMessage(app::RenderWnd.getHwnd(), WM_SET_WIREFRAME, (WPARAM)true, 0);
+                return EXIT_SUCCESS;
+            }
 
-        // Меню выход
-        case ID_FILE_EXIT:
-        {
-            PostQuitMessage(0); // это вызовет WM_DESTROY у всех-всех окон
-            return EXIT_SUCCESS;
-        }
+            case IDB_WIREFRAME_OFF:
+            {
+                SendMessage(app::RenderWnd.getHwnd(), WM_SET_WIREFRAME, (WPARAM)false, 0);
+                return EXIT_SUCCESS;
+            }
 
-        case ID_INFO_INPUT:
-        {
-            MessageBox(
-                hWnd, INSTRUCTION_CAPTION_INPUT,
-                INSTRUCTION_HEADER, MB_OK
-            );
+            case IDM_AUTOR:
+            {
+                MessageBox(
+                    hWnd, AUTOR_TEXT,
+                    AUTOR_CAPTION, MB_OK
+                );
 
-            return EXIT_SUCCESS;
-        }
+                return EXIT_SUCCESS;
+            }
 
-        case ID_INFO_FORMAT:
-        {
-            MessageBox(
-                hWnd, INSTRUCTION_CAPTION_FORMAT,
-                INSTRUCTION_HEADER, MB_OK
-            );
-
-            return EXIT_SUCCESS;
-        }
-
-        case ID_INFO_COORD_SYSTEM:
-        {
-            MessageBox(
-                hWnd, INSTRUCTION_CAPTION_COORD_SYSTEM,
-                INSTRUCTION_HEADER, MB_OK
-            );
-            return EXIT_SUCCESS;
-        }
-
-        default:
-            return DefWindowProc(hWnd, uMsg, wParam, lParam);
+            default:
+                return DefWindowProc(hWnd, uMsg, wParam, lParam);
         }
     }
 
@@ -186,16 +160,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     // При нажатии на крестик
     case WM_CLOSE:
     {
-        rs_int = MessageBox(
-            hWnd,
-            L"Вы уверены, что хотите закрыть приложение?", L"Выход",
-            MB_YESNO | MB_ICONQUESTION
-        );
-
-        // Если пользователь нажал "Да", то закрываем окно
-        if (rs_int == IDYES)
-            PostQuitMessage(0); // это вызовет WM_DESTROY у всех-всех окон
-
+        SendMessage(hWnd, WM_COMMAND, MAKEWPARAM(IDM_EXIT, 0), 0);
         return EXIT_SUCCESS;
     }
 
