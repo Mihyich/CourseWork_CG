@@ -13,8 +13,14 @@
 
 #include "ModelLoader.h"
 
+#include "DepthBufferGenerator.h"
+
 #include "winapi_GLextensions.h"
 #include "winapi_mat_ext.h"
+
+#include "ShadowAlgEnum.h"
+#include "ShadowMapOrthogonal.h"
+#include "ShadowMapPerspective.h"
 
 #include "app_args.h"
 #include "user_msgs.h"
