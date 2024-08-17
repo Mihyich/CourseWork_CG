@@ -13,30 +13,66 @@ IDI_ICON_APP_32 ICON "AppIcon32.ico"
 // главное меню
 IDR_MAINMENU MENU
 BEGIN
+    POPUP "Файл"
+    BEGIN
+        MENUITEM "Новое окно", IDM_NEW_WINDOW
+        MENUITEM SEPARATOR
+        MENUITEM "Сделать фото", IDM_TAKE_FOTO
+        MENUITEM "Сканировать тень ", IDM_SCAN_SHADOW
+        MENUITEM SEPARATOR
+        MENUITEM "Запустить тестирование", IDM_LAUNCH_TESTING
+        MENUITEM SEPARATOR
+        MENUITEM "Выход", IDM_EXIT
+    END
+
     POPUP "Графика"
     BEGIN
-        POPUP "Сбросить"
+        POPUP "Камера"
         BEGIN
-            MENUITEM "Перемещение", ID_RND_CENTER
-            MENUITEM "Масштаб",     ID_RND_SCALE
-            MENUITEM SEPARATOR
-            MENUITEM "Все",         ID_RND_ALL
+           
+        END
+        POPUP "Модель"
+        BEGIN
+            MENUITEM "Загрузить", IDB_LOAD_MODEL
+        END
+        MENUITEM SEPARATOR
+        POPUP "Wireframe"
+        BEGIN
+            MENUITEM "Включить", IDB_WIREFRAME_ON
+            MENUITEM "Выключить", IDB_WIREFRAME_OFF
         END
     END
+
+    POPUP "Вид"
+    BEGIN
+        POPUP "Окно интсрументов"
+        BEGIN
+            MENUITEM "Показать", IDB_SHOW_TOOLBAR
+            MENUITEM "Скыть", IDB_HIDE_TOOLBAR
+        END
+        MENUITEM SEPARATOR
+        POPUP "Окно графики"
+        BEGIN
+            MENUITEM "Показать", IDB_SHOW_RENDERWND
+            MENUITEM "Скыть", IDB_HIDE_RENDERWND
+        END
+    END
+
     POPUP "O программе"
     BEGIN
         POPUP "Информация"
         BEGIN
-            MENUITEM "Автор",       ID_FILE_AUTOR
-            MENUITEM "Задание",     ID_FILE_TASK
+            MENUITEM "Автор", IDM_AUTOR
             POPUP "Инструкция"
             BEGIN
-                MENUITEM "Ввод", ID_INFO_INPUT
-                MENUITEM "Формат", ID_INFO_FORMAT
-                MENUITEM "Система координат", ID_INFO_COORD_SYSTEM
+                
             END
         END
-        MENUITEM SEPARATOR
-        MENUITEM "Выход",           ID_FILE_EXIT
     END
 END
+
+// Диалог загрузки модели
+// IDD_LOAD_MODEL DIALOGEX 0, 0, 200, 300
+// STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_CLIPCHILDREN | WS_CLIPSIBLINGS
+// CAPTION "Визитка"
+// FONT 10, "Arial"
