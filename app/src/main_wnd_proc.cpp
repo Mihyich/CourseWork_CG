@@ -35,6 +35,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     MINMAXINFO* lpMinMaxInfo; // Системная структура для ограничения масштабирования род. окна
 
+    static HMENU hMenu = nullptr;
     static UINT_PTR timerId;
 
     switch (uMsg)
@@ -45,6 +46,16 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
         // Загрузить меню
         SetMenu(hWnd, LoadMenu(app::hInst, MAKEINTRESOURCE(IDR_MAINMENU)));
+        hMenu = GetMenu(hWnd);
+
+        EnableMenuItem(hMenu, IDB_WIREFRAME_ON, MF_ENABLED);
+        EnableMenuItem(hMenu, IDB_WIREFRAME_OFF, MF_DISABLED);
+
+        EnableMenuItem(hMenu, IDB_SHOW_TOOLBAR, MF_DISABLED);
+        EnableMenuItem(hMenu, IDB_HIDE_TOOLBAR, MF_ENABLED);
+
+        EnableMenuItem(hMenu, IDB_SHOW_RENDERWND, MF_DISABLED);
+        EnableMenuItem(hMenu, IDB_HIDE_RENDERWND, MF_ENABLED);
 
         // загрузка пиктограммы окна
         SendMessage(
@@ -150,33 +161,45 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
             case IDB_WIREFRAME_ON:
             {
+                EnableMenuItem(hMenu, IDB_WIREFRAME_ON, MF_DISABLED);
+                EnableMenuItem(hMenu, IDB_WIREFRAME_OFF, MF_ENABLED);
                 SendMessage(app::RenderWnd.getHwnd(), WM_SET_WIREFRAME, (WPARAM)true, 0);
                 return EXIT_SUCCESS;
             }
 
             case IDB_WIREFRAME_OFF:
             {
+                EnableMenuItem(hMenu, IDB_WIREFRAME_ON, MF_ENABLED);
+                EnableMenuItem(hMenu, IDB_WIREFRAME_OFF, MF_DISABLED);
                 SendMessage(app::RenderWnd.getHwnd(), WM_SET_WIREFRAME, (WPARAM)false, 0);
                 return EXIT_SUCCESS;
             }
 
             case IDB_SHOW_TOOLBAR:
             {
+                EnableMenuItem(hMenu, IDB_SHOW_TOOLBAR, MF_DISABLED);
+                EnableMenuItem(hMenu, IDB_HIDE_TOOLBAR, MF_ENABLED);
                 return EXIT_SUCCESS;
             }
 
             case IDB_HIDE_TOOLBAR:
             {
+                EnableMenuItem(hMenu, IDB_SHOW_TOOLBAR, MF_ENABLED);
+                EnableMenuItem(hMenu, IDB_HIDE_TOOLBAR, MF_DISABLED);
                 return EXIT_SUCCESS;
             }
 
             case IDB_SHOW_RENDERWND:
             {
+                EnableMenuItem(hMenu, IDB_SHOW_RENDERWND, MF_DISABLED);
+                EnableMenuItem(hMenu, IDB_HIDE_RENDERWND, MF_ENABLED);
                 return EXIT_SUCCESS;
             }
             
             case IDB_HIDE_RENDERWND:
             {
+                EnableMenuItem(hMenu, IDB_SHOW_RENDERWND, MF_ENABLED);
+                EnableMenuItem(hMenu, IDB_HIDE_RENDERWND, MF_DISABLED);
                 return EXIT_SUCCESS;
             }
 
