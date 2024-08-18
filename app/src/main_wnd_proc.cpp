@@ -109,7 +109,26 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
         switch (LOWORD(wParam))
         {
-        
+            case IDM_NEW_WINDOW:
+            {
+                return EXIT_SUCCESS;
+            }
+
+            case IDM_TAKE_FOTO:
+            {
+                return EXIT_SUCCESS;
+            }
+
+            case IDM_SCAN_SHADOW:
+            {
+                return EXIT_SUCCESS;
+            }
+
+            case IDM_LAUNCH_TESTING:
+            {
+                return EXIT_SUCCESS;
+            }
+            
             case IDM_EXIT:
             {
                 int res = MessageBox(
@@ -138,6 +157,26 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             case IDB_WIREFRAME_OFF:
             {
                 SendMessage(app::RenderWnd.getHwnd(), WM_SET_WIREFRAME, (WPARAM)false, 0);
+                return EXIT_SUCCESS;
+            }
+
+            case IDB_SHOW_TOOLBAR:
+            {
+                return EXIT_SUCCESS;
+            }
+
+            case IDB_HIDE_TOOLBAR:
+            {
+                return EXIT_SUCCESS;
+            }
+
+            case IDB_SHOW_RENDERWND:
+            {
+                return EXIT_SUCCESS;
+            }
+            
+            case IDB_HIDE_RENDERWND:
+            {
                 return EXIT_SUCCESS;
             }
 
