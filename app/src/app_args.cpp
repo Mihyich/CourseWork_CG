@@ -9,6 +9,7 @@ namespace app
     const POINT MinMainWndSize = { 400,  300};
     
     WinApiWindow ToolbarWnd;
+    LONG ToolbarMinWidth = 100;
     LONG ToolbarWidth = 200;
 
     WinApiGLWindow RenderWnd;
