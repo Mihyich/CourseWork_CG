@@ -9,7 +9,7 @@ in vec4 FragPosLightSpace;
 uniform sampler2D shadowMap;
 uniform vec3 lightPos;
 uniform float shadowBias = 0.001;
-uniform float pcfRadius = 1.0;
+uniform float pcfRadius = 1.5;
 
 float ShadowCalculation(vec4 fragPosLightSpace)
 {
