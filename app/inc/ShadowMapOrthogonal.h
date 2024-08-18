@@ -37,4 +37,8 @@ struct ShadowMapOrthogonalRenderData
     mat4* modelModel;
 };
 
+void ShadowMapOrthogonal(ShadowMapOrthogonalRenderData& data);
+
+void ShadowMapOrthogonalDebug(ShadowMapOrthogonalRenderData& data);
+
 #endif // SHADOW_MAP_PERSPECTIVE_H
