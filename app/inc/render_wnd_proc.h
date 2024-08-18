@@ -22,6 +22,8 @@
 #include "ShadowAlgEnum.h"
 #include "ShadowMapOrthogonal.h"
 #include "ShadowMapPerspective.h"
+#include "ShadowMapPcfOrthogonal.h"
+#include "ShadowMapPcfPerspective.h"
 
 #include "app_args.h"
 #include "user_msgs.h"

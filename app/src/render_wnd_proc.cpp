@@ -100,6 +100,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     static ShadowMapOrthogonalRenderData RenderDataSMO;
     static ShadowMapPerspectiveRenderData RenderDataSMP;
+    static ShadowMapPcfOrthogonalRenderData RenderDataSMOPCF;
+    static ShadowMapPcfPerspectiveRenderData RenderDataSMPPCF;
 
     static CameraMode camera_mode = ORBITTING;
     static float orbitting_x_rot = 0.0f;
@@ -152,6 +154,12 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     static Shader shader_SM_P_DP; // ShadowMap Perspective Depth Pass
     static Shader shader_SM_P_RP; // ShadowMap Perspective Render Pass
+
+    static Shader shader_SM_PCF_O_DP; // ShadowMap (PCF) Ortogonal Depth Pass
+    static Shader shader_SM_PCF_O_RP; // ShadowMap (PCF) Ortogonal Render Pass
+
+    static Shader shader_SM_PCF_P_DP; // ShadowMap (PCF) Perspective Depth Pass
+    static Shader shader_SM_PCF_P_RP; // ShadowMap (PCF) Perspective Render Pass
 
     switch (message)
     {
@@ -242,6 +250,46 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_P_RP.delete_shader(GL_VERTEX_SHADER);
         shader_SM_P_RP.delete_shader(GL_FRAGMENT_SHADER);
 
+        shader_SM_PCF_O_DP.set_shader_name("Shaders/ShadowMapPCF (orthogonal)/DepthPass");
+        shader_SM_PCF_O_DP.create_from_file("Shaders/ShadowMapPCF (orthogonal)/DepthPass/vert.glsl", GL_VERTEX_SHADER);
+        shader_SM_PCF_O_DP.create_from_file("Shaders/ShadowMapPCF (orthogonal)/DepthPass/frag.glsl", GL_FRAGMENT_SHADER);
+        shader_SM_PCF_O_DP.link_program();
+        shader_SM_PCF_O_DP.init_uniforms_and_attribs();
+        shader_SM_PCF_O_DP.print_uniforms_and_attribs();
+        shader_SM_PCF_O_DP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
+        shader_SM_PCF_O_DP.delete_shader(GL_VERTEX_SHADER);
+        shader_SM_PCF_O_DP.delete_shader(GL_FRAGMENT_SHADER);
+
+        shader_SM_PCF_O_RP.set_shader_name("Shaders/ShadowMapPCF (orthogonal)/RenderPass");
+        shader_SM_PCF_O_RP.create_from_file("Shaders/ShadowMapPCF (orthogonal)/RenderPass/vert.glsl", GL_VERTEX_SHADER);
+        shader_SM_PCF_O_RP.create_from_file("Shaders/ShadowMapPCF (orthogonal)/RenderPass/frag.glsl", GL_FRAGMENT_SHADER);
+        shader_SM_PCF_O_RP.link_program();
+        shader_SM_PCF_O_RP.init_uniforms_and_attribs();
+        shader_SM_PCF_O_RP.print_uniforms_and_attribs();
+        shader_SM_PCF_O_RP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
+        shader_SM_PCF_O_RP.delete_shader(GL_VERTEX_SHADER);
+        shader_SM_PCF_O_RP.delete_shader(GL_FRAGMENT_SHADER);
+
+        shader_SM_PCF_P_DP.set_shader_name("Shaders/ShadowMapPCF (perspective)/DepthPass");
+        shader_SM_PCF_P_DP.create_from_file("Shaders/ShadowMapPCF (perspective)/DepthPass/vert.glsl", GL_VERTEX_SHADER);
+        shader_SM_PCF_P_DP.create_from_file("Shaders/ShadowMapPCF (perspective)/DepthPass/frag.glsl", GL_FRAGMENT_SHADER);
+        shader_SM_PCF_P_DP.link_program();
+        shader_SM_PCF_P_DP.init_uniforms_and_attribs();
+        shader_SM_PCF_P_DP.print_uniforms_and_attribs();
+        shader_SM_PCF_P_DP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
+        shader_SM_PCF_P_DP.delete_shader(GL_VERTEX_SHADER);
+        shader_SM_PCF_P_DP.delete_shader(GL_FRAGMENT_SHADER);
+
+        shader_SM_PCF_P_RP.set_shader_name("Shaders/ShadowMapPCF (perspective)/RenderPass");
+        shader_SM_PCF_P_RP.create_from_file("Shaders/ShadowMapPCF (perspective)/RenderPass/vert.glsl", GL_VERTEX_SHADER);
+        shader_SM_PCF_P_RP.create_from_file("Shaders/ShadowMapPCF (perspective)/RenderPass/frag.glsl", GL_FRAGMENT_SHADER);
+        shader_SM_PCF_P_RP.link_program();
+        shader_SM_PCF_P_RP.init_uniforms_and_attribs();
+        shader_SM_PCF_P_RP.print_uniforms_and_attribs();
+        shader_SM_PCF_P_RP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
+        shader_SM_PCF_P_RP.delete_shader(GL_VERTEX_SHADER);
+        shader_SM_PCF_P_RP.delete_shader(GL_FRAGMENT_SHADER);
+
         shader.use();
         uniform_matrix4f(shader.get_uniform_location("model"), &planeModel);
         uniform_matrix4f(shader.get_uniform_location("view"), &view);
@@ -250,12 +298,26 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_DBD.use();
         glUniform1i(shader_DBD.get_uniform_location("depthMap"), 0);
 
+        shader_SM_O_RP.use();
+        glUniform1i(shader_SM_P_RP.get_uniform_location("shadowMap"), 0);
+        uniform_vec3f(shader_SM_P_RP.get_uniform_location("lightPos"), &lightPos);
+
         shader_SM_P_RP.use();
         glUniform1i(shader_SM_P_RP.get_uniform_location("shadowMap"), 0);
         uniform_vec3f(shader_SM_P_RP.get_uniform_location("lightPos"), &lightPos);
 
+        shader_SM_PCF_O_RP.use();
+        glUniform1i(shader_SM_PCF_O_RP.get_uniform_location("shadowMap"), 0);
+        uniform_vec3f(shader_SM_PCF_O_RP.get_uniform_location("lightPos"), &lightPos);
+
+        shader_SM_PCF_P_RP.use();
+        glUniform1i(shader_SM_PCF_P_RP.get_uniform_location("shadowMap"), 0);
+        uniform_vec3f(shader_SM_PCF_P_RP.get_uniform_location("lightPos"), &lightPos);
+
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE, (LPARAM)0);
-        SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL, (LPARAM)0);
+        // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL, (LPARAM)0);
+        // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE_PCF, (LPARAM)0);
+        SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL_PCF, (LPARAM)0);
 
         return EXIT_SUCCESS;
     }
@@ -382,8 +444,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     RenderDataSMO.depthBuffer = &depthBuffer;
                     RenderDataSMO.client_width = &client_width;
                     RenderDataSMO.client_height = &client_height;
-                    RenderDataSMO.shaderDepthPass = &shader_SM_P_DP;
-                    RenderDataSMO.shaderRenderPass = &shader_SM_P_RP;
+                    RenderDataSMO.shaderDepthPass = &shader_SM_O_DP;
+                    RenderDataSMO.shaderRenderPass = &shader_SM_O_RP;
                     RenderDataSMO.shaderDepthDebug = &shader_DBD;
                     RenderDataSMO.view = &view;
                     RenderDataSMO.projection = &projection;
@@ -418,6 +480,52 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     RenderDataSMP.modelVAO = &modelVAO;
                     RenderDataSMP.modelIndexCount = &modelIndexCount;
                     RenderDataSMP.modelModel =  &modelModel;
+                    break;
+                }
+
+                case SHADOW_MAP_ORTHOGONAL_PCF:
+                case SHADOW_MAP_ORTHOGONAL_PCF_LIGHT:
+                case SHADOW_MAP_ORTHOGONAL_PCF_DEBUG:
+                {
+                    RenderDataSMOPCF.depthBuffer = &depthBuffer;
+                    RenderDataSMOPCF.client_width = &client_width;
+                    RenderDataSMOPCF.client_height = &client_height;
+                    RenderDataSMOPCF.shaderDepthPass = &shader_SM_PCF_O_DP;
+                    RenderDataSMOPCF.shaderRenderPass = &shader_SM_PCF_O_RP;
+                    RenderDataSMOPCF.shaderDepthDebug = &shader_DBD;
+                    RenderDataSMOPCF.view = &view;
+                    RenderDataSMOPCF.projection = &projection;
+                    RenderDataSMOPCF.lightView = &lightView;
+                    RenderDataSMOPCF.lightProjection = &lightProjectionOrthogonal;
+                    RenderDataSMOPCF.quadVAO = &quadVAO;
+                    RenderDataSMOPCF.planeVAO = &planeVAO;
+                    RenderDataSMOPCF.planeModel = &planeModel;
+                    RenderDataSMOPCF.modelVAO = &modelVAO;
+                    RenderDataSMOPCF.modelIndexCount = &modelIndexCount;
+                    RenderDataSMOPCF.modelModel =  &modelModel;
+                    break;
+                }
+
+                case SHADOW_MAP_PERSPECTIVE_PCF:
+                case SHADOW_MAP_PERSPECTIVE_PCF_LIGHT:
+                case SHADOW_MAP_PERSPECTIVE_PCF_DEBUG:
+                {
+                    RenderDataSMPPCF.depthBuffer = &depthBuffer;
+                    RenderDataSMPPCF.client_width = &client_width;
+                    RenderDataSMPPCF.client_height = &client_height;
+                    RenderDataSMPPCF.shaderDepthPass = &shader_SM_PCF_P_DP;
+                    RenderDataSMPPCF.shaderRenderPass = &shader_SM_PCF_P_RP;
+                    RenderDataSMPPCF.shaderDepthDebug = &shader_DBD;
+                    RenderDataSMPPCF.view = &view;
+                    RenderDataSMPPCF.projection = &projection;
+                    RenderDataSMPPCF.lightView = &lightView;
+                    RenderDataSMPPCF.lightProjection = &lightProjectionPerspective;
+                    RenderDataSMPPCF.quadVAO = &quadVAO;
+                    RenderDataSMPPCF.planeVAO = &planeVAO;
+                    RenderDataSMPPCF.planeModel = &planeModel;
+                    RenderDataSMPPCF.modelVAO = &modelVAO;
+                    RenderDataSMPPCF.modelIndexCount = &modelIndexCount;
+                    RenderDataSMPPCF.modelModel =  &modelModel;
                     break;
                 }
                 
@@ -482,6 +590,40 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 break;
             }
 
+            case SHADOW_MAP_ORTHOGONAL_PCF:
+            {
+                ShadowMapPcfOrthogonal(RenderDataSMOPCF);
+                break;
+            }
+
+            case SHADOW_MAP_ORTHOGONAL_PCF_LIGHT:
+            {
+                break;
+            }
+
+            case SHADOW_MAP_ORTHOGONAL_PCF_DEBUG:
+            {
+                ShadowMapPcfOrthogonalDebug(RenderDataSMOPCF);
+                break;
+            }
+
+            case SHADOW_MAP_PERSPECTIVE_PCF:
+            {
+                ShadowMapPcfPerspective(RenderDataSMPPCF);
+                break;
+            }
+
+            case SHADOW_MAP_PERSPECTIVE_PCF_LIGHT:
+            {
+                break;
+            }
+
+            case SHADOW_MAP_PERSPECTIVE_PCF_DEBUG:
+            {
+                ShadowMapPcfPerspectiveDebug(RenderDataSMPPCF);
+                break;
+            }
+
             default:
                 break;
         }
@@ -514,6 +656,10 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_O_RP.delete_program();
         shader_SM_P_DP.delete_program();
         shader_SM_P_RP.delete_program();
+        shader_SM_PCF_O_DP.delete_program();
+        shader_SM_PCF_O_RP.delete_program();
+        shader_SM_PCF_P_DP.delete_program();
+        shader_SM_PCF_P_RP.delete_program();
 
         PostQuitMessage(0);
         return DefWindowProc(hWnd, message, wParam, lParam);
