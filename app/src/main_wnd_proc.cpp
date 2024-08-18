@@ -123,6 +123,12 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                 return EXIT_SUCCESS;
             }
 
+            case IDB_LOAD_MODEL:
+            {
+                DialogBox(app::hInst, MAKEINTRESOURCE(IDD_MODEL_LOADER), hWnd, ModelLoaderDlgProc);
+                return EXIT_SUCCESS;
+            }
+
             case IDB_WIREFRAME_ON:
             {
                 SendMessage(app::RenderWnd.getHwnd(), WM_SET_WIREFRAME, (WPARAM)true, 0);
