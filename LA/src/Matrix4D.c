@@ -740,7 +740,7 @@ void __cdecl mat4_set_rotate_axis_degrees(pmat4 m, float x, float y, float z, fl
     mat4_set_rotate_axis(m, x, y, z, degrees_to_radians(degrees));
 }
 
-void __cdecl mat4_set_ortho_projection(pmat4 m, float l, float r, float b, float t, float f, float n)
+void __cdecl mat4_set_ortho_projection(pmat4 m, float l, float r, float b, float t, float n, float f)
 {
     m->x_basis.x = 2.f / (r - l);
     m->x_basis.y = 0.f;
@@ -763,14 +763,14 @@ void __cdecl mat4_set_ortho_projection(pmat4 m, float l, float r, float b, float
     m->w_basis.w = 1.f;
 }
 
-void __cdecl mat4_set_ortho_projection_with_aspect(pmat4 m, float l, float r, float b, float t, float f, float n, int w, int h)
+void __cdecl mat4_set_ortho_projection_with_aspect(pmat4 m, float l, float r, float b, float t, float n, float f, int w, int h)
 {
     float aspect = (float)w / (float)h;
 
     l *= aspect;
     r *= aspect;
 
-    mat4_set_ortho_projection(m, l, r, b, t, f, n);
+    mat4_set_ortho_projection(m, l, r, b, t, n, f);
 }
 
 void __cdecl mat4_set_perspective_projection(pmat4 m, float w, float h, float n, float f, float fov)
