@@ -4,6 +4,8 @@
 // иконки
 #define IDI_ICON_APP_32 1
 
+
+
 // основное меню
 #define IDR_MAINMENU 101
 
@@ -28,7 +30,29 @@
 #define IDB_HIDE_RENDERWND 1204
 
 // Вкладка "О программе"
-
 #define IDM_AUTOR 1011
+
+
+
+// Диалог загрузки модели
+#define IDD_MODEL_LOADER 201
+
+// Строка пути
+#define IDC_ML_PATH 2001
+
+// Кнопка обзор
+#define IDC_ML_EXPLORE 2002
+
+// Чекбокс инвертации обхода вершин
+#define IDC_ML_INVERSE_CB 2003
+
+// Строка инвертации обхода вершин
+#define IDC_ML_INVERTSE_STATIC 2004
+
+// Отмена
+#define IDC_ML_CANCEL 2005
+
+// Загрузить
+#define IDC_ML_LOAD 2006
 
 #endif // RESOURECE_H
