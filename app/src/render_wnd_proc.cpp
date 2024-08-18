@@ -128,7 +128,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static vec3 lightDst;
     static vec3 lightUp = {0, 1, 0};
     static mat4 lightView;
-    static mat4 lightProjection;
+    static mat4 lightProjectionPerspective;
+    static mat4 lightProjectionOrthogonal;
     static float lightProjNear = 0.1f;
     static float lightProjFar = 50.0f;
     static float lightProjFov = degrees_to_radians(60.0f);
@@ -167,7 +168,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         // vec3_sum(&lightPos, &lightDir, &lightDst);
         lightDst = {0, 2, 0};
         mat4_set_look_at(&lightView, &lightPos, &lightDst, &lightUp);
-        mat4_set_perspective_projection(&lightProjection, 1920, 1080, lightProjNear, lightProjFar, lightProjFov);
+        mat4_set_perspective_projection(&lightProjectionPerspective, 1920, 1080, lightProjNear, lightProjFar, lightProjFov);
+        mat4_set_ortho_projection_with_aspect(&lightProjectionOrthogonal, -2, 2, -2, 2, 0.1f, 50, 1920, 1080);
 
         GenDepthFrameBuffer(depthBuffer, 1920, 1080);
 
@@ -245,7 +247,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         glUniform1i(shader_SM_P_RP.get_uniform_location("shadowMap"), 0);
         uniform_vec3f(shader_SM_P_RP.get_uniform_location("lightPos"), &lightPos);
 
-        SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE, (LPARAM)0);
+        // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE, (LPARAM)0);
+        SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL, (LPARAM)0);
 
         return EXIT_SUCCESS;
     }
@@ -378,7 +381,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     RenderDataSMO.view = &view;
                     RenderDataSMO.projection = &projection;
                     RenderDataSMO.lightView = &lightView;
-                    RenderDataSMO.lightProjection = &lightProjection;
+                    RenderDataSMO.lightProjection = &lightProjectionOrthogonal;
                     RenderDataSMO.quadVAO = &quadVAO;
                     RenderDataSMO.planeVAO = &planeVAO;
                     RenderDataSMO.planeModel = &planeModel;
@@ -401,7 +404,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     RenderDataSMP.view = &view;
                     RenderDataSMP.projection = &projection;
                     RenderDataSMP.lightView = &lightView;
-                    RenderDataSMP.lightProjection = &lightProjection;
+                    RenderDataSMP.lightProjection = &lightProjectionPerspective;
                     RenderDataSMP.quadVAO = &quadVAO;
                     RenderDataSMP.planeVAO = &planeVAO;
                     RenderDataSMP.planeModel = &planeModel;
@@ -440,11 +443,18 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
             case SHADOW_MAP_ORTHOGONAL:
             {
+                ShadowMapOrthogonal(RenderDataSMO);
                 break;
             }
 
             case SHADOW_MAP_ORTHOGONAL_LIGHT:
             {
+                break;
+            }
+
+            case SHADOW_MAP_ORTHOGONAL_DEBUG:
+            {
+                ShadowMapOrthogonalDebug(RenderDataSMO);
                 break;
             }
 
