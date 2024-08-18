@@ -2,11 +2,9 @@
     
 LRESULT CALLBACK ToolbarWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-    static bool isResizing = false;
-    static RECT resizeRect; // Прямоугольник, определяющий зону для захвата изменения размера
-    static int resizeBorderWidth = 30; // Ширина области для изменения размера
+    static bool resizing = false;
     static POINT lastMousePos;
-    static HWND hResizeWnd = nullptr; // Окно, которое мы изменяем в данный момент
+    static RECT originalRect;
 
     switch(uMsg)
     {
@@ -15,59 +13,73 @@ LRESULT CALLBACK ToolbarWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
             return EXIT_SUCCESS;
         }
 
-        case WM_MOUSEMOVE:
+        case WM_LBUTTONDOWN:
         {
-            if (isResizing && wParam == MK_LBUTTON)
+            POINT pt;
+            RECT rect;
+
+            GetCursorPos(&pt);
+            ScreenToClient(hWnd, &pt);
+            GetClientRect(hWnd, &rect);
+
+            if (pt.x >= rect.right - HIT_BORDER_SIZE)
             {
-                POINT pt;
-                GetCursorPos(&pt);
-                ScreenToClient(hWnd, &pt);
-
-                int dx = pt.x - lastMousePos.x;
-                int dy = pt.y - lastMousePos.y;
-
-                int newWidth = resizeRect.right - resizeRect.left + dx;
-                int newHeight = resizeRect.bottom - resizeRect.top + dy;
-
-                // Убедимся, что окно не становится слишком маленьким
-                const int minWidth = 100;
-                const int minHeight = 100;
-
-                if (newWidth < minWidth) newWidth = minWidth;
-                if (newHeight < minHeight) newHeight = minHeight;
-
-                app::ToolbarWidth = newWidth;
+                SetCapture(hWnd);
+                GetWindowRect(hWnd, &originalRect);
+                resizing = true;
                 lastMousePos = pt;
-
-                SendMessage(app::MainWnd.getHwnd(), WM_SIZE, 0, 0);
             }
+
             return EXIT_SUCCESS;
         }
 
-        case WM_NCHITTEST:
+        case WM_LBUTTONUP:
         {
-            LRESULT hit = DefWindowProc(hWnd, uMsg, wParam, lParam);
-
-            if (hit == HTCLIENT)
+            if (resizing)
             {
-                POINT pt;
-                GetCursorPos(&pt);
-                ScreenToClient(hWnd, &pt);
-                GetClientRect(hWnd, &resizeRect);
-
-                if (pt.x >= resizeRect.right - resizeBorderWidth)
-                {
-                    pt.x = resizeRect.right - resizeBorderWidth / 2;
-                    lastMousePos = pt;
-                    isResizing = true;
-                }
-                else
-                {
-                    isResizing = false;
-                }
+                ReleaseCapture();
+                resizing = false;
             }
 
-            return hit;
+            return EXIT_SUCCESS;
+        }
+
+        case WM_MOUSEMOVE:
+        {
+            RECT MainRect;
+            POINT pt;
+            int dx;
+            int maxWidth;
+
+            if (resizing)
+            {
+                GetCursorPos(&pt);
+                ScreenToClient(hWnd, &pt);
+                GetWindowRect(app::MainWnd.getHwnd(), &MainRect);
+                dx = pt.x - lastMousePos.x;
+                app::ToolbarWidth = std::min(std::max(originalRect.right - originalRect.left + dx, app::ToolbarMinWidth), get_rect_width(MainRect));
+                SendMessage(app::MainWnd.getHwnd(), WM_SIZE, 0, 0);
+            }
+
+            return EXIT_SUCCESS;
+        }
+
+        case WM_SETCURSOR:
+        {
+            POINT pt;
+            RECT rect;
+
+            GetCursorPos(&pt);
+            ScreenToClient(hWnd, &pt);
+            GetClientRect(hWnd, &rect);
+
+            if (pt.x >= rect.right - HIT_BORDER_SIZE)
+            {
+                SetCursor(LoadCursor(NULL, IDC_SIZEWE));
+                return TRUE;
+            }
+
+            return DefWindowProc(hWnd, uMsg, wParam, lParam);
         }
 
         case WM_COMMAND:
