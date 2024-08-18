@@ -97,6 +97,8 @@ void __cdecl mat4_set_rotate_axis_degrees(pmat4 m, float x, float y, float z, fl
 
 void __cdecl mat4_set_ortho_projection(pmat4 m, float l, float r, float b, float t, float f, float n);
 
+void __cdecl mat4_set_ortho_projection_with_aspect(pmat4 m, float l, float r, float b, float t, float f, float n, int w, int h);
+
 void __cdecl mat4_set_perspective_projection(pmat4 m, float w, float h, float n, float f, float fov);
 
 void __cdecl mat4_set_look_at(pmat4 m, cpvec3 pos, cpvec3 dst, cpvec3 up);

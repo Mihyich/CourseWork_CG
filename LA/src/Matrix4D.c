@@ -763,6 +763,16 @@ void __cdecl mat4_set_ortho_projection(pmat4 m, float l, float r, float b, float
     m->w_basis.w = 1.f;
 }
 
+void __cdecl mat4_set_ortho_projection_with_aspect(pmat4 m, float l, float r, float b, float t, float f, float n, int w, int h)
+{
+    float aspect = (float)w / (float)h;
+
+    l *= aspect;
+    r *= aspect;
+
+    mat4_set_ortho_projection(m, l, r, b, t, f, n);
+}
+
 void __cdecl mat4_set_perspective_projection(pmat4 m, float w, float h, float n, float f, float fov)
 {
     const float inv_k = 1.f / (w / h);
