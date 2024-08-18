@@ -17,6 +17,7 @@
 
 #include "winapi_GLextensions.h"
 #include "winapi_mat_ext.h"
+#include "winapi_char_converter.h"
 
 #include "ShadowAlgEnum.h"
 #include "ShadowMapOrthogonal.h"

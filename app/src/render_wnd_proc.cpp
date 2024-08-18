@@ -246,9 +246,19 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         uniform_vec3f(shader_SM_P_RP.get_uniform_location("lightPos"), &lightPos);
 
         SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE, (LPARAM)0);
-        // SendMessage(hWnd, WM_SET_WIREFRAME, (WPARAM)true, (LPARAM)0);
 
         return EXIT_SUCCESS;
+    }
+
+    case WM_LOAD_MODEL:
+    {
+        std::string path;
+        std::wstring wpath = (WCHAR*)wParam;
+        bool CCW = (bool)lParam;
+
+        wchar_to_char(&wpath, &path);
+
+        return GenModelMesh(path, modelVAO, modelVBO, modelEBO, modelIndexCount, CCW);
     }
 
     case WM_SIZE:
