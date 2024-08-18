@@ -17,6 +17,7 @@ INT WINAPI WinMain(
     UNREFERENCED_PARAMETER(hPrevInstance);
 
     WinApiConsole Console;
+    Console.create();
 
     // инициализация труднодоступных переменных
     app::hInst = hInstance;
@@ -31,18 +32,7 @@ INT WINAPI WinMain(
     }
 
     // загрузка шрифтов
-    app::Fonts.load_font(25, L"Calibri", L"Calibri25");
-    app::Fonts.load_font(25, L"Consolas", L"Consolas25");
-    app::Fonts.load_font(20, L"Consolas", L"Consolas20");
-    app::Fonts.load_font(
-        30, 0, 0, 0,
-        FW_BOLD, TRUE,
-        FALSE, FALSE, DEFAULT_CHARSET,
-        OUT_OUTLINE_PRECIS, CLIP_DEFAULT_PRECIS,
-        CLEARTYPE_QUALITY, VARIABLE_PITCH, L"Arial",
-        L"Arial30");
-
-    Console.create();
+    // app::Fonts.load_font(10, L"Arial", L"Arial10");
 
     // Создание родительского окна
     app::MainWnd.Create(
