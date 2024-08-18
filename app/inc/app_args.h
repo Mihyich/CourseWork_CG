@@ -19,6 +19,8 @@ L"\
 Группа:  ИУ7-45Б\
 "
 
+#define HIT_BORDER_SIZE 5
+
 namespace app
 {
     // Дескриптор приложения
@@ -32,6 +34,7 @@ namespace app
 
     // Окно инструментов
     extern WinApiWindow ToolbarWnd;
+    extern LONG ToolbarMinWidth;
     extern LONG ToolbarWidth; // Ширина окна toolbar
     // его дочерние окна ...
 
