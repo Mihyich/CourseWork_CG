@@ -100,7 +100,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             RenderWndProc, L"GLRenderer", nullptr,
             0, 0,
             CS_VREDRAW | CS_HREDRAW | CS_OWNDC,
-            WS_CHILD | WS_VISIBLE | WS_BORDER,
+            WS_CHILD | WS_VISIBLE,
             0,
             hWnd
         );
