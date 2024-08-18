@@ -8,6 +8,7 @@ in vec4 FragPosLightSpace;
 
 uniform sampler2D shadowMap;
 uniform vec3 lightPos;
+uniform float shadowBias = 0.001;
 
 float ShadowCalculation(vec4 fragPosLightSpace)
 {
@@ -20,7 +21,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     float currentDepth = projCoords.z;
 
     // Проверка на тень
-    float shadow = step(closestDepth + 0.005, currentDepth);
+    float shadow = step(closestDepth + shadowBias, currentDepth);
     shadow *= step(currentDepth, 1.0);
 
     return shadow;
