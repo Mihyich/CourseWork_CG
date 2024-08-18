@@ -5,29 +5,49 @@ void repos_child_wnds()
     RECT rect;
     LONG width;
     LONG height;
+    LONG posX = 0;
+    LONG posY = 0;
+    LONG tmp_width = 0;
+    LONG tmp_height = 0;
+    WINBOOL ToolbarVisible;
+    WINBOOL RenderVisible;
 
     GetClientRect(app::MainWnd.getHwnd(), &rect);
     width = get_rect_width(rect);
     height = get_rect_height(rect);
 
-    if (app::ToolbarWnd.getHwnd())
+    if (app::ToolbarWnd.getHwnd() && app::RenderWnd.getHwnd())
     {
-        MoveWindow(
-            app::ToolbarWnd.getHwnd(),
-            0, 0,
-            app::ToolbarWidth, height,
-            TRUE
-        );
-    }
+        ToolbarVisible = IsWindowVisible(app::ToolbarWnd.getHwnd());
+        RenderVisible = IsWindowVisible(app::RenderWnd.getHwnd());
 
-    if (app::RenderWnd.getHwnd())
-    {
-        MoveWindow(
-            app::RenderWnd.getHwnd(),
-            app::ToolbarWidth, 0,
-            width - app::ToolbarWidth, height,
-            TRUE
-        );
+        if (ToolbarVisible)
+        {
+            tmp_width = RenderVisible ? app::ToolbarWidth : width;
+            tmp_height = height;
+
+            MoveWindow(
+                app::ToolbarWnd.getHwnd(),
+                posX, posY,
+                tmp_width, tmp_height,
+                TRUE
+            );
+        }
+
+        posX += tmp_width;
+        
+        if (RenderVisible)
+        {
+            tmp_width = width - tmp_width;
+            tmp_height = height;
+
+            MoveWindow(
+                app::RenderWnd.getHwnd(),
+                posX, posY,
+                tmp_width, tmp_height,
+                TRUE
+            );
+        }
     }
 }
 
@@ -179,6 +199,8 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             {
                 EnableMenuItem(hMenu, IDB_SHOW_TOOLBAR, MF_DISABLED);
                 EnableMenuItem(hMenu, IDB_HIDE_TOOLBAR, MF_ENABLED);
+                ShowWindow(app::ToolbarWnd.getHwnd(), SW_SHOW);
+                repos_child_wnds();
                 return EXIT_SUCCESS;
             }
 
@@ -186,6 +208,8 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             {
                 EnableMenuItem(hMenu, IDB_SHOW_TOOLBAR, MF_ENABLED);
                 EnableMenuItem(hMenu, IDB_HIDE_TOOLBAR, MF_DISABLED);
+                ShowWindow(app::ToolbarWnd.getHwnd(), SW_HIDE);
+                repos_child_wnds();
                 return EXIT_SUCCESS;
             }
 
@@ -193,6 +217,8 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             {
                 EnableMenuItem(hMenu, IDB_SHOW_RENDERWND, MF_DISABLED);
                 EnableMenuItem(hMenu, IDB_HIDE_RENDERWND, MF_ENABLED);
+                ShowWindow(app::RenderWnd.getHwnd(), SW_SHOW);
+                repos_child_wnds();
                 return EXIT_SUCCESS;
             }
             
@@ -200,6 +226,8 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             {
                 EnableMenuItem(hMenu, IDB_SHOW_RENDERWND, MF_ENABLED);
                 EnableMenuItem(hMenu, IDB_HIDE_RENDERWND, MF_DISABLED);
+                ShowWindow(app::RenderWnd.getHwnd(), SW_HIDE);
+                repos_child_wnds();
                 return EXIT_SUCCESS;
             }
 
