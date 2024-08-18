@@ -13,6 +13,9 @@ void GenQuadMesh(GLuint &quadVAO, GLuint &quadVBO)
          1.0f,  1.0f,    1.0f, 1.0f  //
     };
 
+    if (quadVAO) glDeleteVertexArrays(1, &quadVAO);
+    if (quadVBO) glDeleteBuffers(1, &quadVBO);
+
     glGenVertexArrays(1, &quadVAO);
     glGenBuffers(1, &quadVBO);
 
@@ -47,6 +50,10 @@ void GenPlaneMesh(GLuint &planeVAO, GLuint &planeVBO, GLuint &planeEBO)
         0, 1, 2,
         2, 3, 0
     };
+
+    if (planeVAO) glDeleteVertexArrays(1, &planeVAO);
+    if (planeVBO) glDeleteBuffers(1, &planeVBO);
+    if (planeEBO) glDeleteBuffers(1, &planeEBO);
 
     glGenVertexArrays(1, &planeVAO);
     glGenBuffers(1, &planeVBO);
