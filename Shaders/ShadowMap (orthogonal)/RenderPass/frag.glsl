@@ -12,7 +12,7 @@ uniform vec3 lightPos;
 float ShadowCalculation(vec4 fragPosLightSpace)
 {
     // Конвертация из [-1, 1] в [0, 1]
-    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    vec3 projCoords = fragPosLightSpace.xyz;
     projCoords = projCoords * 0.5 + 0.5;
 
     //Глубина текущего фрагмента из карты теней
