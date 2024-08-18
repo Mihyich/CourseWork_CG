@@ -19,7 +19,7 @@ L"\
 Группа:  ИУ7-45Б\
 "
 
-#define HIT_BORDER_SIZE 5
+#define HIT_BORDER_SIZE 10
 
 namespace app
 {
