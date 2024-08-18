@@ -8,7 +8,7 @@ in vec4 FragPosLightSpace;
 
 uniform sampler2D shadowMap;
 uniform vec3 lightPos;
-uniform float shadowBias = 0.001;
+uniform float shadowBias = 0.005;
 
 float ShadowCalculation(vec4 fragPosLightSpace)
 {
@@ -16,7 +16,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     vec3 projCoords = fragPosLightSpace.xyz;
     projCoords = projCoords * 0.5 + 0.5;
 
-    //Глубина текущего фрагмента из карты теней
+    // Глубина текущего фрагмента из карты теней
     float closestDepth = texture(shadowMap, projCoords.xy).r; 
     float currentDepth = projCoords.z;
 

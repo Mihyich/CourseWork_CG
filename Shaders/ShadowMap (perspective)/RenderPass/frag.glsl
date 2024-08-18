@@ -16,7 +16,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     projCoords = projCoords * 0.5 + 0.5;
 
-    //Глубина текущего фрагмента из карты теней
+    // Глубина текущего фрагмента из карты теней
     float closestDepth = texture(shadowMap, projCoords.xy).r; 
     float currentDepth = projCoords.z;
 
