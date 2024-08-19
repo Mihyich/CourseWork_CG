@@ -51,3 +51,21 @@ UINT GetWindowShowMode(HWND hWnd)
     wndPlacement.length = sizeof(WINDOWPLACEMENT);
     return GetWindowPlacement(hWnd, &wndPlacement);
 }
+
+VOID DisableAeroForWindow(HWND hWnd)
+{
+    BOOL isDwmEnabled = FALSE;
+
+    if (SUCCEEDED(DwmIsCompositionEnabled(&isDwmEnabled)) && isDwmEnabled)
+    {
+        // Отключение прозрачности для этого окна
+        BOOL disable = TRUE;
+        DwmSetWindowAttribute(hWnd, DWMWA_TRANSITIONS_FORCEDISABLED, &disable, sizeof(disable));
+
+        // Выключение размытия фона для окна
+        DWM_BLURBEHIND bb = {0};
+        bb.dwFlags = DWM_BB_ENABLE;
+        bb.fEnable = FALSE;
+        DwmEnableBlurBehindWindow(hWnd, &bb);
+    }
+}

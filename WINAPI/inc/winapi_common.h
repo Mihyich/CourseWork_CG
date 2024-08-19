@@ -2,6 +2,7 @@
 #define WINAPI_COMMON_H
 
 #include <windows.h>
+#include <dwmapi.h>
 #include <cstdarg>
 
 void make_wnd_redraw(HWND hWnd);
@@ -15,5 +16,7 @@ void LaunchAsyncApp(LPCWSTR programPath);
 void GetAlignCenterRect(INT width, INT height, RECT *rect);
 
 UINT GetWindowShowMode(HWND hWnd);
+
+VOID DisableAeroForWindow(HWND hWnd);
 
 #endif // WINAPI_COMMON_H
