@@ -146,7 +146,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static float lightProjFov = degrees_to_radians(60.0f);
 
     static DepthBuffer depthBuffer = {0, 0, 0, 0};
-    static DepthBuffer depthBufferExp = {0, 0, 0, 0};
+    static DepthBufferExp depthBufferExp = {0, 0, 0, 0};
 
     static Shader shader;
 
@@ -791,6 +791,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         if (depthBuffer.FBO) glDeleteFramebuffers(1, &depthBuffer.FBO);
 
         if (depthBufferExp.Texture) glDeleteTextures(1, &depthBufferExp.Texture);
+        if (depthBufferExp.RBO) glDeleteRenderbuffers(1, &depthBufferExp.RBO);
         if (depthBufferExp.FBO) glDeleteFramebuffers(1, &depthBufferExp.FBO);
 
         shader.delete_program();
