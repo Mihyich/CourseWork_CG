@@ -63,7 +63,7 @@ VOID DisableAeroForWindow(HWND hWnd)
         DwmSetWindowAttribute(hWnd, DWMWA_TRANSITIONS_FORCEDISABLED, &disable, sizeof(disable));
 
         // Выключение размытия фона для окна
-        DWM_BLURBEHIND bb = {0};
+        DWM_BLURBEHIND bb = {0, 0, 0, 0};
         bb.dwFlags = DWM_BB_ENABLE;
         bb.fEnable = FALSE;
         DwmEnableBlurBehindWindow(hWnd, &bb);
