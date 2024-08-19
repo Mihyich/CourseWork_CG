@@ -440,17 +440,6 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         return EXIT_SUCCESS;
     }
 
-    case WM_LOAD_MODEL:
-    {
-        std::string path;
-        std::wstring wpath = (WCHAR*)wParam;
-        bool CCW = (bool)lParam;
-
-        wchar_to_char(&wpath, &path);
-
-        return GenModelMesh(path, modelVAO, modelVBO, modelEBO, modelIndexCount, CCW);
-    }
-
     case WM_SIZE:
     {
         GetClientRect(hWnd, &client_rect);
@@ -523,6 +512,17 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
 
         return EXIT_SUCCESS;
+    }
+
+    case WM_LOAD_MODEL:
+    {
+        std::string path;
+        std::wstring wpath = (WCHAR*)wParam;
+        bool CCW = (bool)lParam;
+
+        wchar_to_char(&wpath, &path);
+
+        return GenModelMesh(path, modelVAO, modelVBO, modelEBO, modelIndexCount, CCW);
     }
 
     case WM_SET_WIREFRAME:
