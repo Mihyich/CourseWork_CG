@@ -1,9 +1,10 @@
 #include "ExpDepthBufferGenerator.h"
 
-bool GenExpDepthFrameBuffer(DepthBuffer &DB, GLsizei width, GLsizei height)
+bool GenExpDepthFrameBuffer(DepthBufferExp &DB, GLsizei width, GLsizei height)
 {
     GLuint depthMap = 0;
     GLuint depthMapFBO = 0;
+    GLuint depthRBO = 0;
     float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
 
     glGenTextures(1, &depthMap);
@@ -22,10 +23,16 @@ bool GenExpDepthFrameBuffer(DepthBuffer &DB, GLsizei width, GLsizei height)
     glReadBuffer(GL_NONE);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    if (depthMap && depthMapFBO)
+    glGenRenderbuffers(1, &depthRBO);
+    glBindRenderbuffer(GL_RENDERBUFFER, depthRBO);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRBO);
+
+    if (depthMap && depthMapFBO && depthRBO)
     {
         if (DB.Texture) glDeleteTextures(1, &DB.Texture);
-        if (DB.FBO)glDeleteFramebuffers(1, &DB.FBO);
+        if (DB.RBO) glDeleteRenderbuffers(1, &DB.FBO);
+        if (DB.FBO) glDeleteFramebuffers(1, &DB.FBO);
 
         DB.Texture = depthMap;
         DB.FBO = depthMapFBO;
@@ -34,6 +41,10 @@ bool GenExpDepthFrameBuffer(DepthBuffer &DB, GLsizei width, GLsizei height)
 
         return true;
     }
+
+    if (depthMap) glDeleteTextures(1, &depthMap);
+    if (depthRBO) glDeleteRenderbuffers(1, &depthRBO);
+    if (depthMapFBO) glDeleteFramebuffers(1, &depthMapFBO);
 
     return false;
 }
