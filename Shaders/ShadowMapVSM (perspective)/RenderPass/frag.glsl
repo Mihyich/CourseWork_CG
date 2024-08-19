@@ -1,3 +1,5 @@
+// За основу взято: https://github.com/cforfang/opengl-shadowmapping
+
 #version 460 core
 
 out vec4 FragColor;
@@ -9,15 +11,18 @@ in vec4 FragPosLightSpace;
 uniform sampler2D shadowMap;
 uniform vec3 lightPos;
 
-float ChebyshevUpperBound(float moment1, float t)
+float ChebyshevUpperBound(float moment1, float moment2, float t)
 {
-    float moment2 = moment1 * moment1;
-    float p = t <= moment1 ? 1.0 : 0.0;
+    if (t <= moment1)
+        return 1.0;
+
     float variance = moment2 - (moment1 * moment1);
-    variance = max(variance, 0.00002);
+    variance = max(variance, 0.0005);
+
     float d = t - moment1;
     float p_max = variance / (variance + d * d);
-    return max(p, p_max);
+
+    return p_max;
 }
 
 float ShadowCalculation(vec4 fragPosLightSpace)
@@ -26,9 +31,9 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     projCoords = projCoords * 0.5 + 0.5;
 
     float moment1 = texture(shadowMap, projCoords.xy).r;
-    float currentDepth = projCoords.z;
+    float moment2 = pow(moment1, 2.0) + 0.25 * (pow(dFdx(moment1), 2.0) + pow(dFdy(moment1), 2.0));    
     
-    return ChebyshevUpperBound(moment1, currentDepth);
+    return clamp(ChebyshevUpperBound(moment1, moment2, projCoords.z), step(fragPosLightSpace.w, 0.0), 1.0);
 }
 
 void main()
@@ -42,7 +47,7 @@ void main()
     vec3 diffuse = diff * color;
 
     float shadow = ShadowCalculation(FragPosLightSpace);                      
-    vec3 lighting = (ambient + (1.0 - shadow) * diffuse);
+    vec3 lighting = (ambient + (shadow) * diffuse);
 
     FragColor = vec4(lighting, 1.0);
 }
