@@ -66,7 +66,7 @@ WINAPI_OBJ := $(patsubst $(WINAPI_SRC)/%.cpp,$(OUT)/%.o,$(filter %.cpp,$(WINAPI_
 
 # линковка программы (порядок библиотек имеет значение)
 app.exe : $(APP_OBJ) $(OUT)/resource.o WINAPI.lib LA.lib
-	$(CCPP) -mwindows -o $@ $^ -lgdi32 -dwmapi -lopengl32 -Lc:\assimp\build\bin -lassimp-5
+	$(CCPP) -mwindows -o $@ $^ -lgdi32 -ldwmapi -lopengl32 -Lc:\assimp\build\bin -lassimp-5
 
 # линковка библиотеки
 LA.lib : $(LA_OBJ)
