@@ -27,6 +27,7 @@
 #include "ShadowMapPcfPerspective.h"
 #include "ShadowMapEsmOrthogonal.h"
 #include "ShadowMapEsmPerspective.h"
+#include "ShadowMapVsmPerspective.h"
 
 #include "app_args.h"
 #include "user_msgs.h"

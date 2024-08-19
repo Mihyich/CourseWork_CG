@@ -104,6 +104,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static ShadowMapPcfPerspectiveRenderData RenderDataSMPPCF;
     static ShadowMapEsmOrthogonalRenderData RenderDataSMOESM;
     static ShadowMapEsmPerspectiveRenderData RenderDataSMPESM;
+    static ShadowMapVsmPerspectiveRenderData RenderDataSMPVSM;
 
     static CameraMode camera_mode = ORBITTING;
     static float orbitting_x_rot = 0.0f;
@@ -169,6 +170,9 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     static Shader shader_SM_ESM_P_DP; // ShadowMap (ESM) Perspective Depth Pass
     static Shader shader_SM_ESM_P_RP; // ShadowMap (ESM) Perspective Render Pass
+
+    static Shader shader_SM_VSM_P_DP; // ShadowMap (VSM) Perspective Depth Pass
+    static Shader shader_SM_VSM_P_RP; // ShadowMap (VSM) Perspective Render Pass
 
     switch (message)
     {
@@ -340,6 +344,26 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_ESM_P_RP.delete_shader(GL_VERTEX_SHADER);
         shader_SM_ESM_P_RP.delete_shader(GL_FRAGMENT_SHADER);
 
+        shader_SM_VSM_P_DP.set_shader_name("Shaders/ShadowMapVSM (perspective)/DepthPass");
+        shader_SM_VSM_P_DP.create_from_file("Shaders/ShadowMapVSM (perspective)/DepthPass/vert.glsl", GL_VERTEX_SHADER);
+        shader_SM_VSM_P_DP.create_from_file("Shaders/ShadowMapVSM (perspective)/DepthPass/frag.glsl", GL_FRAGMENT_SHADER);
+        shader_SM_VSM_P_DP.link_program();
+        shader_SM_VSM_P_DP.init_uniforms_and_attribs();
+        shader_SM_VSM_P_DP.print_uniforms_and_attribs();
+        shader_SM_VSM_P_DP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
+        shader_SM_VSM_P_DP.delete_shader(GL_VERTEX_SHADER);
+        shader_SM_VSM_P_DP.delete_shader(GL_FRAGMENT_SHADER);
+
+        shader_SM_VSM_P_RP.set_shader_name("Shaders/ShadowMapVSM (perspective)/RenderPass");
+        shader_SM_VSM_P_RP.create_from_file("Shaders/ShadowMapVSM (perspective)/RenderPass/vert.glsl", GL_VERTEX_SHADER);
+        shader_SM_VSM_P_RP.create_from_file("Shaders/ShadowMapVSM (perspective)/RenderPass/frag.glsl", GL_FRAGMENT_SHADER);
+        shader_SM_VSM_P_RP.link_program();
+        shader_SM_VSM_P_RP.init_uniforms_and_attribs();
+        shader_SM_VSM_P_RP.print_uniforms_and_attribs();
+        shader_SM_VSM_P_RP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
+        shader_SM_VSM_P_RP.delete_shader(GL_VERTEX_SHADER);
+        shader_SM_VSM_P_RP.delete_shader(GL_FRAGMENT_SHADER);
+
         shader.use();
         uniform_matrix4f(shader.get_uniform_location("model"), &planeModel);
         uniform_matrix4f(shader.get_uniform_location("view"), &view);
@@ -372,12 +396,17 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         glUniform1i(shader_SM_ESM_P_RP.get_uniform_location("shadowMap"), 0);
         uniform_vec3f(shader_SM_ESM_P_RP.get_uniform_location("lightPos"), &lightPos);
 
+        shader_SM_VSM_P_RP.use();
+        glUniform1i(shader_SM_VSM_P_RP.get_uniform_location("shadowMap"), 0);
+        uniform_vec3f(shader_SM_VSM_P_RP.get_uniform_location("lightPos"), &lightPos);
+
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE_PCF, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL_PCF, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE_ESM, (LPARAM)0);
-        SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL_ESM, (LPARAM)0);
+        // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL_ESM, (LPARAM)0);
+        SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE_VSM, (LPARAM)0);
 
         return EXIT_SUCCESS;
     }
@@ -634,6 +663,36 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     RenderDataSMPESM.modelModel =  &modelModel;
                     break;
                 }
+
+                case SHADOW_MAP_ORTHOGONAL_VSM:
+                case SHADOW_MAP_ORTHOGONAL_VSM_LIGHT:
+                case SHADOW_MAP_ORTHOGONAL_VSM_DEBUG:
+                {
+                    break;
+                }
+
+                case SHADOW_MAP_PERSPECTIVE_VSM:
+                case SHADOW_MAP_PERSPECTIVE_VSM_LIGHT:
+                case SHADOW_MAP_PERSPECTIVE_VSM_DEBUG:
+                {
+                    RenderDataSMPVSM.depthBuffer = &depthBuffer;
+                    RenderDataSMPVSM.client_width = &client_width;
+                    RenderDataSMPVSM.client_height = &client_height;
+                    RenderDataSMPVSM.shaderDepthPass = &shader_SM_VSM_P_DP;
+                    RenderDataSMPVSM.shaderRenderPass = &shader_SM_VSM_P_RP;
+                    RenderDataSMPVSM.shaderDepthDebug = &shader_DBD;
+                    RenderDataSMPVSM.view = &view;
+                    RenderDataSMPVSM.projection = &projection;
+                    RenderDataSMPVSM.lightView = &lightView;
+                    RenderDataSMPVSM.lightProjection = &lightProjectionPerspective;
+                    RenderDataSMPVSM.quadVAO = &quadVAO;
+                    RenderDataSMPVSM.planeVAO = &planeVAO;
+                    RenderDataSMPVSM.planeModel = &planeModel;
+                    RenderDataSMPVSM.modelVAO = &modelVAO;
+                    RenderDataSMPVSM.modelIndexCount = &modelIndexCount;
+                    RenderDataSMPVSM.modelModel =  &modelModel;
+                    break;
+                }
                 
                 default:
                     break;
@@ -764,6 +823,38 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 break;
             }
 
+            case SHADOW_MAP_ORTHOGONAL_VSM:
+            {
+                break;
+            }
+
+            case SHADOW_MAP_ORTHOGONAL_VSM_LIGHT:
+            {
+                break;
+            }
+
+            case SHADOW_MAP_ORTHOGONAL_VSM_DEBUG:
+            {
+                break;
+            }
+
+            case SHADOW_MAP_PERSPECTIVE_VSM:
+            {
+                ShadowMapVsmPerspective(RenderDataSMPVSM);
+                break;
+            }
+
+            case SHADOW_MAP_PERSPECTIVE_VSM_LIGHT:
+            {
+                break;
+            }
+
+            case SHADOW_MAP_PERSPECTIVE_VSM_DEBUG:
+            {
+                ShadowMapVsmPerspectiveDebug(RenderDataSMPVSM);
+                break;
+            }
+            
             default:
                 break;
         }
@@ -808,6 +899,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_ESM_O_RP.delete_program();
         shader_SM_ESM_P_DP.delete_program();
         shader_SM_ESM_P_RP.delete_program();
+        shader_SM_VSM_P_DP.delete_program();
+        shader_SM_VSM_P_RP.delete_program();
 
         PostQuitMessage(0);
         return DefWindowProc(hWnd, message, wParam, lParam);
