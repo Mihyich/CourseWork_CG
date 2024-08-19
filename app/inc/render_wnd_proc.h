@@ -14,6 +14,7 @@
 #include "ModelLoader.h"
 
 #include "DepthBufferGenerator.h"
+#include "ExpDepthBufferGenerator.h"
 
 #include "winapi_GLextensions.h"
 #include "winapi_mat_ext.h"
@@ -24,6 +25,7 @@
 #include "ShadowMapPerspective.h"
 #include "ShadowMapPcfOrthogonal.h"
 #include "ShadowMapPcfPerspective.h"
+#include "ShadowMapEsmPerspective.h"
 
 #include "app_args.h"
 #include "user_msgs.h"
