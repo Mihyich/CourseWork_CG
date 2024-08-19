@@ -5,6 +5,7 @@
 
 #include "winapi_window.h"
 #include "winapi_GLextensions.h"
+#include "winapi_common.h"
 #include "winapi_mouse.h"
 
 #define OPENGL_CONTEXT_CREATED 0 // контекст и расширения успешно установлены
@@ -22,8 +23,6 @@ private:
     HGLRC hRC = NULL; // контекст рендеринга
     MSG msg; // структура системный сообщений
 
-    PIXELFORMATDESCRIPTOR pfd; // формат пикселей
-
     BOOL check_wndclass_options(void);
     BOOL check_resources_readiness(void);
 
@@ -31,7 +30,7 @@ public:
     WinApiGLWindow();
     ~WinApiGLWindow();
 
-    BOOL CreateOpenGLContext(void);
+    BOOL CreateOpenGLContext(int samples = 0);
 
     VOID Destroy() override;
 

@@ -23,7 +23,6 @@ BOOL WinApiGLWindow::check_resources_readiness(void)
 WinApiGLWindow::WinApiGLWindow()
 {
     ZeroMemory(&msg, sizeof(MSG));
-    ZeroMemory(&pfd, sizeof(PIXELFORMATDESCRIPTOR));
 }
 
 WinApiGLWindow::~WinApiGLWindow()
@@ -31,62 +30,46 @@ WinApiGLWindow::~WinApiGLWindow()
     reset_and_free_data();
 }
 
-BOOL WinApiGLWindow::CreateOpenGLContext(void)
+BOOL WinApiGLWindow::CreateOpenGLContext(int samples)
 {
     HDC hDC = NULL;
-    PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB = NULL; // расширение WGL_ARB_create_context
+    PFNWGLCHOOSEPIXELFORMATARBPROC wglChoosePixelFormatARB = NULL;
+    PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB = NULL;
 
-    // Проверка совместимости класса
-    if (!check_wndclass_options())
-        return ERR_WNDCLASS_DISMATCH;
+    UINT numFormats = 0;
 
-    // Получение контекста устройства (Device Context)
-    if ((hDC = GetDC(hWnd)) == NULL)
-    {
-        error = GetLastError();
-        return ERR_HDCNOTGOTTEN;
-    }
-
-    // Настройка и установка формата пискселей формата пикселей
-    pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
-    pfd.nVersion = 1;
-    pfd.dwFlags = PFD_GENERIC_ACCELERATED | PFD_DRAW_TO_WINDOW |
-        PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER | PFD_SWAP_EXCHANGE | PFD_SUPPORT_COMPOSITION;
-    // pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL;
-    pfd.iPixelType = PFD_TYPE_RGBA;
-    pfd.cColorBits = 32;
-    pfd.cDepthBits = 16;
-    pfd.cStencilBits = 8;
-    INT pixelFormat = ChoosePixelFormat(hDC, &pfd);
-    if (!pixelFormat || !SetPixelFormat(hDC, pixelFormat, &pfd))
-    {
-        error = GetLastError();
-        return ERR_PIXELFORMAT;
-    }
-
-    // Создание временного контекста OpenGL,
-    // он нужен для получения функции wglCreateContextAttribsARB
-    hRC = wglCreateContext(hDC);
-    if (!hRC || !wglMakeCurrent(hDC, hRC))
-    {
-        error = GetLastError();
-        return ERR_WGLTEMPCONTEXT;
-    }
-
-    // Запрос на расширение WGL_ARB_create_context
-    OPENGL_GET_PROC(PFNWGLCREATECONTEXTATTRIBSARBPROC, wglCreateContextAttribsARB);
-    if (!wglCreateContextAttribsARB)
-    {
-        error = GetLastError();
-        return ERR_PFNWGLCREATE;
-    }
-
-    // Теперь временный контекст больше не нужен
-    wglMakeCurrent(NULL, NULL);
-    wglDeleteContext(hRC);
+    INT PixelFormat = 0;
+    PIXELFORMATDESCRIPTOR pfd = {
+        sizeof(PIXELFORMATDESCRIPTOR), // Размер структуры в байтах
+        1, //  Версия структуры
+        PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER, // Флаги, определяющие свойства формата пикселей
+        PFD_TYPE_RGBA, // Тип пикселей
+        32, // Количество битов на цвет в буфере цветов
+        0, // Количество битов, используемых для красного компонента
+        0, // Смещение красного компонента
+        0, // Количество битов, используемых для зеленого компонента
+        0, // Смещение зеленого компонента
+        0, // Количество битов, используемых для синего компонента
+        0, // Смещение синего компонента
+        0, // Количество битов, используемых для альфа-компонента
+        0, // Смещение альфа-компонента
+        0, // Общее количество битов в накопительном буфере
+        0, // Количество битов, используемых для красного компонента в накопительном буфере
+        0, // Количество битов, используемых для зеленого компонента в накопительном буфере
+        0, // Количество битов, используемых для синего компонента в накопительном буфере
+        0, // Количество битов, используемых для альфа-компонента в накопительном буфере
+        32, // Количество битов в буфере глубины
+        8, // Количество битов в буфере трафарета
+        0, // Количество вспомогательных буферов
+        PFD_MAIN_PLANE, // Уровень поверхности
+        0, // Зарезервировано
+        0, // Маска для уровня поверхности
+        0, // Маска видимости
+        0 // Маска повреждений
+    };
 
     // Атрибуты для создания расширенного контекста OpenGL
-    INT attribs[] =
+    INT modernContextAttribs[] =
     {
         WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
         WGL_CONTEXT_MINOR_VERSION_ARB, 6,
@@ -95,8 +78,57 @@ BOOL WinApiGLWindow::CreateOpenGLContext(void)
         0
     };
 
+    // Проверка совместимости класса
+    if (!check_wndclass_options())
+        return ERR_WNDCLASS_DISMATCH;
+
+    // Получение контекста устройства
+    if ((hDC = GetDC(hWnd)) == NULL)
+    {
+        error = GetLastError();
+        return ERR_HDCNOTGOTTEN;
+    }
+
+    // Установка временного пиксельного формата
+    PixelFormat = ChoosePixelFormat(hDC, &pfd);
+    if (!PixelFormat || !SetPixelFormat(hDC, PixelFormat, &pfd))
+    {
+        error = GetLastError();
+        return ERR_PIXELFORMAT;
+    }
+
+    // Создание временного контекста OpenGL
+    hRC = wglCreateContext(hDC);
+    if (!hRC || !wglMakeCurrent(hDC, hRC))
+    {
+        error = GetLastError();
+        return ERR_WGLTEMPCONTEXT;
+    }
+
+    // Загрузка расширения
+    OPENGL_GET_PROC(PFNWGLCREATECONTEXTATTRIBSARBPROC, wglCreateContextAttribsARB);
+    if (!wglCreateContextAttribsARB)
+    {
+        error = GetLastError();
+        return ERR_PFNWGLCREATE;
+    }
+
+    // Загрузка расширения
+    OPENGL_GET_PROC(PFNWGLCHOOSEPIXELFORMATARBPROC, wglChoosePixelFormatARB);
+    if (!wglChoosePixelFormatARB)
+    {
+        error = GetLastError();
+        return ERR_PFNWGLCREATE;
+    }
+
+    DisableAeroForWindow(hWnd);  
+
+    // Теперь временный контекст больше не нужен
+    wglMakeCurrent(NULL, NULL);
+    wglDeleteContext(hRC);
+
     // Создание современного контекста OpenGL
-    hRC = wglCreateContextAttribsARB(hDC, NULL, attribs);
+    hRC = wglCreateContextAttribsARB(hDC, NULL, modernContextAttribs);
     if (!hRC || !wglMakeCurrent(hDC, hRC))
     {
         error = GetLastError();
@@ -139,7 +171,6 @@ VOID WinApiGLWindow::Destroy()
 
     // Очистка структур
     ZeroMemory(&this->msg, sizeof(MSG));
-    ZeroMemory(&this->pfd, sizeof(PIXELFORMATDESCRIPTOR));
 }
 
 VOID WinApiGLWindow::reset_and_free_data(void)
@@ -171,5 +202,4 @@ VOID WinApiGLWindow::reset_and_free_data(void)
 
     // очистка структур
     ZeroMemory(&this->msg, sizeof(MSG));
-    ZeroMemory(&this->pfd, sizeof(PIXELFORMATDESCRIPTOR));
 }
