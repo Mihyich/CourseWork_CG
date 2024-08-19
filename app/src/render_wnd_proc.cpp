@@ -102,6 +102,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static ShadowMapPerspectiveRenderData RenderDataSMP;
     static ShadowMapPcfOrthogonalRenderData RenderDataSMOPCF;
     static ShadowMapPcfPerspectiveRenderData RenderDataSMPPCF;
+    static ShadowMapEsmOrthogonalRenderData RenderDataSMOESM;
     static ShadowMapEsmPerspectiveRenderData RenderDataSMPESM;
 
     static CameraMode camera_mode = ORBITTING;
@@ -162,6 +163,9 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     static Shader shader_SM_PCF_P_DP; // ShadowMap (PCF) Perspective Depth Pass
     static Shader shader_SM_PCF_P_RP; // ShadowMap (PCF) Perspective Render Pass
+
+    static Shader shader_SM_ESM_O_DP; // ShadowMap (ESM) Orthogonal Depth Pass
+    static Shader shader_SM_ESM_O_RP; // ShadowMap (ESM) Orthogonal Render Pass
 
     static Shader shader_SM_ESM_P_DP; // ShadowMap (ESM) Perspective Depth Pass
     static Shader shader_SM_ESM_P_RP; // ShadowMap (ESM) Perspective Render Pass
@@ -296,6 +300,26 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_PCF_P_RP.delete_shader(GL_VERTEX_SHADER);
         shader_SM_PCF_P_RP.delete_shader(GL_FRAGMENT_SHADER);
 
+        shader_SM_ESM_O_DP.set_shader_name("Shaders/ShadowMapESM (orthogonal)/DepthPass");
+        shader_SM_ESM_O_DP.create_from_file("Shaders/ShadowMapESM (orthogonal)/DepthPass/vert.glsl", GL_VERTEX_SHADER);
+        shader_SM_ESM_O_DP.create_from_file("Shaders/ShadowMapESM (orthogonal)/DepthPass/frag.glsl", GL_FRAGMENT_SHADER);
+        shader_SM_ESM_O_DP.link_program();
+        shader_SM_ESM_O_DP.init_uniforms_and_attribs();
+        shader_SM_ESM_O_DP.print_uniforms_and_attribs();
+        shader_SM_ESM_O_DP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
+        shader_SM_ESM_O_DP.delete_shader(GL_VERTEX_SHADER);
+        shader_SM_ESM_O_DP.delete_shader(GL_FRAGMENT_SHADER);
+
+        shader_SM_ESM_O_RP.set_shader_name("Shaders/ShadowMapESM (orthogonal)/RenderPass");
+        shader_SM_ESM_O_RP.create_from_file("Shaders/ShadowMapESM (orthogonal)/RenderPass/vert.glsl", GL_VERTEX_SHADER);
+        shader_SM_ESM_O_RP.create_from_file("Shaders/ShadowMapESM (orthogonal)/RenderPass/frag.glsl", GL_FRAGMENT_SHADER);
+        shader_SM_ESM_O_RP.link_program();
+        shader_SM_ESM_O_RP.init_uniforms_and_attribs();
+        shader_SM_ESM_O_RP.print_uniforms_and_attribs();
+        shader_SM_ESM_O_RP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
+        shader_SM_ESM_O_RP.delete_shader(GL_VERTEX_SHADER);
+        shader_SM_ESM_O_RP.delete_shader(GL_FRAGMENT_SHADER);
+
         shader_SM_ESM_P_DP.set_shader_name("Shaders/ShadowMapESM (perspective)/DepthPass");
         shader_SM_ESM_P_DP.create_from_file("Shaders/ShadowMapESM (perspective)/DepthPass/vert.glsl", GL_VERTEX_SHADER);
         shader_SM_ESM_P_DP.create_from_file("Shaders/ShadowMapESM (perspective)/DepthPass/frag.glsl", GL_FRAGMENT_SHADER);
@@ -340,6 +364,10 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         glUniform1i(shader_SM_PCF_P_RP.get_uniform_location("shadowMap"), 0);
         uniform_vec3f(shader_SM_PCF_P_RP.get_uniform_location("lightPos"), &lightPos);
 
+        shader_SM_ESM_O_RP.use();
+        glUniform1i(shader_SM_ESM_O_RP.get_uniform_location("shadowMap"), 0);
+        uniform_vec3f(shader_SM_ESM_O_RP.get_uniform_location("lightPos"), &lightPos);
+
         shader_SM_ESM_P_RP.use();
         glUniform1i(shader_SM_ESM_P_RP.get_uniform_location("shadowMap"), 0);
         uniform_vec3f(shader_SM_ESM_P_RP.get_uniform_location("lightPos"), &lightPos);
@@ -348,8 +376,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE_PCF, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL_PCF, (LPARAM)0);
-        // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE_ESM_DEBUG, (LPARAM)0);
-        SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE_ESM, (LPARAM)0);
+        // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE_ESM, (LPARAM)0);
+        SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL_ESM, (LPARAM)0);
 
         return EXIT_SUCCESS;
     }
@@ -565,6 +593,22 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 case SHADOW_MAP_ORTHOGONAL_ESM_LIGHT:
                 case SHADOW_MAP_ORTHOGONAL_ESM_DEBUG:
                 {
+                    RenderDataSMOESM.depthBuffer = &depthBufferExp;
+                    RenderDataSMOESM.client_width = &client_width;
+                    RenderDataSMOESM.client_height = &client_height;
+                    RenderDataSMOESM.shaderDepthPass = &shader_SM_ESM_O_DP;
+                    RenderDataSMOESM.shaderRenderPass = &shader_SM_ESM_O_RP;
+                    RenderDataSMOESM.shaderDepthDebug = &shader_DBD;
+                    RenderDataSMOESM.view = &view;
+                    RenderDataSMOESM.projection = &projection;
+                    RenderDataSMOESM.lightView = &lightView;
+                    RenderDataSMOESM.lightProjection = &lightProjectionOrthogonal;
+                    RenderDataSMOESM.quadVAO = &quadVAO;
+                    RenderDataSMOESM.planeVAO = &planeVAO;
+                    RenderDataSMOESM.planeModel = &planeModel;
+                    RenderDataSMOESM.modelVAO = &modelVAO;
+                    RenderDataSMOESM.modelIndexCount = &modelIndexCount;
+                    RenderDataSMOESM.modelModel =  &modelModel;
                     break;
                 }
 
@@ -688,6 +732,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
             case SHADOW_MAP_ORTHOGONAL_ESM:
             {
+                ShadowMapEsmOrthogonal(RenderDataSMOESM);
                 break;
             }
 
@@ -698,6 +743,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
             case SHADOW_MAP_ORTHOGONAL_ESM_DEBUG:
             {
+                ShadowMapEsmOrthogonalDebug(RenderDataSMOESM);
                 break;
             }
             
@@ -757,6 +803,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_PCF_O_RP.delete_program();
         shader_SM_PCF_P_DP.delete_program();
         shader_SM_PCF_P_RP.delete_program();
+        shader_SM_ESM_O_DP.delete_program();
+        shader_SM_ESM_O_RP.delete_program();
         shader_SM_ESM_P_DP.delete_program();
         shader_SM_ESM_P_RP.delete_program();
 
