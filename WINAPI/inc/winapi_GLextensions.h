@@ -59,6 +59,12 @@ extern PFNGLFRAMEBUFFERTEXTURE2DPROC glFramebufferTexture2D;
 extern PFNGLDRAWBUFFERSPROC glDrawBuffers;
 extern PFNGLCHECKFRAMEBUFFERSTATUSPROC glCheckFramebufferStatus;
 extern PFNGLDELETEFRAMEBUFFERSPROC glDeleteFramebuffers;
+// Рендер буфер
+extern PFNGLGENRENDERBUFFERSPROC glGenRenderbuffers;
+extern PFNGLBINDRENDERBUFFERPROC glBindRenderbuffer;
+extern PFNGLRENDERBUFFERSTORAGEPROC glRenderbufferStorage;
+extern PFNGLFRAMEBUFFERRENDERBUFFERPROC glFramebufferRenderbuffer;
+extern PFNGLDELETERENDERBUFFERSPROC glDeleteRenderbuffers;
 // Шейдеры
 extern PFNGLCREATEPROGRAMPROC glCreateProgram;
 extern PFNGLDELETEPROGRAMPROC glDeleteProgram;
