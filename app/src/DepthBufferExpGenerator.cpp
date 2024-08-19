@@ -1,4 +1,4 @@
-#include "ExpDepthBufferGenerator.h"
+#include "DepthBufferExpGenerator.h"
 
 bool GenExpDepthFrameBuffer(DepthBufferExp &DB, GLsizei width, GLsizei height)
 {
