@@ -33,7 +33,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     float moment1 = texture(shadowMap, projCoords.xy).r;
     float moment2 = pow(moment1, 2.0) + 0.25 * (pow(dFdx(moment1), 2.0) + pow(dFdy(moment1), 2.0));    
     
-    return clamp(ChebyshevUpperBound(moment1, moment2, projCoords.z), step(fragPosLightSpace.w, 0.0), 1.0);
+    return ChebyshevUpperBound(moment1, moment2, projCoords.z);
 }
 
 void main()
