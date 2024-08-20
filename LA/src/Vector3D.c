@@ -12,6 +12,70 @@ void __cdecl vec3_set(pvec3 v, float x, float y, float z)
     v->z = z;
 }
 
+void __cdecl vec3_min(pvec3 v1, cpvec3 v2)
+{
+    v1->x = fminf(v1->x, v2->x);
+    v1->y = fminf(v1->y, v2->y);
+    v1->z = fminf(v1->z, v2->z);
+}
+
+void __cdecl vec3_min_n(pvec3 v, int n, ...)
+{
+    va_list vl;
+    cpvec3 a = NULL;
+    vec3_set(&v, __FLT_MAX__, __FLT_MAX__, __FLT_MAX__);
+
+    va_start(vl, n);
+
+    while (n > 0)
+    {
+        a = va_arg(vl, cpvec3);
+        vec3_min(v, a);
+        --n;
+    }
+
+    va_end(vl);
+}
+
+void __cdecl vec3_min_res(cpvec3 v1, cpvec3 v2, pvec3 res)
+{
+    res->x = fminf(v1->x, v2->x);
+    res->y = fminf(v1->y, v2->y);
+    res->z = fminf(v1->z, v2->z);
+}
+
+void __cdecl vec3_max(pvec3 v1, cpvec3 v2)
+{
+    v1->x = fmaxf(v1->x, v2->x);
+    v1->y = fmaxf(v1->y, v2->y);
+    v1->z = fmaxf(v1->z, v2->z);
+}
+
+void __cdecl vec3_max_n(pvec3 v, int n, ...)
+{
+    va_list vl;
+    cpvec3 a = NULL;
+    vec3_set(&v, -__FLT_MAX__, -__FLT_MAX__, -__FLT_MAX__);
+
+    va_start(vl, n);
+
+    while (n > 0)
+    {
+        a = va_arg(vl, cpvec3);
+        vec3_max(v, a);
+        --n;
+    }
+
+    va_end(vl);
+}
+
+void __cdecl vec3_max_res(cpvec3 v1, cpvec3 v2, pvec3 res)
+{
+    res->x = fmaxf(v1->x, v2->x);
+    res->y = fmaxf(v1->y, v2->y);
+    res->z = fmaxf(v1->z, v2->z);
+}
+
 void __cdecl vec3_invert(pvec3 v)
 {
     v->x = -v->x;

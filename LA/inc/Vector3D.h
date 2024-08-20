@@ -32,6 +32,18 @@ struct Vector3D
 
 void __cdecl vec3_set(pvec3, float x, float y, float z);
 
+void __cdecl vec3_min(pvec3 v1, cpvec3 v2);
+
+void __cdecl vec3_min_n(pvec3 v, int n, ...);
+
+void __cdecl vec3_min_res(cpvec3 v1, cpvec3 v2, pvec3 res);
+
+void __cdecl vec3_max(pvec3 v1, cpvec3 v2);
+
+void __cdecl vec3_max_n(pvec3 v, int n, ...);
+
+void __cdecl vec3_max_res(cpvec3 v1, cpvec3 v2, pvec3 res);
+
 void __cdecl vec3_invert(pvec3 v);
 
 void __cdecl vec3_scale(pvec3 v, float s);
