@@ -27,13 +27,17 @@ void RayTraceBVHTree::addMesh(std::vector<RayTraceTriangle>& triangles, const ma
 
 void RayTraceBVHTree::updateVerteces(std::vector<RayTraceTriangle>& triangles)
 {
-    int newStartIndex = verteces.size() / 3;
+    RayTraceVertexTringle RTVT;
+    int newStartIndex = verteces.size();
 
     for (auto& t : triangles)
     {
-        verteces.push_back(t.v1);
-        verteces.push_back(t.v2);
-        verteces.push_back(t.v3);
+        RTVT.v1 = t.v1;
+        RTVT.v2 = t.v2;
+        RTVT.v3 = t.v3;
+
+        verteces.push_back(RTVT);
+
         t.index += newStartIndex;
     }
 }
@@ -280,13 +284,13 @@ void RayTraceBVHTree::addSubTree(const std::vector<RayTraceBVHNode>& root, const
         }
 
         // 5. Обновить первый узел как новый корень дерева
-        RTBS = computeBoundingSphere(nodes[1], nodes[newStartIndexForSubTree]);
+        RTBS = {0, 0, 0, 0}; // Узел не в меше, ограничивающий объем не нужен
         nodes[0].center = RTBS.c;
         nodes[0].radius = RTBS.r;
         nodes[0].leftChild = 1; // Старый корень теперь смещен вправо
         nodes[0].rightChild = newStartIndexForSubTree; // Корень нового поддерева
         nodes[0].triangleIndex = -1; // это не листовой узел
-        nodes[0].modelIndex = -1; // единичная матрица (ну или просто трансформации)
+        nodes[0].modelIndex = -1; // Узел не в меше, матрица не нужна
 
         // 6. Обновить ссылочные данные на корневые узлы мешей в массиве
         for (auto& m : meshes) { ++m.second; }

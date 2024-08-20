@@ -13,9 +13,10 @@
 class RayTraceBVHTree
 {
 private:
-    std::vector<RayTraceBVHNode> nodes;
-    std::vector<RayTraceVertex> verteces;
+    std::vector<RayTraceVertexTringle> verteces;
     std::vector<mat4> models;
+    std::vector<RayTraceBVHNode> nodes;
+    
     std::map<std::string, int> meshes;
     int nonameMeshes = 0;
 
