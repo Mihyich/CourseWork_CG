@@ -23,7 +23,7 @@ void __cdecl vec3_min_n(pvec3 v, int n, ...)
 {
     va_list vl;
     cpvec3 a = NULL;
-    vec3_set(&v, __FLT_MAX__, __FLT_MAX__, __FLT_MAX__);
+    vec3_set(v, __FLT_MAX__, __FLT_MAX__, __FLT_MAX__);
 
     va_start(vl, n);
 
@@ -55,7 +55,7 @@ void __cdecl vec3_max_n(pvec3 v, int n, ...)
 {
     va_list vl;
     cpvec3 a = NULL;
-    vec3_set(&v, -__FLT_MAX__, -__FLT_MAX__, -__FLT_MAX__);
+    vec3_set(v, -__FLT_MAX__, -__FLT_MAX__, -__FLT_MAX__);
 
     va_start(vl, n);
 
@@ -227,7 +227,7 @@ void __cdecl vec3_sum_n(pvec3 res, int n, ...)
 {
     va_list vl;
     cpvec3 a;
-    vec3_set(&res, 0, 0, 0);
+    vec3_set(res, 0, 0, 0);
 
     va_start(vl, n);
 
@@ -249,7 +249,7 @@ void __cdecl vec3_sum_scaled_n(pvec3 res, float s, int n, ...)
 {
     va_list vl;
     cpvec3 a;
-    vec3_set(&res, 0, 0, 0);
+    vec3_set(res, 0, 0, 0);
 
     va_start(vl, n);
 
@@ -266,7 +266,7 @@ void __cdecl vec3_sum_scaled_n(pvec3 res, float s, int n, ...)
 
     va_end(vl);
 
-    vec3_scale(&res, s);
+    vec3_scale(res, s);
 }
 
 void __cdecl vec3_component_product(pvec3 v1, cpvec3 v2)
