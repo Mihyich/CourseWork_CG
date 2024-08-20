@@ -21,33 +21,36 @@ bool LoadModel(const std::string& filePath, std::vector<Vertex>& vertices, std::
 
     if (scene && scene->mNumMeshes)
     {
-        mesh = scene->mMeshes[0];
-
-        // Извлечение вершин и нормалей
-        for (unsigned int i = 0; i < mesh->mNumVertices; ++i)
+        for (size_t t = 0; t < scene->mNumMeshes; ++t)
         {
-            vec3_set(&vertex.position, mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
-            vec3_set(&vertex.normal, mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
-            vertices.push_back(vertex);
-        }
+            mesh = scene->mMeshes[t];
 
-        // Извлечение индексов
-        for (unsigned int i = 0; i < mesh->mNumFaces; ++i)
-        {
-            aiFace& face = mesh->mFaces[i];
-            if (face.mNumIndices == 3)
+            // Извлечение вершин и нормалей
+            for (unsigned int i = 0; i < mesh->mNumVertices; ++i)
             {
-                if (CCW)
+                vec3_set(&vertex.position, mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
+                vec3_set(&vertex.normal, mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
+                vertices.push_back(vertex);
+            }
+
+            // Извлечение индексов
+            for (unsigned int i = 0; i < mesh->mNumFaces; ++i)
+            {
+                aiFace& face = mesh->mFaces[i];
+                if (face.mNumIndices == 3)
                 {
-                    indices.push_back(face.mIndices[2]);
-                    indices.push_back(face.mIndices[1]);
-                    indices.push_back(face.mIndices[0]);
-                }
-                else
-                {
-                    indices.push_back(face.mIndices[0]);
-                    indices.push_back(face.mIndices[1]);
-                    indices.push_back(face.mIndices[2]);
+                    if (CCW)
+                    {
+                        indices.push_back(face.mIndices[2]);
+                        indices.push_back(face.mIndices[1]);
+                        indices.push_back(face.mIndices[0]);
+                    }
+                    else
+                    {
+                        indices.push_back(face.mIndices[0]);
+                        indices.push_back(face.mIndices[1]);
+                        indices.push_back(face.mIndices[2]);
+                    }
                 }
             }
         }
