@@ -7,6 +7,7 @@
 
 #include "winapi_window.h"
 #include "winapi_common.h"
+#include "winapi_font_common.h"
 #include "winapi_mat_ext.h"
 
 #include "app_args.h"
