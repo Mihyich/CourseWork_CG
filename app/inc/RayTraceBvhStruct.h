@@ -40,8 +40,8 @@ struct RayTraceBVHNode
     float radius;          // Радиус Bounding Sphere
     int leftChild;         // Индекс левого дочернего узла в массиве
     int rightChild;        // Индекс правого дочернего узла в массиве
-    int triangleIndex;     // Индекс первого треугольника (или -1, если это не лист)
-    int modelIndex;        // Индекс матрицы модели для текущего узла (для использования в шейдере)
+    int triangleIndex;     // Индекс первой вершины треугольника (или -1, если это не лист)
+    int modelIndex;        // Индекс матрицы модели для текущего узла (-1, если узел не относится к мешу)
 };
 
 #endif // RAY_TRACE_BVH_STRUCT_H
