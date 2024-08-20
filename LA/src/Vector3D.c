@@ -245,6 +245,30 @@ void __cdecl vec3_sum_n(pvec3 res, int n, ...)
     va_end(vl);
 }
 
+void __cdecl vec3_sum_scaled_n(pvec3 res, float s, int n, ...)
+{
+    va_list vl;
+    cpvec3 a;
+    vec3_set(&res, 0, 0, 0);
+
+    va_start(vl, n);
+
+    while(n > 0)
+    {
+        a = va_arg(vl, cpvec3);
+
+        res->x += a->x;
+        res->y += a->y;
+        res->z += a->z;
+
+        --n;
+    }
+
+    va_end(vl);
+
+    vec3_scale(&res, s);
+}
+
 void __cdecl vec3_component_product(pvec3 v1, cpvec3 v2)
 {
     v1->x *= v2->x;

@@ -72,6 +72,8 @@ void __cdecl vec3_diff(cpvec3 v1, cpvec3 v2, pvec3 res);
 
 void __cdecl vec3_sum_n(pvec3 res, int n, ...);
 
+void __cdecl vec3_sum_scaled_n(pvec3 res, float s, int n, ...);
+
 void __cdecl vec3_component_product(pvec3 v1, cpvec3 v2);
 
 void __cdecl vec3_set_component_product(cpvec3 v1, cpvec3 v2, pvec3 res);
