@@ -17,7 +17,9 @@ struct Vertex
     vec3 normal;
 };
 
-bool LoadModel(const std::string& filePath, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, bool CCW = false);
+bool LoadModel(const std::string& filePath, std::vector<Vertex>& verteces, std::vector<unsigned int>& indices, bool CCW = false);
+
+bool LoadModel(const std::string& filePath, std::vector<vec3>& vertices, std::vector<vec3>& normales, std::vector<unsigned int>& indices, bool CCW = false);
 
 bool GenModelMesh(const std::string& filePath, GLuint &VAO, GLuint &VBO, GLuint &EBO, GLsizei &index_count, bool CCW = false);
 
