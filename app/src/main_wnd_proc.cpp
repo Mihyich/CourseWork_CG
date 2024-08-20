@@ -260,6 +260,12 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         return EXIT_SUCCESS;
     }
 
+    case WM_DESTROY:
+    {
+        KillTimer(hWnd, timerId);
+        return DefWindowProc(hWnd, uMsg, wParam, lParam);
+    }
+
     // Прочие необработанные событие делает винда сама
 	default:
 		return DefWindowProc(hWnd, uMsg, wParam, lParam);
