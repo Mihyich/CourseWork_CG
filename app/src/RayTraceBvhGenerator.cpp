@@ -1,44 +1,75 @@
 #include "RayTraceBvhGenerator.h"
 
-void RayTraceBVHTree::addMesh(const std::vector<RayTraceTriangle>& triangles, const mat4& model)
- {
+void RayTraceBVHTree::addMesh(std::vector<RayTraceTriangle>& triangles, const mat4& model, const std::string& name)
+{
     int modelIndex = models.size();
     models.push_back(model);
 
-    int subtreeRoot = buildBVH(triangles, modelIndex);
-    updateTree(subtreeRoot);
+    updateVerteces(triangles);
+
+    std::vector<RayTraceBVHNode> subTree;
+    buildSubtree(subTree, triangles, modelIndex);
+    
+    std::string resName;
+    if (!name.size())
+    {
+        ++nonameMeshes;
+        resName = "Noname mesh";
+        resName += std::to_string(nonameMeshes);
+    }
+    else
+    {
+        resName = name;
+    }
+
+    addSubTree(subTree, resName);
 }
 
-int RayTraceBVHTree::buildBVH(const std::vector<RayTraceTriangle>& triangles, int modelIndex)
+void RayTraceBVHTree::updateVerteces(std::vector<RayTraceTriangle>& triangles)
 {
-    return buildSubtree(triangles, modelIndex);
+    int newStartIndex = verteces.size() / 3;
+
+    for (auto& t : triangles)
+    {
+        verteces.push_back(t.v1);
+        verteces.push_back(t.v2);
+        verteces.push_back(t.v3);
+        t.index += newStartIndex;
+    }
 }
 
-RayTraceBS RayTraceBVHTree::computeBoundingSphere(const std::vector<RayTraceTriangle>& triangles)
+RayTraceAABB RayTraceBVHTree::computeAxisAlignBoundingBox(const std::vector<RayTraceTriangle>& triangles) const
 {
-    vec3 minPos;
-    vec3 maxPos;
+    vec3 min;
+    vec3 max;
+
+    for (const auto& t : triangles)
+    {
+        vec3_min_n(&min, 3, &t.v1.p, &t.v2.p, &t.v3.p);
+        vec3_max_n(&max, 3, &t.v1.p, &t.v2.p, &t.v3.p);
+    }
+
+    return RayTraceAABB {min, max};
+}
+
+RayTraceBS RayTraceBVHTree::computeBoundingSphere(const std::vector<RayTraceTriangle>& triangles) const
+{
+    RayTraceAABB RTAABB = computeAxisAlignBoundingBox(triangles);
 
     vec3 center;
     vec3 dist;
     float radius;
 
-    for (const auto& t : triangles)
-    {
-        vec3_min_n(&minPos, 3, &t.v1.p, &t.v2.p, &t.v3.p);
-        vec3_max_n(&maxPos, 3, &t.v1.p, &t.v2.p, &t.v3.p);
-    }
-
-    vec3_sum(&minPos, &maxPos, &center);
+    vec3_sum(&RTAABB.min, &RTAABB.max, &center);
     vec3_scale(&center, 0.5f);
 
-    vec3_diff(&maxPos, &center, &dist);
+    vec3_diff(&RTAABB.max, &center, &dist);
     radius = vec3_magnitude(&dist);
 
-    return {center, radius};
+    return RayTraceBS {center, radius};
 }
 
-RayTraceBS RayTraceBVHTree::computeBoundingSphere(const RayTraceBVHNode& node1, const RayTraceBVHNode& node2)
+RayTraceBS RayTraceBVHTree::computeBoundingSphere(const RayTraceBVHNode& node1, const RayTraceBVHNode& node2) const
 {
     vec3 center;
     vec3 dist;
@@ -55,39 +86,99 @@ RayTraceBS RayTraceBVHTree::computeBoundingSphere(const RayTraceBVHNode& node1, 
 void RayTraceBVHTree::splitTriangles(
     const std::vector<RayTraceTriangle>& triangles,
     std::vector<RayTraceTriangle>& leftTriangles,
-    std::vector<RayTraceTriangle>& rightTriangles)
+    std::vector<RayTraceTriangle>& rightTriangles) const
 {
-    // Простейшее разделение: по оси X (можно улучшить)
-    std::vector<vec3> centers;
-    vec3 center;
-    float median = 0.0f;
-
-    for (const auto& tri : triangles)
+    // Если меньше 4 треугольников - деление пополам
+    if (triangles.size() <= 4)
     {
-        vec3_sum_scaled_n(&center, 1.f / 3.f, 3, &tri.v1.p, &tri.v2.p, &tri.v3.p);
-        centers.push_back(center);
+        size_t mid = triangles.size() / 2;
+        leftTriangles.insert(leftTriangles.end(), triangles.begin(), triangles.begin() + mid);
+        rightTriangles.insert(rightTriangles.end(), triangles.begin() + mid, triangles.end());
+        return;
     }
-
-    for (const auto& center : centers)
+    else
     {
-        median += center.x;
-    }
-    median /= centers.size();
+        // Bounding Box всех треугольников
+        RayTraceAABB RTAABB = computeAxisAlignBoundingBox(triangles);
 
-    for (size_t i = 0; i < triangles.size(); ++i)
-    {
-        if (centers[i].x < median)
+        // Самая длинная ось
+        vec3 size;
+        int axis = 0;
+
+        // Медиана и среднее значение вдоль выбранной оси
+        std::vector<float> centroids;
+        float centroid;
+        float sum = 0.0f;
+        float average;
+
+        std::vector<int> leftIndices, rightIndices;
+        float median;
+
+        vec3_diff(&RTAABB.max, &RTAABB.min, &size);
+        if (size.y > size.x && size.y > size.z) axis = 1;
+        else if (size.z > size.x) axis = 2;
+
+        for (const auto& tri : triangles)
         {
-            leftTriangles.push_back(triangles[i]);
+            centroid = (*(&tri.v1.p.x + axis) + *(&tri.v2.p.x + axis) + *(&tri.v3.p.x + axis)) / 3.0f;
+            centroids.push_back(centroid);
+            sum += centroid;
         }
-        else
+        average = sum / centroids.size();
+        
+        median = centroids[triangles.size() / 2];
+        
+        for (size_t i = 0; i < triangles.size(); ++i)
         {
-            rightTriangles.push_back(triangles[i]);
+            if (centroids[i] < median)
+                leftIndices.push_back(i);
+            else
+                rightIndices.push_back(i);
+        }
+
+        // Если одно из делений пустое - деление по среднему
+        if (leftIndices.empty() || rightIndices.empty())
+        {
+            leftIndices.clear();
+            rightIndices.clear();
+
+            for (size_t i = 0; i < triangles.size(); ++i)
+            {
+                if (centroids[i] < average)
+                    leftIndices.push_back(i);
+                else
+                    rightIndices.push_back(i);
+            }
+        }
+
+        // Если одно из делений пустое - деление пополам
+        if (leftIndices.empty() || rightIndices.empty()) {
+            leftIndices.clear();
+            rightIndices.clear();
+            size_t mid = triangles.size() / 2;
+
+            for (size_t i = 0; i < triangles.size(); ++i)
+            {
+                if (i < mid)
+                    leftIndices.push_back(i);
+                else
+                    rightIndices.push_back(i);
+            }
+        }
+
+        // Заполнение
+        for (int index : leftIndices)
+        {
+            leftTriangles.push_back(triangles[index]);
+        }
+        for (int index : rightIndices)
+        {
+            rightTriangles.push_back(triangles[index]);
         }
     }
 }
 
-int RayTraceBVHTree::buildSubtree(const std::vector<RayTraceTriangle>& triangles, int modelIndex)
+int RayTraceBVHTree::buildSubtree(std::vector<RayTraceBVHNode>& root, const std::vector<RayTraceTriangle>& triangles, int modelIndex) const
 {
     RayTraceBVHNode RTnode;
     RayTraceBS RTBS;
@@ -99,66 +190,132 @@ int RayTraceBVHTree::buildSubtree(const std::vector<RayTraceTriangle>& triangles
     std::vector<RayTraceTriangle> leftTriangles;
     std::vector<RayTraceTriangle> rightTriangles;
 
-    // Листовой узел: содержит треугольник
+    // Листовой узел: содержит только 1 треугольник
     if (triangles.size() == 1)
     {
         RTBS = computeBoundingSphere(triangles);
 
         RTnode.center = RTBS.c;
         RTnode.radius = RTBS.r;
-        // RTnode.triangleIndex = triangles[0].index;
+        RTnode.leftChild = -1; // Нет потомков
+        RTnode.rightChild = -1; // Нет потомков
+        RTnode.triangleIndex = triangles[0].index;
         RTnode.modelIndex = modelIndex;
 
-        nodes.push_back(RTnode);
-        return nodes.size() - 1;
+        root.push_back(RTnode);
+        return  root.size() - 1;
     }
 
-    // Разделить треугольники на две группы (например, по медиане)
+    // Разделить треугольники
     splitTriangles(triangles, leftTriangles, rightTriangles);
 
-    currentIndex = nodes.size();
-    nodes.push_back(RayTraceBVHNode{});
+    currentIndex =  root.size();
+    root.push_back(RayTraceBVHNode{});
 
-    // Рекурсивно строим дочерние узлы
-    leftChildIndex = buildSubtree(leftTriangles, modelIndex);
-    rightChildIndex = buildSubtree(rightTriangles, modelIndex);
+    // Строительство дочерних узлов
+    leftChildIndex = buildSubtree(root, leftTriangles, modelIndex);
+    rightChildIndex = buildSubtree(root, rightTriangles, modelIndex);
 
-    // Заполняем текущий узел
+    // Заполнение текущего узла
     RTBS = computeBoundingSphere(triangles);
-    RTnode.leftChild = leftChildIndex;
-    RTnode.rightChild = rightChildIndex;
     RTnode.center = RTBS.c;
     RTnode.radius = RTBS.r;
-    RTnode.triangleIndex = -1; // Указываем, что это не листовой узел
+    RTnode.leftChild = leftChildIndex;
+    RTnode.rightChild = rightChildIndex;
+    RTnode.triangleIndex = -1; // Не листовой узел
+    RTnode.modelIndex = modelIndex;
 
-    nodes[currentIndex] = RTnode;
+    root[currentIndex] = RTnode;
     return currentIndex;
 }
 
-void RayTraceBVHTree::updateTree(int newSubtreeRoot)
+void RayTraceBVHTree::addSubTree(const std::vector<RayTraceBVHNode>& root, const std::string& name)
 {
-    // Если дерево пустое, просто добавляем новый поддерево как корень
+    // Исходное дерево пустое
     if (nodes.empty())
     {
-        nodes.push_back(nodes[newSubtreeRoot]);
+        // 1. Скопировать поддерево
+        nodes = root;
+
+        // 2. Сохранить новый меш
+        meshes.insert(std::make_pair(name, 0));
     }
-    // Если дерево не пустое, объединяем новое поддерево с существующим
+    // В нем присутсвуют другие меши
     else
     {
-        int oldRoot = 0; // Текущий корень дерева
-        int newRoot = nodes.size();
-        nodes.push_back(RayTraceBVHNode{});
+        int newStartIndexForSubTree; // Новый начальный индекс для добавляемого поддерева в основном массиве
+        RayTraceBS RTBS;
 
-        // Определение нового Bounding Sphere для нового корня
-        RayTraceBVHNode newNode;
-        newNode.leftChild = oldRoot;
-        newNode.rightChild = newSubtreeRoot;
+        // 1. Сместить все существующие узлы на одну позицию вправо
+        nodes.insert(nodes.begin(), RayTraceBVHNode{});
 
-        RayTraceBS newSphere = computeBoundingSphere(nodes[oldRoot], nodes[newSubtreeRoot]);
-        newNode.center = newSphere.c;
-        newNode.radius = newSphere.r;
-        newNode.triangleIndex = -1;
+        // 2. Обноить индексы смещенных узлов
+        for (size_t i = 1; i < nodes.size(); ++i)
+        {
+            if (nodes[i].leftChild != -1) nodes[i].leftChild += 1;
+            if (nodes[i].rightChild != -1) nodes[i].rightChild += 1;
+        }
 
-        nodes[newRoot] = newNode;
+        // 3. Добавить новое поддерево в конец
+        newStartIndexForSubTree = nodes.size();
+        nodes.insert(nodes.end(), root.begin(), root.end());
+
+        // 4. Обновить индексы в новом поддереве
+        for (size_t i = newStartIndexForSubTree; i < nodes.size(); ++i)
+        {
+            if (nodes[i].leftChild != -1) nodes[i].leftChild += newStartIndexForSubTree;
+            if (nodes[i].rightChild != -1) nodes[i].rightChild += newStartIndexForSubTree;
+        }
+
+        // 5. Обновить первый узел как новый корень дерева
+        RTBS = computeBoundingSphere(nodes[1], nodes[newStartIndexForSubTree]);
+        nodes[0].center = RTBS.c;
+        nodes[0].radius = RTBS.r;
+        nodes[0].leftChild = 1; // Старый корень теперь смещен вправо
+        nodes[0].rightChild = newStartIndexForSubTree; // Корень нового поддерева
+        nodes[0].triangleIndex = -1; // это не листовой узел
+        nodes[0].modelIndex = -1; // единичная матрица (ну или просто трансформации)
+
+        // 6. Обновить ссылочные данные на корневые узлы мешей в массиве
+        for (auto& m : meshes) { ++m.second; }
+
+        // 7. Сохранить новый меш
+        meshes.insert(std::make_pair(name, newStartIndexForSubTree));
     }
+}
+
+void RayTraceBVHTree::writeBVHTreeToDot(const std::vector<RayTraceBVHNode>& nodes, const std::string& filename)
+{
+    std::ofstream file(filename);
+    if (!file.is_open())
+    {
+        std::cout << "Error opening file: " << filename << std::endl;
+        return;
+    }
+
+    file << "digraph BVHTree {\n";
+    file << "  node [shape=box];\n";
+
+    for (size_t i = 0; i < nodes.size(); ++i)
+    {
+        const auto& node = nodes[i];
+        file << "  " << i << " [label=\"Node " << i
+             << "\\nCenter: (" << node.center.x << ", " << node.center.y << ", " << node.center.z << ")"
+             << "\\nRadius: " << node.radius
+             << "\\nTriangleIndex: " << node.triangleIndex
+             << "\\nModelIndex: " << node.modelIndex
+             << "\"];\n";
+
+        if (node.leftChild != -1)
+        {
+            file << "  " << i << " -> " << node.leftChild << " [label=\"left\"];\n";
+        }
+        if (node.rightChild != -1)
+        {
+            file << "  " << i << " -> " << node.rightChild << " [label=\"right\"];\n";
+        }
+    }
+
+    file << "}\n";
+    file.close();
 }

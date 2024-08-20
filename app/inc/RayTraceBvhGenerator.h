@@ -1,34 +1,48 @@
 #ifndef RAY_TRACE_BVH_GENERATOR_H
 #define RAY_TRACE_BVH_GENERATOR_H
 
+#include <iostream>
+#include <fstream>
+#include <string>
 #include <vector>
+#include <map>
 
 #include "RayTraceBvhStruct.h"
 #include "Matrix4D.h"
 
 class RayTraceBVHTree
 {
-public:
+private:
     std::vector<RayTraceBVHNode> nodes;
+    std::vector<RayTraceVertex> verteces;
     std::vector<mat4> models;
+    std::map<std::string, int> meshes;
+    int nonameMeshes = 0;
 
-    void addMesh(const std::vector<RayTraceTriangle>& triangles, const mat4& model);
+public:
+
+    void addMesh(std::vector<RayTraceTriangle>& triangles, const mat4& model, const std::string& name);
 
 private:
-    int buildBVH(const std::vector<RayTraceTriangle>& triangles, int modelIndex);
+    void updateVerteces(std::vector<RayTraceTriangle>& triangles);
 
-    RayTraceBS computeBoundingSphere(const std::vector<RayTraceTriangle>& triangles);
+    RayTraceAABB computeAxisAlignBoundingBox(const std::vector<RayTraceTriangle>& triangles) const;
 
-    RayTraceBS computeBoundingSphere(const RayTraceBVHNode& node1, const RayTraceBVHNode& node2);
+    RayTraceBS computeBoundingSphere(const std::vector<RayTraceTriangle>& triangles) const;
+
+    RayTraceBS computeBoundingSphere(const RayTraceBVHNode& node1, const RayTraceBVHNode& node2) const;
 
     void splitTriangles(
         const std::vector<RayTraceTriangle>& triangles,
         std::vector<RayTraceTriangle>& leftTriangles,
-        std::vector<RayTraceTriangle>& rightTriangles);
+        std::vector<RayTraceTriangle>& rightTriangles) const;
 
-    int buildSubtree(const std::vector<RayTraceTriangle>& triangles, int modelIndex);
+    int buildSubtree(std::vector<RayTraceBVHNode>& root, const std::vector<RayTraceTriangle>& triangles, int modelIndex) const;
 
-    void updateTree(int newSubtreeRoot);
+    void addSubTree(const std::vector<RayTraceBVHNode>& root, const std::string& name);
+
+public:
+    void writeBVHTreeToDot(const std::vector<RayTraceBVHNode>& nodes, const std::string& filename);
 };
 
 #endif // RAY_TRACE_BVH_GENERATOR_H
