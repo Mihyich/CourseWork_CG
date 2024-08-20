@@ -30,7 +30,7 @@ public:
     WinApiGLWindow();
     ~WinApiGLWindow();
 
-    BOOL CreateOpenGLContext(int samples = 0);
+    BOOL CreateOpenGLContext();
 
     VOID Destroy() override;
 

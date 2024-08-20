@@ -30,13 +30,11 @@ WinApiGLWindow::~WinApiGLWindow()
     reset_and_free_data();
 }
 
-BOOL WinApiGLWindow::CreateOpenGLContext(int samples)
+BOOL WinApiGLWindow::CreateOpenGLContext()
 {
     HDC hDC = NULL;
     PFNWGLCHOOSEPIXELFORMATARBPROC wglChoosePixelFormatARB = NULL;
     PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB = NULL;
-
-    UINT numFormats = 0;
 
     INT PixelFormat = 0;
     PIXELFORMATDESCRIPTOR pfd = {
