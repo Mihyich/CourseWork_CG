@@ -5,7 +5,7 @@ bool WinApiFont::is_copy(const wchar_t *font_name) const
     return fonts.find(font_name) != fonts.end();
 }
 
-HFONT WinApiFont::create_font(FontParam_ct fp) const
+HFONT WinApiFont::create_font(FontParam_ct fp)
 {
     if (!fp)
         return nullptr;
@@ -40,7 +40,7 @@ HFONT WinApiFont::create_font(int cHeight, const wchar_t *FaceName) const
         FaceName
     };
 
-    return create_font(&fp);
+    return WinApiFont::create_font(&fp);
 }
 
 HFONT WinApiFont::create_font(
@@ -78,7 +78,7 @@ HFONT WinApiFont::create_font(
         pszFaceName
     };
 
-    return create_font(&fp);
+    return WinApiFont::create_font(&fp);
 }
 
 DWORD WinApiFont::load_font(FontParam_ct fp, const wchar_t *font_name)

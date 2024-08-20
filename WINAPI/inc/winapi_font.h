@@ -15,7 +15,7 @@ private:
 
 public:
 
-    HFONT create_font(FontParam_ct fp) const;
+    static HFONT create_font(FontParam_ct fp);
 
     HFONT create_font(int cHeight, const wchar_t *FaceName) const;
 

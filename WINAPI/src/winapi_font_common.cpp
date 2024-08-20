@@ -19,14 +19,13 @@ int decrease_font_height_for_fitting_width(HDC hDc, FontParam_t fpt, const WCHAR
     HFONT CurFont = nullptr;
 
     FontParam fp = *fpt; ++fp.cHeight;
-    WinApiFont Font;
     SIZE text_size;
     const size_t text_lenght = wcslen(text);
 
     do
     {
         --fp.cHeight;
-        CurFont = Font.create_font(&fp);
+        CurFont = WinApiFont::create_font(&fp);
         OldFont = (HFONT)SelectObject(hDc, (HFONT)CurFont);
         GetTextExtentPoint32(hDc, text, text_lenght, &text_size);
         DeleteObject((HFONT)SelectObject(hDc, (HFONT)OldFont));
@@ -45,14 +44,13 @@ int decrease_font_height_for_fitting_height(HDC hDc, FontParam_t fpt, const WCHA
     HFONT CurFont = nullptr;
 
     FontParam fp = *fpt; ++fp.cHeight;
-    WinApiFont Font;
     SIZE text_size;
     const size_t text_lenght = wcslen(text);
 
     do
     {
         --fp.cHeight;
-        CurFont = Font.create_font(&fp);
+        CurFont = WinApiFont::create_font(&fp);
         OldFont = (HFONT)SelectObject(hDc, (HFONT)CurFont);
         GetTextExtentPoint32(hDc, text, text_lenght, &text_size);
         DeleteObject((HFONT)SelectObject(hDc, (HFONT)OldFont));
@@ -79,14 +77,13 @@ int increase_font_height_for_fitting_width(HDC hDc, FontParam_t fpt, const WCHAR
     HFONT CurFont = nullptr;
 
     FontParam fp = *fpt; --fp.cHeight;
-    WinApiFont Font;
     SIZE text_size;
     const size_t text_lenght = wcslen(text);
 
     do
     {
         ++fp.cHeight;
-        CurFont = Font.create_font(&fp);
+        CurFont = WinApiFont::create_font(&fp);
         OldFont = (HFONT)SelectObject(hDc, (HFONT)CurFont);
         GetTextExtentPoint32(hDc, text, text_lenght, &text_size);
         DeleteObject((HFONT)SelectObject(hDc, (HFONT)OldFont));
@@ -105,14 +102,13 @@ int increase_font_height_for_fitting_height(HDC hDc, FontParam_t fpt, const WCHA
     HFONT CurFont = nullptr;
 
     FontParam fp = *fpt; --fp.cHeight;
-    WinApiFont Font;
     SIZE text_size;
     const size_t text_lenght = wcslen(text);
 
     do
     {
         ++fp.cHeight;
-        CurFont = Font.create_font(&fp);
+        CurFont = WinApiFont::create_font(&fp);
         OldFont = (HFONT)SelectObject(hDc, (HFONT)CurFont);
         GetTextExtentPoint32(hDc, text, text_lenght, &text_size);
         DeleteObject((HFONT)SelectObject(hDc, (HFONT)OldFont));
