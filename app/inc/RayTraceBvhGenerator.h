@@ -30,6 +30,8 @@ private:
 
     RayTraceBS computeBoundingSphere(const std::vector<RayTraceTriangle>& triangles) const;
 
+    RayTraceBS computeBoundingSphere(const RayTraceBS& RTBS1, const RayTraceBS& RTBS2) const;
+
     RayTraceBS computeBoundingSphere(const RayTraceBVHNode& node1, const RayTraceBVHNode& node2) const;
 
     void splitTriangles(
@@ -42,7 +44,7 @@ private:
     void addSubTree(const std::vector<RayTraceBVHNode>& root, const std::string& name);
 
 public:
-    void writeBVHTreeToDot(const std::vector<RayTraceBVHNode>& nodes, const std::string& filename);
+    void writeBVHTreeToDot(const std::string& filename) const;
 };
 
 #endif // RAY_TRACE_BVH_GENERATOR_H

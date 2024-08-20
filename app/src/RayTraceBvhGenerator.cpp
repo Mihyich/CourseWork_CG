@@ -40,13 +40,18 @@ void RayTraceBVHTree::updateVerteces(std::vector<RayTraceTriangle>& triangles)
 
 RayTraceAABB RayTraceBVHTree::computeAxisAlignBoundingBox(const std::vector<RayTraceTriangle>& triangles) const
 {
-    vec3 min;
-    vec3 max;
+    vec3 min = {__FLT_MAX__, __FLT_MAX__, __FLT_MAX__};
+    vec3 max = {-__FLT_MAX__, -__FLT_MAX__, -__FLT_MAX__};
 
     for (const auto& t : triangles)
     {
-        vec3_min_n(&min, 3, &t.v1.p, &t.v2.p, &t.v3.p);
-        vec3_max_n(&max, 3, &t.v1.p, &t.v2.p, &t.v3.p);
+       min.x = std::min(min.x, std::min(t.v1.p.x, std::min(t.v2.p.x, t.v3.p.x)));
+       min.y = std::min(min.y, std::min(t.v1.p.y, std::min(t.v2.p.y, t.v3.p.y)));
+       min.z = std::min(min.z, std::min(t.v1.p.z, std::min(t.v2.p.z, t.v3.p.z)));
+
+       max.x = std::max(max.x, std::max(t.v1.p.x, std::max(t.v2.p.x, t.v3.p.x)));
+       max.y = std::max(max.y, std::max(t.v1.p.y, std::max(t.v2.p.y, t.v3.p.y)));
+       max.z = std::max(max.z, std::max(t.v1.p.z, std::max(t.v2.p.z, t.v3.p.z)));
     }
 
     return RayTraceAABB {min, max};
@@ -60,27 +65,34 @@ RayTraceBS RayTraceBVHTree::computeBoundingSphere(const std::vector<RayTraceTria
     vec3 dist;
     float radius;
 
-    vec3_sum(&RTAABB.min, &RTAABB.max, &center);
-    vec3_scale(&center, 0.5f);
+    vec3_sum_scaled_n(&center, 0.5f, 2, &RTAABB.min, &RTAABB.max);
 
-    vec3_diff(&RTAABB.max, &center, &dist);
-    radius = vec3_magnitude(&dist);
+    vec3_diff(&RTAABB.max, &RTAABB.min, &dist);
+    radius = vec3_magnitude(&dist) / 2.f;
+
+    return RayTraceBS {center, radius};
+}
+
+RayTraceBS RayTraceBVHTree::computeBoundingSphere(const RayTraceBS& RTBS1, const RayTraceBS& RTBS2) const
+{
+    vec3 dist;
+    vec3 center;
+    float radius;
+
+    vec3_diff(&RTBS1.c, &RTBS2.c, &dist);
+    radius = (vec3_magnitude(&dist) + RTBS1.r + RTBS2.r) / 2.f;
+
+    vec3_sum_scaled_n(&center, 0.5f, 2, &RTBS1.c, &RTBS2.c);
 
     return RayTraceBS {center, radius};
 }
 
 RayTraceBS RayTraceBVHTree::computeBoundingSphere(const RayTraceBVHNode& node1, const RayTraceBVHNode& node2) const
 {
-    vec3 center;
-    vec3 dist;
-    float radius;
+    RayTraceBS RTBS1 = {node1.center, node1.radius};
+    RayTraceBS RTBS2 = {node2.center, node2.radius};
 
-    vec3_sum(&node1.center, &node2.center, &center);
-    vec3_scale(&center, 0.5f);
-    vec3_diff(&center, &node1.center, &dist);
-    radius = vec3_magnitude(&dist) + node1.radius;
-
-    return RayTraceBS {center, radius};
+    return computeBoundingSphere(RTBS1, RTBS2);
 }
 
 void RayTraceBVHTree::splitTriangles(
@@ -284,7 +296,7 @@ void RayTraceBVHTree::addSubTree(const std::vector<RayTraceBVHNode>& root, const
     }
 }
 
-void RayTraceBVHTree::writeBVHTreeToDot(const std::vector<RayTraceBVHNode>& nodes, const std::string& filename)
+void RayTraceBVHTree::writeBVHTreeToDot(const std::string& filename) const
 {
     std::ofstream file(filename);
     if (!file.is_open())
