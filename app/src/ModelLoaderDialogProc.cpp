@@ -24,10 +24,8 @@ LRESULT CALLBACK ModelLoaderDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPAR
         {
             HDC hDc = GetDC(hDlg);
 
-            WinApiFont Fonts;
             FontParam fp;
             HFONT hFont;
-            SIZE textSize;
 
             RECT tmp_rect;
             int tmp_width = 350;
@@ -35,8 +33,6 @@ LRESULT CALLBACK ModelLoaderDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPAR
 
             int width;
             int height;
-
-            int fit_height;
 
             RECT mainRect;
             GetWindowRect(app::MainWnd.getHwnd(), &mainRect);
@@ -115,35 +111,35 @@ LRESULT CALLBACK ModelLoaderDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPAR
             GetWindowText(EditMLPathHwnd, EditMLPathText, MAX_PATH);
             fp.cHeight = 1;
             fp.cHeight = increase_font_height_for_fitting_height(hDc, &fp, EditMLPathText, 16);
-            hFont = Fonts.create_font(&fp);
+            hFont = WinApiFont::create_font(&fp);
             if (hFont) SendMessage(EditMLPathHwnd, WM_SETFONT, (WPARAM)hFont, TRUE);
 
             GetWindowRect(ButtonMLExploreHwnd, &tmp_rect);
             GetWindowText(ButtonMLExploreHwnd, tmpText, MAX_PATH);
             fp.cHeight = 1;
             fp.cHeight = increase_font_height_for_fitting(hDc, &fp, tmpText, get_rect_width(tmp_rect), 16);
-            hFont = Fonts.create_font(&fp);
+            hFont = WinApiFont::create_font(&fp);
             if (hFont) SendMessage(ButtonMLExploreHwnd, WM_SETFONT, (WPARAM)hFont, TRUE);
 
             GetWindowRect(StaticMLInverseHwnd, &tmp_rect);
             GetWindowText(StaticMLInverseHwnd, tmpText, MAX_PATH);
             fp.cHeight = 1;
             fp.cHeight = increase_font_height_for_fitting(hDc, &fp, tmpText, get_rect_width(tmp_rect), 16);
-            hFont = Fonts.create_font(&fp);
+            hFont = WinApiFont::create_font(&fp);
             if (hFont) SendMessage(StaticMLInverseHwnd, WM_SETFONT, (WPARAM)hFont, TRUE);
 
             GetWindowRect(ButtonCancelHwnd, &tmp_rect);
             GetWindowText(ButtonCancelHwnd, tmpText, MAX_PATH);
             fp.cHeight = 1;
             fp.cHeight = increase_font_height_for_fitting(hDc, &fp, tmpText, get_rect_width(tmp_rect), 16);
-            hFont = Fonts.create_font(&fp);
+            hFont = WinApiFont::create_font(&fp);
             if (hFont) SendMessage(ButtonCancelHwnd, WM_SETFONT, (WPARAM)hFont, TRUE);
 
             GetWindowRect(ButtonLoadHwnd, &tmp_rect);
             GetWindowText(ButtonLoadHwnd, tmpText, MAX_PATH);
             fp.cHeight = 1;
             fp.cHeight = increase_font_height_for_fitting(hDc, &fp, tmpText, get_rect_width(tmp_rect), 16);
-            hFont = Fonts.create_font(&fp);
+            hFont = WinApiFont::create_font(&fp);
             if (hFont) SendMessage(ButtonLoadHwnd, WM_SETFONT, (WPARAM)hFont, TRUE);
 
             ReleaseDC(hDlg, hDc);
