@@ -7,12 +7,14 @@
 #include <iostream>
 #include <vector>
 
+#include "Vector3D.h"
+
 #include "winapi_GLextensions.h"
 
 struct Vertex
 {
-    aiVector3D position;
-    aiVector3D normal;
+    vec3 position;
+    vec3 normal;
 };
 
 bool LoadModel(const std::string& filePath, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, bool CCW = false);
