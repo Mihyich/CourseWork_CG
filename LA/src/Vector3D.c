@@ -227,8 +227,8 @@ void __cdecl vec3_sum_n(pvec3 res, int n, ...)
 {
     va_list vl;
     cpvec3 a;
+    vec3_set(&res, 0, 0, 0);
 
-    memset(res, 0, sizeof(vec3));
     va_start(vl, n);
 
     while(n > 0)
