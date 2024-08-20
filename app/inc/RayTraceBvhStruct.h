@@ -10,13 +10,21 @@ struct RayTraceVertex
     vec3 n; // Нормаль
 };
 
-// Вершинные данные треугольника
+// Вершинные данные треугольника + индекс для генерации BVH
 struct RayTraceTriangle
 {
     RayTraceVertex v1; // Вершина 1
     RayTraceVertex v2; // Вершина 2
     RayTraceVertex v3; // Вершина 3
     int index; // индекс
+};
+
+// Вершинные данные треугольника для использования в шейдере
+struct RayTraceVertexTringle
+{
+    RayTraceVertex v1; // Вершина 1
+    RayTraceVertex v2; // Вершина 2
+    RayTraceVertex v3; // Вершина 3
 };
 
 // Ограничивающая сфера
