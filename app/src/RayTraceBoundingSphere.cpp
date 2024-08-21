@@ -65,15 +65,20 @@ bool isBoundingSphereInsideBoundingSphere(const RayTraceBS& outer, const RayTrac
 RayTraceBS computeBoundingSphere(const RayTraceBS& RTBS1, const RayTraceBS& RTBS2)
 {
     vec3 dist;
-    vec3 center;
-    float radius;
-
     vec3_diff(&RTBS1.c, &RTBS2.c, &dist);
-    radius = (vec3_magnitude(&dist) + RTBS1.r + RTBS2.r) / 2.f;
+    float dist_mag = vec3_magnitude(&dist);
 
-    vec3_sum_scaled_n(&center, 0.5f, 2, &RTBS1.c, &RTBS2.c);
+    if (RTBS1.r >= dist_mag + RTBS2.r) return RTBS1;
+    if (RTBS2.r >= dist_mag + RTBS1.r) return RTBS2;
 
-    return RayTraceBS {center, radius};
+    float new_radius = (dist_mag + RTBS1.r + RTBS2.r) / 2.0f;
+    float t = (new_radius - RTBS1.r) / dist_mag;
+
+    vec3 new_center;
+    vec3_scale(&dist, t);
+    vec3_sum(&RTBS1.c, &dist, &new_center);
+
+    return RayTraceBS { new_center, new_radius };
 }
 
 RayTraceBS computeBoundingSphere(const RayTraceBVHNode& node1, const RayTraceBVHNode& node2)
