@@ -400,16 +400,11 @@ int RayTraceBVHTree::getNextNodeIndex(int currentIndex) const
 
 bool RayTraceBVHTree::isTriangleInsideSphere(const RayTraceVertexTringle& triangle, const RayTraceBS& sphere) const
 {
-    return isPointInsideSphere(triangle.v1.p, sphere) &&
-           isPointInsideSphere(triangle.v2.p, sphere) &&
-           isPointInsideSphere(triangle.v3.p, sphere);
-}
+    bool v1 = isPointInsideBoundingSphere(sphere, triangle.v1.p);
+    bool v2 = isPointInsideBoundingSphere(sphere, triangle.v2.p);
+    bool v3 = isPointInsideBoundingSphere(sphere, triangle.v3.p);
 
-bool RayTraceBVHTree::isPointInsideSphere(const vec3& point, const RayTraceBS& sphere) const
-{
-    vec3 dist;
-    vec3_diff(&point, &sphere.c, &dist);
-    return vec3_square_magnitude(&dist) <= sphere.r * sphere.r;
+    return v1 && v2 && v3;
 }
 
 bool RayTraceBVHTree::isSphereInsideSphere(const RayTraceBS& inner, const RayTraceBS& outer) const

@@ -64,8 +64,6 @@ private:
     
     bool isTriangleInsideSphere(const RayTraceVertexTringle& triangle, const RayTraceBS& sphere) const;
 
-    bool isPointInsideSphere(const vec3& point, const RayTraceBS& sphere) const;
-
     bool isSphereInsideSphere(const RayTraceBS& inner, const RayTraceBS& outer) const;
 };
 
