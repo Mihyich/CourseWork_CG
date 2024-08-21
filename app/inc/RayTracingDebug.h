@@ -14,6 +14,8 @@ struct RayTracingDebugRenderData
     GLuint* MatrixSSBO;
     GLuint* BvhSSBO;
 
+    int nodeCount;
+
     GLsizei* client_width;
     GLsizei* client_height;
 
