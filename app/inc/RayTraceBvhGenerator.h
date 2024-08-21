@@ -8,6 +8,8 @@
 #include <map>
 
 #include "RayTraceTriangleStruct.h"
+#include "RayTraceBoundingSphereStruct.h"
+#include "RayTraceBoundingAabbStruct.h"
 #include "RayTraceBvhStruct.h"
 #include "Matrix4D.h"
 

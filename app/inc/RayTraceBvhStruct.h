@@ -2,7 +2,7 @@
 #define RAY_TRACE_BVH_STRUCT_H
 
 #include "Vector3D.h"
-#include "RayTraceBoundingStruct.h"
+#include "RayTraceBoundingSphereStruct.h"
 
 // Индексы дочерних узлов дерева в массиве
 struct RayTraceChildIndex
