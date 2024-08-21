@@ -34,49 +34,6 @@ void GenQuadMesh(GLuint &quadVAO, GLuint &quadVBO)
     glBindVertexArray(0);
 }
 
-void GenPlaneMesh(GLuint &planeVAO, GLuint &planeVBO, GLuint &planeEBO)
-{   
-    const float size = 20;
-
-    float planeVertices[] = {
-        // Позиции                         // Нормали
-        -0.5f * size, 0.0f, -0.5f * size,  0.0f, 1.0f, 0.0f,
-         0.5f * size, 0.0f, -0.5f * size,  0.0f, 1.0f, 0.0f,
-         0.5f * size, 0.0f,  0.5f * size,  0.0f, 1.0f, 0.0f,
-        -0.5f * size, 0.0f,  0.5f * size,  0.0f, 1.0f, 0.0f,
-    };
-
-    unsigned int planeIndices[] = {
-        0, 1, 2,
-        2, 3, 0
-    };
-
-    if (planeVAO) glDeleteVertexArrays(1, &planeVAO);
-    if (planeVBO) glDeleteBuffers(1, &planeVBO);
-    if (planeEBO) glDeleteBuffers(1, &planeEBO);
-
-    glGenVertexArrays(1, &planeVAO);
-    glGenBuffers(1, &planeVBO);
-    glGenBuffers(1, &planeEBO);
-
-    glBindVertexArray(planeVAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, planeVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(planeVertices), planeVertices, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, planeEBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(planeIndices), planeIndices, GL_STATIC_DRAW);
-
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-}
-
 void SetupOpenGLServices()
 {
     glEnable(GL_DEPTH_TEST);
@@ -100,12 +57,17 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     static ShadowMapOrthogonalRenderData RenderDataSMO;
     static ShadowMapPerspectiveRenderData RenderDataSMP;
+
     static ShadowMapPcfOrthogonalRenderData RenderDataSMOPCF;
     static ShadowMapPcfPerspectiveRenderData RenderDataSMPPCF;
+
     static ShadowMapEsmOrthogonalRenderData RenderDataSMOESM;
     static ShadowMapEsmPerspectiveRenderData RenderDataSMPESM;
+
     static ShadowMapVsmOrthogonalRenderData RenderDataSMOVSM;
     static ShadowMapVsmPerspectiveRenderData RenderDataSMPVSM;
+
+    static RayTracingDebugRenderData RenderDataRTD;
 
     static CameraMode camera_mode = ORBITTING;
     static float orbitting_x_rot = 0.0f;
@@ -137,7 +99,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static Matrix4D modelModel;
 
     static vec3 lightPos = {0, 5, 3};
-    static vec3 lightDir = {0, -1, 0};
+    // static vec3 lightDir = {0, -1, 0};
     static vec3 lightDst;
     static vec3 lightUp = {0, 1, 0};
     static mat4 lightView;
@@ -148,7 +110,12 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static float lightProjFov = degrees_to_radians(60.0f);
 
     static DepthBuffer depthBuffer = {0, 0, 0, 0};
-    static DepthBufferExp depthBufferExp = {0, 0, 0, 0};
+    static DepthBufferExp depthBufferExp = {0, 0, 0, 0, 0};
+
+    static RayTraceBVHTree BVH;
+    static GLuint VertexSSBO = 0;
+    static GLuint MatrixSSBO = 0;
+    static GLuint BvhSSBO = 0;
 
     static Shader shader;
 
@@ -178,9 +145,10 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static Shader shader_SM_VSM_P_DP; // ShadowMap (VSM) Perspective Depth Pass
     static Shader shader_SM_VSM_P_RP; // ShadowMap (VSM) Perspective Render Pass
 
+    static Shader shader_RT_BVH; // RayTracing BVH Debug
+
     switch (message)
     {
-
     case WM_INIT_GL_OPTIONS:
     {
         ZeroMemory(&RenderDataSMP, sizeof(ShadowMapPerspectiveRenderData));
@@ -191,7 +159,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         GenQuadMesh(quadVAO, quadVBO);
         mat4_set_ordinary(&quadModel);
 
-        GenPlaneMesh(planeVAO, planeVBO, planeEBO);
+        GenPlaneMesh(planeVAO, planeVBO, planeEBO, 40.f);
         mat4_set_ordinary(&planeModel);
 
         GenModelMesh("Models/Rabbit.obj", modelVAO, modelVBO, modelEBO, modelIndexCount, true);
@@ -205,6 +173,25 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         GenDepthFrameBuffer(depthBuffer, 1920, 1080);
         GenExpDepthFrameBuffer(depthBufferExp, 1920, 1080);
+
+        mat4 m;
+        std::vector<vec3> vertices;
+        std::vector<vec3> normales;
+        std::vector<unsigned int> indeces;
+        std::vector<RayTraceTriangle> triangles;
+        
+        mat4_set_ordinary(&m);
+        genPlaneMeshVNI(vertices, normales, indeces, 20.f);
+        genRayTraceTriangles(triangles, vertices, normales, indeces);
+        BVH.addMesh(triangles, m, "Plane");
+
+        LoadModel("Models/Rabbit.obj", vertices, normales, indeces, true);
+        genRayTraceTriangles(triangles, vertices, normales, indeces);
+        BVH.addMesh(triangles, modelModel, "Rabbit");
+
+        genRayTraceVertexSSBO(BVH.getVerteces(), VertexSSBO);
+        genRayTraceMatrixSSBO(BVH.getMatrices(), MatrixSSBO);
+        genRayTraceBvhSSBO(BVH.getBvh(), BvhSSBO);
 
         SetupOpenGLServices();
 
@@ -387,6 +374,18 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_VSM_P_RP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
         shader_SM_VSM_P_RP.delete_shader(GL_VERTEX_SHADER);
         shader_SM_VSM_P_RP.delete_shader(GL_FRAGMENT_SHADER);
+
+        shader_RT_BVH.set_shader_name("Shaders/RayTraceBvhDebug");
+        shader_RT_BVH.create_from_file("Shaders/RayTraceBvhDebug/vert.glsl", GL_VERTEX_SHADER);
+        shader_RT_BVH.create_from_file("Shaders/RayTraceBvhDebug/geom.glsl", GL_GEOMETRY_SHADER);
+        shader_RT_BVH.create_from_file("Shaders/RayTraceBvhDebug/frag.glsl", GL_FRAGMENT_SHADER);
+        shader_RT_BVH.link_program();
+        shader_RT_BVH.init_uniforms_and_attribs();
+        shader_RT_BVH.print_uniforms_and_attribs();
+        shader_RT_BVH.report(REPORT_VS | REPORT_GS | REPORT_FS | REPORT_PROG);
+        shader_RT_BVH.delete_shader(GL_VERTEX_SHADER);
+        shader_RT_BVH.delete_shader(GL_GEOMETRY_SHADER);
+        shader_RT_BVH.delete_shader(GL_FRAGMENT_SHADER);
 
         shader.use();
         uniform_matrix4f(shader.get_uniform_location("model"), &planeModel);
@@ -738,6 +737,19 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     RenderDataSMPVSM.modelModel =  &modelModel;
                     break;
                 }
+
+                case RAY_TRACING_DEBUG:
+                {
+                    RenderDataRTD.VertexSSBO = &VertexSSBO;
+                    RenderDataRTD.MatrixSSBO = &MatrixSSBO;
+                    RenderDataRTD.BvhSSBO = &BvhSSBO;
+                    RenderDataRTD.client_width = &client_width;
+                    RenderDataRTD.client_height = &client_height;
+                    RenderDataRTD.shader = &shader_RT_BVH;
+                    RenderDataRTD.view = &view;
+                    RenderDataRTD.projection = &projection;
+                    break;
+                }
                 
                 default:
                     break;
@@ -901,6 +913,12 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 ShadowMapVsmPerspectiveDebug(RenderDataSMPVSM);
                 break;
             }
+
+            case RAY_TRACING_DEBUG:
+            {
+                RayTracingDrawBvh(RenderDataRTD);
+                break;
+            }
             
             default:
                 break;
@@ -950,6 +968,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_VSM_O_RP.delete_program();
         shader_SM_VSM_P_DP.delete_program();
         shader_SM_VSM_P_RP.delete_program();
+        shader_RT_BVH.delete_program();
 
         PostQuitMessage(0);
         return DefWindowProc(hWnd, message, wParam, lParam);

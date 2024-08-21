@@ -4,31 +4,50 @@
 #include <windows.h>
 #include <math.h>
 
+
 #include "shader.h"
 #include "shader_extensions.h"
+
 
 #include "Vector3D.h"
 #include "Matrix4D.h"
 #include "Quaternion.h"
 
-#include "ModelLoader.h"
 
 #include "winapi_GLextensions.h"
 #include "winapi_mat_ext.h"
 #include "winapi_char_converter.h"
 
+
+#include "ModelLoader.h"
+#include "PlaneMeshGenerator.h"
+
+
+#include "RayTraceBvhStruct.h"
+#include "RayTraceTrianglesGenerator.h"
+#include "RayTraceBvhGenerator.h"
+#include "RayTraceBufferGenerator.h"
+
+
 #include "DepthBufferGenerator.h"
 #include "DepthBufferExpGenerator.h"
 
+
 #include "ShadowAlgEnum.h"
+
 #include "ShadowMapOrthogonal.h"
 #include "ShadowMapPerspective.h"
+
 #include "ShadowMapPcfOrthogonal.h"
 #include "ShadowMapPcfPerspective.h"
+
 #include "ShadowMapEsmOrthogonal.h"
 #include "ShadowMapEsmPerspective.h"
+
 #include "ShadowMapVsmOrthogonal.h"
 #include "ShadowMapVsmPerspective.h"
+
+#include "RayTracingDebug.h"
 
 #include "app_args.h"
 #include "user_msgs.h"
