@@ -189,6 +189,21 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         genRayTraceTriangles(triangles, vertices, normales, indeces);
         BVH.addMesh(triangles, modelModel, "Rabbit");
 
+        if (!BVH.checkLinkRanges())
+        {
+            printf("!!!\nBVH tree has error linking ranges\n!!!\n");
+        }
+        
+        if (!BVH.checkCycles())
+        {
+            printf("!!!\nBVH tree has cycles\n!!!\n");
+        }
+
+        if (!BVH.checkBoundingSpheres())
+        {
+            printf("!!!\nBVH tree has incorrect bounding spheres\n!!!\n");
+        }
+
         genRayTraceVertexSSBO(BVH.getVerteces(), VertexSSBO);
         genRayTraceMatrixSSBO(BVH.getMatrices(), MatrixSSBO);
         genRayTraceBvhSSBO(BVH.getBvh(), BvhSSBO);
