@@ -45,6 +45,12 @@ private:
     void addSubTree(const std::vector<RayTraceBVHNode>& root, const std::string& name);
 
 public:
+    const std::vector<RayTraceVertexTringle>& getVerteces() const;
+
+    const std::vector<mat4>& getMatrices() const;
+
+    const std::vector<RayTraceBVHNode>& getBvh() const;
+
     void writeBVHTreeToDot(const std::string& filename) const;
 };
 

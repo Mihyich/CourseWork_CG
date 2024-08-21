@@ -300,6 +300,21 @@ void RayTraceBVHTree::addSubTree(const std::vector<RayTraceBVHNode>& root, const
     }
 }
 
+const std::vector<RayTraceVertexTringle>& RayTraceBVHTree::getVerteces() const
+{
+    return this->verteces;
+}
+
+const std::vector<mat4>& RayTraceBVHTree::getMatrices() const
+{
+    return this->models;
+}
+
+const std::vector<RayTraceBVHNode>& RayTraceBVHTree::getBvh() const
+{
+    return this->nodes;
+}
+
 void RayTraceBVHTree::writeBVHTreeToDot(const std::string& filename) const
 {
     std::ofstream file(filename);
