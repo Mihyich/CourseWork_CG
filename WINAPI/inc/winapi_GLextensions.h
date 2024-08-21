@@ -50,6 +50,7 @@ extern PFNGLBINDVERTEXARRAYPROC glBindVertexArray;
 extern PFNGLGENBUFFERSPROC glGenBuffers;
 extern PFNGLDELETEBUFFERSPROC glDeleteBuffers;
 extern PFNGLBINDBUFFERPROC glBindBuffer;
+extern PFNGLBINDBUFFERBASEPROC glBindBufferBase;
 extern PFNGLBUFFERDATAPROC glBufferData;
 extern PFNGLBUFFERSUBDATAPROC glBufferSubData;
 // Кадровый буфер
