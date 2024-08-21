@@ -61,8 +61,6 @@ public:
 
 private:
     int getNextNodeIndex(int currentIndex) const;
-    
-    bool isTriangleInsideSphere(const RayTraceVertexTringle& triangle, const RayTraceBS& sphere) const;
 
     bool isSphereInsideSphere(const RayTraceBS& inner, const RayTraceBS& outer) const;
 };

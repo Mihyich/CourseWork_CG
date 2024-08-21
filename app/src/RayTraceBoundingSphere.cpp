@@ -7,6 +7,15 @@ bool isPointInsideBoundingSphere(const RayTraceBS& RTBS, const vec3& p)
     return vec3_square_magnitude(&dist) <= RTBS.r * RTBS.r;
 }
 
+bool isTriangleInsideBoundingSphere(const RayTraceBS& RTBS, const RayTraceVertexTringle& triangle)
+{
+    bool v1 = isPointInsideBoundingSphere(RTBS, triangle.v1.p);
+    bool v2 = isPointInsideBoundingSphere(RTBS, triangle.v2.p);
+    bool v3 = isPointInsideBoundingSphere(RTBS, triangle.v3.p);
+
+    return v1 && v2 && v3;
+}
+
 void expandBoundingSphereToInclude(RayTraceBS& RTBS, const vec3& p)
 {
     if (isPointInsideBoundingSphere(RTBS, p))

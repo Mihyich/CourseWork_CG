@@ -360,7 +360,7 @@ bool RayTraceBVHTree::checkBoundingSpheres() const
     {
         if (node.DI.triangle >= 0)
         {
-            if (!isTriangleInsideSphere(verteces[node.DI.triangle], node.BS))
+            if (!isTriangleInsideBoundingSphere(node.BS, verteces[node.DI.triangle]))
                 return false;
         }
         else if (node.DI.matrix >= 0)
@@ -396,15 +396,6 @@ int RayTraceBVHTree::getNextNodeIndex(int currentIndex) const
 
     // Нет дочерних
     return -1;
-}
-
-bool RayTraceBVHTree::isTriangleInsideSphere(const RayTraceVertexTringle& triangle, const RayTraceBS& sphere) const
-{
-    bool v1 = isPointInsideBoundingSphere(sphere, triangle.v1.p);
-    bool v2 = isPointInsideBoundingSphere(sphere, triangle.v2.p);
-    bool v3 = isPointInsideBoundingSphere(sphere, triangle.v3.p);
-
-    return v1 && v2 && v3;
 }
 
 bool RayTraceBVHTree::isSphereInsideSphere(const RayTraceBS& inner, const RayTraceBS& outer) const
