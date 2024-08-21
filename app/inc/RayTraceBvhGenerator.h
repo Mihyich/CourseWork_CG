@@ -7,11 +7,15 @@
 #include <vector>
 #include <map>
 
+#include "Vector3D.h"
+#include "Matrix4D.h"
+
 #include "RayTraceTriangleStruct.h"
 #include "RayTraceBoundingSphereStruct.h"
 #include "RayTraceBoundingAabbStruct.h"
 #include "RayTraceBvhStruct.h"
-#include "Matrix4D.h"
+
+#include "RayTraceBoundingAabb.h"
 
 class RayTraceBVHTree
 {
@@ -29,8 +33,6 @@ public:
 
 private:
     void updateVerteces(std::vector<RayTraceTriangle>& triangles);
-
-    RayTraceAABB computeAxisAlignBoundingBox(const std::vector<RayTraceTriangle>& triangles) const;
 
     RayTraceBS computeBoundingSphere(const std::vector<RayTraceTriangle>& triangles) const;
 
