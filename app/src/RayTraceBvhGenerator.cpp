@@ -93,10 +93,7 @@ RayTraceBS RayTraceBVHTree::computeBoundingSphere(const RayTraceBS& RTBS1, const
 
 RayTraceBS RayTraceBVHTree::computeBoundingSphere(const RayTraceBVHNode& node1, const RayTraceBVHNode& node2) const
 {
-    RayTraceBS RTBS1 = {node1.center, node1.radius};
-    RayTraceBS RTBS2 = {node2.center, node2.radius};
-
-    return computeBoundingSphere(RTBS1, RTBS2);
+    return computeBoundingSphere(node1.BS, node2.BS);
 }
 
 void RayTraceBVHTree::splitTriangles(
@@ -197,7 +194,6 @@ void RayTraceBVHTree::splitTriangles(
 int RayTraceBVHTree::buildSubtree(std::vector<RayTraceBVHNode>& root, const std::vector<RayTraceTriangle>& triangles, int modelIndex) const
 {
     RayTraceBVHNode RTnode;
-    RayTraceBS RTBS;
 
     int currentIndex;
     int leftChildIndex;
@@ -209,14 +205,9 @@ int RayTraceBVHTree::buildSubtree(std::vector<RayTraceBVHNode>& root, const std:
     // Листовой узел: содержит только 1 треугольник
     if (triangles.size() == 1)
     {
-        RTBS = computeBoundingSphere(triangles);
-
-        RTnode.center = RTBS.c;
-        RTnode.radius = RTBS.r;
-        RTnode.leftChild = -1; // Нет потомков
-        RTnode.rightChild = -1; // Нет потомков
-        RTnode.triangleIndex = triangles[0].index;
-        RTnode.modelIndex = modelIndex;
+        RTnode.BS = computeBoundingSphere(triangles);
+        RTnode.CI = { -1, -1 }; // Нет потомков
+        RTnode.DI = { triangles[0].index, modelIndex };
 
         root.push_back(RTnode);
         return  root.size() - 1;
@@ -233,13 +224,9 @@ int RayTraceBVHTree::buildSubtree(std::vector<RayTraceBVHNode>& root, const std:
     rightChildIndex = buildSubtree(root, rightTriangles, modelIndex);
 
     // Заполнение текущего узла
-    RTBS = computeBoundingSphere(triangles);
-    RTnode.center = RTBS.c;
-    RTnode.radius = RTBS.r;
-    RTnode.leftChild = leftChildIndex;
-    RTnode.rightChild = rightChildIndex;
-    RTnode.triangleIndex = -1; // Не листовой узел
-    RTnode.modelIndex = modelIndex;
+    RTnode.BS = computeBoundingSphere(triangles);
+    RTnode.CI = { leftChildIndex, rightChildIndex };
+    RTnode.DI = { -1, modelIndex }; // Не листовой узел
 
     root[currentIndex] = RTnode;
     return currentIndex;
@@ -260,7 +247,6 @@ void RayTraceBVHTree::addSubTree(const std::vector<RayTraceBVHNode>& root, const
     else
     {
         int newStartIndexForSubTree; // Новый начальный индекс для добавляемого поддерева в основном массиве
-        RayTraceBS RTBS;
 
         // 1. Сместить все существующие узлы на одну позицию вправо
         nodes.insert(nodes.begin(), RayTraceBVHNode{});
@@ -268,8 +254,8 @@ void RayTraceBVHTree::addSubTree(const std::vector<RayTraceBVHNode>& root, const
         // 2. Обноить индексы смещенных узлов
         for (size_t i = 1; i < nodes.size(); ++i)
         {
-            if (nodes[i].leftChild != -1) nodes[i].leftChild += 1;
-            if (nodes[i].rightChild != -1) nodes[i].rightChild += 1;
+            if (nodes[i].CI.left != -1) nodes[i].CI.left += 1;
+            if (nodes[i].CI.right != -1) nodes[i].CI.right += 1;
         }
 
         // 3. Добавить новое поддерево в конец
@@ -279,18 +265,16 @@ void RayTraceBVHTree::addSubTree(const std::vector<RayTraceBVHNode>& root, const
         // 4. Обновить индексы в новом поддереве
         for (size_t i = newStartIndexForSubTree; i < nodes.size(); ++i)
         {
-            if (nodes[i].leftChild != -1) nodes[i].leftChild += newStartIndexForSubTree;
-            if (nodes[i].rightChild != -1) nodes[i].rightChild += newStartIndexForSubTree;
+            if (nodes[i].CI.left != -1) nodes[i].CI.left += newStartIndexForSubTree;
+            if (nodes[i].CI.right != -1) nodes[i].CI.right += newStartIndexForSubTree;
         }
 
         // 5. Обновить первый узел как новый корень дерева
-        RTBS = {0, 0, 0, 0}; // Узел не в меше, ограничивающий объем не нужен
-        nodes[0].center = RTBS.c;
-        nodes[0].radius = RTBS.r;
-        nodes[0].leftChild = 1; // Старый корень теперь смещен вправо
-        nodes[0].rightChild = newStartIndexForSubTree; // Корень нового поддерева
-        nodes[0].triangleIndex = -1; // это не листовой узел
-        nodes[0].modelIndex = -1; // Узел не в меше, матрица не нужна
+        nodes[0].BS = { 0, 0, 0, 0 }; // Узел не в меше, ограничивающий объем не нужен
+        nodes[0].CI.left = 1; // Старый корень теперь смещен вправо
+        nodes[0].CI.right = newStartIndexForSubTree; // Корень нового поддерева
+        nodes[0].DI.triangle = -1; // это не листовой узел
+        nodes[0].DI.matrix = -1; // Узел не в меше, матрица не нужна
 
         // 6. Обновить ссылочные данные на корневые узлы мешей в массиве
         for (auto& m : meshes) { ++m.second; }
@@ -331,19 +315,19 @@ void RayTraceBVHTree::writeBVHTreeToDot(const std::string& filename) const
     {
         const auto& node = nodes[i];
         file << "  " << i << " [label=\"Node " << i
-             << "\\nCenter: (" << node.center.x << ", " << node.center.y << ", " << node.center.z << ")"
-             << "\\nRadius: " << node.radius
-             << "\\nTriangleIndex: " << node.triangleIndex
-             << "\\nModelIndex: " << node.modelIndex
+             << "\\nCenter: (" << node.BS.c.x << ", " << node.BS.c.y << ", " << node.BS.c.z << ")"
+             << "\\nRadius: " << node.BS.r
+             << "\\nTriangleIndex: " << node.DI.triangle
+             << "\\nModelIndex: " << node.DI.matrix
              << "\"];\n";
 
-        if (node.leftChild != -1)
+        if (node.CI.left != -1)
         {
-            file << "  " << i << " -> " << node.leftChild << " [label=\"left\"];\n";
+            file << "  " << i << " -> " << node.CI.left << " [label=\"left\"];\n";
         }
-        if (node.rightChild != -1)
+        if (node.CI.right != -1)
         {
-            file << "  " << i << " -> " << node.rightChild << " [label=\"right\"];\n";
+            file << "  " << i << " -> " << node.CI.right << " [label=\"right\"];\n";
         }
     }
 

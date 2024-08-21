@@ -41,15 +41,26 @@ struct RayTraceAABB
     vec3 max; // Правый верхний дальний угол
 };
 
+// Индексы дочерних узлов дерева в массиве
+struct RayTraceChildIndex
+{
+    int left;  // Индекс левого дочернего узла в массиве
+    int right; // Индекс правого дочернего узла в массиве
+};
+
+// Индексы треугольников и матриц в отдельных массивах
+struct RayTraceDataIndex
+{
+    int triangle; // Индекс треугольника (или -1, если это не лист)
+    int matrix;   // Индекс матрицы (-1, если узел не относится к мешу)
+};
+
 // Bounding Volume Hierarchy
 struct RayTraceBVHNode
 {
-    vec3 center;           // Центр Bounding Sphere
-    float radius;          // Радиус Bounding Sphere
-    int leftChild;         // Индекс левого дочернего узла в массиве
-    int rightChild;        // Индекс правого дочернего узла в массиве
-    int triangleIndex;     // Индекс первой вершины треугольника (или -1, если это не лист)
-    int modelIndex;        // Индекс матрицы модели для текущего узла (-1, если узел не относится к мешу)
+    RayTraceBS BS;         // Ограничиавющая сфера
+    RayTraceChildIndex CI; // Дочерние индексы
+    RayTraceDataIndex DI;  // Индексы данных
 };
 
 #endif // RAY_TRACE_BVH_STRUCT_H
