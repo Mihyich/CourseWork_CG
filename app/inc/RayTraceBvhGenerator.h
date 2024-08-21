@@ -16,6 +16,7 @@
 #include "RayTraceBvhStruct.h"
 
 #include "RayTraceBoundingAabb.h"
+#include "RayTraceBoundingSphere.h"
 
 class RayTraceBVHTree
 {
@@ -33,12 +34,6 @@ public:
 
 private:
     void updateVerteces(std::vector<RayTraceTriangle>& triangles);
-
-    RayTraceBS computeBoundingSphere(const std::vector<RayTraceTriangle>& triangles) const;
-
-    RayTraceBS computeBoundingSphere(const RayTraceBS& RTBS1, const RayTraceBS& RTBS2) const;
-
-    RayTraceBS computeBoundingSphere(const RayTraceBVHNode& node1, const RayTraceBVHNode& node2) const;
 
     void splitTriangles(
         const std::vector<RayTraceTriangle>& triangles,
