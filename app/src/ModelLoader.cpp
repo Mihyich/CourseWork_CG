@@ -21,6 +21,9 @@ bool LoadModel(const std::string& filePath, std::vector<Vertex>& verteces, std::
 
     if (scene && scene->mNumMeshes)
     {
+        verteces.clear();
+        indices.clear();
+
         for (size_t t = 0; t < scene->mNumMeshes; ++t)
         {
             mesh = scene->mMeshes[t];
@@ -83,6 +86,10 @@ bool LoadModel(const std::string& filePath, std::vector<vec3>& vertices, std::ve
 
     if (scene && scene->mNumMeshes)
     {
+        vertices.clear();
+        normales.clear();
+        indices.clear();
+
         for (size_t t = 0; t < scene->mNumMeshes; ++t)
         {
             mesh = scene->mMeshes[t];
