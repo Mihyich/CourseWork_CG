@@ -6,7 +6,6 @@ bool genRayTraceTriangles(
     std::vector<vec3>& normales,
     std::vector<unsigned int>& indeces)
 {
-    unsigned int index;
     RayTraceTriangle RTT;
 
     if (!indeces.size() || indeces.size() % 3)
@@ -19,15 +18,13 @@ bool genRayTraceTriangles(
 
     for (size_t i = 0; i < indeces.size(); i += 3)
     {
-        index = indeces[i];
+        RTT.v1.p = vertices[indeces[i + 0]];
+        RTT.v2.p = vertices[indeces[i + 1]];
+        RTT.v3.p = vertices[indeces[i + 2]];
 
-        RTT.v1.p = vertices[index];
-        RTT.v2.p = vertices[index + 1];
-        RTT.v3.p = vertices[index + 2];
-
-        RTT.v1.n = normales[index];
-        RTT.v2.n = normales[index + 1];
-        RTT.v3.n = normales[index + 2];
+        RTT.v1.n = normales[indeces[i + 0]];
+        RTT.v2.n = normales[indeces[i + 1]];
+        RTT.v3.n = normales[indeces[i + 2]];
 
         RTT.index = i / 3;
 
