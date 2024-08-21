@@ -1,0 +1,19 @@
+#ifndef RAY_TRACE_BOUNDING_SPHERE_H
+#define RAY_TRACE_BOUNDING_SPHERE_H
+
+#include <vector>
+
+#include "RayTraceBoundingSphereStruct.h"
+#include "RayTraceBoundingAabbStruct.h"
+#include "RayTraceTriangleStruct.h"
+#include "RayTraceBvhStruct.h"
+
+#include "RayTraceBoundingAabb.h"
+
+RayTraceBS computeBoundingSphere(const std::vector<RayTraceTriangle>& triangles);
+
+RayTraceBS computeBoundingSphere(const RayTraceBS& RTBS1, const RayTraceBS& RTBS2);
+
+RayTraceBS computeBoundingSphere(const RayTraceBVHNode& node1, const RayTraceBVHNode& node2);
+
+#endif // RAY_TRACE_BOUNDING_SPHERE_H
