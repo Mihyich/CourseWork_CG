@@ -270,7 +270,7 @@ void RayTraceBVHTree::addSubTree(const std::vector<RayTraceBVHNode>& root, const
         }
 
         // 5. Обновить первый узел как новый корень дерева
-        nodes[0].BS = { 0, 0, 0, 0 }; // Узел не в меше, ограничивающий объем не нужен
+        nodes[0].BS = { {0.f, 0.f, 0.f}, 0.f }; // Узел не в меше, ограничивающий объем не нужен
         nodes[0].CI.left = 1; // Старый корень теперь смещен вправо
         nodes[0].CI.right = newStartIndexForSubTree; // Корень нового поддерева
         nodes[0].DI.triangle = -1; // это не листовой узел
