@@ -53,6 +53,21 @@ public:
     const std::vector<RayTraceBVHNode>& getBvh() const;
 
     void writeBVHTreeToDot(const std::string& filename) const;
+
+    bool checkLinkRanges() const;
+
+    bool checkCycles() const;
+
+    bool checkBoundingSpheres() const;
+
+private:
+    int getNextNodeIndex(int currentIndex) const;
+    
+    bool isTriangleInsideSphere(const RayTraceVertexTringle& triangle, const RayTraceBS& sphere) const;
+
+    bool isPointInsideSphere(const vec3& point, const RayTraceBS& sphere) const;
+
+    bool isSphereInsideSphere(const RayTraceBS& inner, const RayTraceBS& outer) const;
 };
 
 #endif // RAY_TRACE_BVH_GENERATOR_H

@@ -334,3 +334,142 @@ void RayTraceBVHTree::writeBVHTreeToDot(const std::string& filename) const
     file << "}\n";
     file.close();
 }
+
+bool RayTraceBVHTree::checkLinkRanges() const
+{
+    size_t vertexCount = this->verteces.size();
+    size_t matrixCount = this->models.size();
+    size_t nodeCount = this->nodes.size();
+
+    int left;
+    int right;
+
+    int triangle;
+    int matrix;
+
+    for (size_t i = 0; i < nodeCount; ++i)
+    {
+        const RayTraceBVHNode& node = nodes[i];
+
+        left = node.CI.left;
+        right = node.CI.right;
+
+        triangle = node.DI.triangle;
+        matrix = node.DI.matrix;
+
+        if (left >= 0 && (size_t)left >= nodeCount)
+            return false;
+
+        if (right >= 0 && (size_t)right >= nodeCount)
+            return false;
+
+        if (triangle >= 0 && (size_t)triangle >= vertexCount)
+            return false;
+
+        if (matrix >= 0 && (size_t)matrix >= matrixCount)
+            return false;
+    }
+
+    return true;
+}
+
+bool RayTraceBVHTree::checkCycles() const
+{
+    size_t nodeCount = this->nodes.size();
+
+    for (size_t i = 0; i < nodeCount; ++i)
+    {
+        int slow = i; // Медленный указатель
+        int fast = i; // Быстрый указатель
+
+        while (true)
+        {
+            // Медленный указатель на 1 шаг
+            slow = getNextNodeIndex(slow);
+
+            // Быстрый указатель на 2 шага
+            fast = getNextNodeIndex(getNextNodeIndex(fast));
+            
+            // Если один из указателей вышел за пределы, цикла нет
+            if (slow < 0 || fast < 0)
+            {
+                break;
+            }
+
+            // Если указатели встретились - наличие цикла
+            if (slow == fast)
+            {
+                return false;
+            }
+        }
+    }
+
+    // Если цикл не найден
+    return true;
+}
+
+bool RayTraceBVHTree::checkBoundingSpheres() const
+{
+    for (const RayTraceBVHNode& node : nodes)
+    {
+        if (node.DI.triangle >= 0)
+        {
+            if (!isTriangleInsideSphere(verteces[node.DI.triangle], node.BS))
+                return false;
+        }
+        else if (node.DI.matrix >= 0)
+        {
+            if (node.CI.left >= 0 && !isSphereInsideSphere(nodes[node.CI.left].BS, node.BS))
+                return false;
+
+            if (node.CI.right >= 0 && !isSphereInsideSphere(nodes[node.CI.right].BS, node.BS))
+                return false;
+        }
+    }
+    
+    return true;
+}
+
+int RayTraceBVHTree::getNextNodeIndex(int currentIndex) const
+{
+    if (currentIndex < 0 || (size_t)currentIndex >= this->nodes.size())
+    {
+        return -1;
+    }
+
+    const RayTraceBVHNode& node = nodes[currentIndex];
+
+    if (node.CI.left >= 0)
+    {
+        return node.CI.left;
+    }
+    if (node.CI.right >= 0)
+    {
+        return node.CI.right;
+    }
+
+    // Нет дочерних
+    return -1;
+}
+
+bool RayTraceBVHTree::isTriangleInsideSphere(const RayTraceVertexTringle& triangle, const RayTraceBS& sphere) const
+{
+    return isPointInsideSphere(triangle.v1.p, sphere) &&
+           isPointInsideSphere(triangle.v2.p, sphere) &&
+           isPointInsideSphere(triangle.v3.p, sphere);
+}
+
+bool RayTraceBVHTree::isPointInsideSphere(const vec3& point, const RayTraceBS& sphere) const
+{
+    vec3 dist;
+    vec3_diff(&point, &sphere.c, &dist);
+    return vec3_square_magnitude(&dist) <= sphere.r * sphere.r;
+}
+
+bool RayTraceBVHTree::isSphereInsideSphere(const RayTraceBS& inner, const RayTraceBS& outer) const
+{
+    vec3 dist;
+    vec3_diff(&inner.c, &outer.c, &dist);
+    float distance = vec3_square_magnitude(&dist);
+    return distance + inner.r * inner.r <= outer.r * outer.r;
+}
