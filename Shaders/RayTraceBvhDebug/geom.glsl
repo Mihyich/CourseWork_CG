@@ -83,20 +83,59 @@ out vec3 color;
 // Генерация примитива - треугольник
 void genPrimitiveTriangle(RayTraceVertexTringle triangle, mat4 model)
 {
-    color = vec3(0.0, 1.0, 0.0);
-    vec4 v1 = projection * view * model * vec4(triangle.v1.px, triangle.v1.py, triangle.v1.pz, 1.0);
-    vec4 v2 = projection * view * model * vec4(triangle.v2.px, triangle.v2.py, triangle.v2.pz, 1.0);
-    vec4 v3 = projection * view * model * vec4(triangle.v3.px, triangle.v3.py, triangle.v3.pz, 1.0);
+    mat4 pvm = projection * view * model;
 
-    gl_Position = v1;
-    EmitVertex();
-    
-    gl_Position = v2;
-    EmitVertex();
-    
-    gl_Position = v3;
-    EmitVertex();
-    
+    vec4 v1 = pvm * vec4(triangle.v1.px, triangle.v1.py, triangle.v1.pz, 1.0);
+    vec4 v2 = pvm * vec4(triangle.v2.px, triangle.v2.py, triangle.v2.pz, 1.0);
+    vec4 v3 = pvm * vec4(triangle.v3.px, triangle.v3.py, triangle.v3.pz, 1.0);
+
+    color = vec3(0.0, 1.0, 0.0);
+
+    gl_Position = v1; EmitVertex();
+    gl_Position = v2; EmitVertex();
+    gl_Position = v3; EmitVertex();
+    EndPrimitive();
+}
+
+// Генерация Box (описанный вокруг сферы куб)
+void genPrimitiveBox(RayTraceBS RTBS, mat4 model)
+{
+    mat4 pvm = projection * view * model;
+    float hs = RTBS.r; // half size стороны коробки
+    vec3 center = vec3(RTBS.cx, RTBS.cy, RTBS.cz);
+
+    vec4 v1 = pvm * vec4(center + vec3( hs, -hs,  hs), 1.0); // правая нижняя дальняя
+    vec4 v2 = pvm * vec4(center + vec3( hs, -hs, -hs), 1.0); // правая нижняя ближняя
+    vec4 v3 = pvm * vec4(center + vec3(-hs, -hs, -hs), 1.0); // левая нижняя ближняя
+    vec4 v4 = pvm * vec4(center + vec3(-hs, -hs,  hs), 1.0); // левая нижняя дальняя
+
+    vec4 v5 = pvm * vec4(center + vec3( hs,  hs,  hs), 1.0); // правая верхняя дальняя
+    vec4 v6 = pvm * vec4(center + vec3(-hs,  hs,  hs), 1.0); // левая верхняя дальняя
+    vec4 v7 = pvm * vec4(center + vec3(-hs,  hs, -hs), 1.0); // левая верхняя ближняя
+    vec4 v8 = pvm * vec4(center + vec3( hs,  hs, -hs), 1.0); // правая верхняя ближняя
+
+    color = vec3(1.0, 0.0, 0.0);
+
+    // правая && верхняя && левая грани
+    gl_Position = v2; EmitVertex();
+    gl_Position = v1; EmitVertex();
+    gl_Position = v8; EmitVertex();
+    gl_Position = v5; EmitVertex();
+    gl_Position = v7; EmitVertex();
+    gl_Position = v6; EmitVertex();
+    gl_Position = v3; EmitVertex();
+    gl_Position = v4; EmitVertex();
+    EndPrimitive();
+
+    // ближняя && нижняя && дальняя грани
+    gl_Position = v8; EmitVertex();
+    gl_Position = v7; EmitVertex();
+    gl_Position = v2; EmitVertex();
+    gl_Position = v3; EmitVertex();
+    gl_Position = v1; EmitVertex();
+    gl_Position = v4; EmitVertex();
+    gl_Position = v5; EmitVertex();
+    gl_Position = v6; EmitVertex();
     EndPrimitive();
 }
 
@@ -113,7 +152,8 @@ void main()
         // Нужно нарисовать ограничивающий объем
         if (node.DI.matrix >= 0)
         {
-            // Рисование сферы...
+            // Сфера - слишком много треугольников (аппаратное ограничение), поэтому обойдемся коробками
+            genPrimitiveBox(node.BS, matrices[node.DI.matrix]);
         }
 
         // Нужно нарисовать треугольник
