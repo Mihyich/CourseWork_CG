@@ -14,6 +14,8 @@ bool isPointInsideBoundingSphere(const RayTraceBS& RTBS, const vec3& p);
 
 bool isTriangleInsideBoundingSphere(const RayTraceBS& RTBS, const RayTraceVertexTringle& triangle);
 
+bool isBoundingSphereInsideBoundingSphere(const RayTraceBS& outer, const RayTraceBS& inner);
+
 void expandBoundingSphereToInclude(RayTraceBS& RTBS, const vec3& p);
 
 RayTraceBS computeBoundingSphere(const std::vector<RayTraceTriangle>& triangles);

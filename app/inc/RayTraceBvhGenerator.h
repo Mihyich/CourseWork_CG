@@ -61,8 +61,6 @@ public:
 
 private:
     int getNextNodeIndex(int currentIndex) const;
-
-    bool isSphereInsideSphere(const RayTraceBS& inner, const RayTraceBS& outer) const;
 };
 
 #endif // RAY_TRACE_BVH_GENERATOR_H

@@ -54,6 +54,14 @@ RayTraceBS computeBoundingSphere(const std::vector<RayTraceTriangle>& triangles)
     return RTBS;
 }
 
+bool isBoundingSphereInsideBoundingSphere(const RayTraceBS& outer, const RayTraceBS& inner)
+{
+    vec3 dist;
+    vec3_diff(&inner.c, &outer.c, &dist);
+    float distance = vec3_square_magnitude(&dist);
+    return distance + inner.r * inner.r <= outer.r * outer.r;
+}
+
 RayTraceBS computeBoundingSphere(const RayTraceBS& RTBS1, const RayTraceBS& RTBS2)
 {
     vec3 dist;

@@ -365,10 +365,10 @@ bool RayTraceBVHTree::checkBoundingSpheres() const
         }
         else if (node.DI.matrix >= 0)
         {
-            if (node.CI.left >= 0 && !isSphereInsideSphere(nodes[node.CI.left].BS, node.BS))
+            if (node.CI.left >= 0 && !isBoundingSphereInsideBoundingSphere(node.BS, nodes[node.CI.left].BS))
                 return false;
 
-            if (node.CI.right >= 0 && !isSphereInsideSphere(nodes[node.CI.right].BS, node.BS))
+            if (node.CI.right >= 0 && !isBoundingSphereInsideBoundingSphere(node.BS, nodes[node.CI.right].BS))
                 return false;
         }
     }
@@ -396,12 +396,4 @@ int RayTraceBVHTree::getNextNodeIndex(int currentIndex) const
 
     // Нет дочерних
     return -1;
-}
-
-bool RayTraceBVHTree::isSphereInsideSphere(const RayTraceBS& inner, const RayTraceBS& outer) const
-{
-    vec3 dist;
-    vec3_diff(&inner.c, &outer.c, &dist);
-    float distance = vec3_square_magnitude(&dist);
-    return distance + inner.r * inner.r <= outer.r * outer.r;
 }
