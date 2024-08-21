@@ -1,19 +1,48 @@
 #include "RayTraceBoundingSphere.h"
 
+bool isPointInsideBoundingSphere(const RayTraceBS& RTBS, const vec3& p)
+{
+    vec3 dist;
+    vec3_diff(&RTBS.c, &p, &dist);
+    return vec3_square_magnitude(&dist) <= RTBS.r * RTBS.r;
+}
+
+void expandBoundingSphereToInclude(RayTraceBS& RTBS, const vec3& p)
+{
+    if (isPointInsideBoundingSphere(RTBS, p))
+        return;
+
+    vec3 dist;
+    vec3_diff(&RTBS.c, &p, &dist);
+
+    float d = vec3_magnitude(&dist);
+    float nRadius = (RTBS.r + d) * 0.5f;
+    float k = (nRadius - RTBS.r) / d;
+
+    vec3 direction;
+    vec3_diff(&p, &RTBS.c, &direction);
+    vec3_scale(&direction, k);
+    
+    vec3_add(&RTBS.c, &direction);
+    RTBS.r = nRadius;
+}
+
 RayTraceBS computeBoundingSphere(const std::vector<RayTraceTriangle>& triangles)
 {
-    RayTraceAABB RTAABB = computeAxisAlignBoundingBox(triangles);
+    if (triangles.empty())
+        return RayTraceBS { 0, 0, 0, 0 };
 
-    vec3 center;
-    vec3 dist;
-    float radius;
+    vec3 initialPoint = triangles[0].v1.p;
+    RayTraceBS RTBS = { initialPoint, 0 };
 
-    vec3_sum_scaled_n(&center, 0.5f, 2, &RTAABB.min, &RTAABB.max);
+    for (const auto& triangle : triangles)
+    {
+        expandBoundingSphereToInclude(RTBS, triangle.v1.p);
+        expandBoundingSphereToInclude(RTBS, triangle.v2.p);
+        expandBoundingSphereToInclude(RTBS, triangle.v3.p);
+    }
 
-    vec3_diff(&RTAABB.max, &RTAABB.min, &dist);
-    radius = vec3_magnitude(&dist) / 2.f;
-
-    return RayTraceBS {center, radius};
+    return RTBS;
 }
 
 RayTraceBS computeBoundingSphere(const RayTraceBS& RTBS1, const RayTraceBS& RTBS2)

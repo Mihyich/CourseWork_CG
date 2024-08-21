@@ -10,6 +10,10 @@
 
 #include "RayTraceBoundingAabb.h"
 
+bool isPointInsideBoundingSphere(const RayTraceBS& RTBS, const vec3& p);
+
+void expandBoundingSphereToInclude(RayTraceBS& RTBS, const vec3& p);
+
 RayTraceBS computeBoundingSphere(const std::vector<RayTraceTriangle>& triangles);
 
 RayTraceBS computeBoundingSphere(const RayTraceBS& RTBS1, const RayTraceBS& RTBS2);
