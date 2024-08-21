@@ -1,14 +1,20 @@
 #version 460 core
 
-layout(points) in;                             // Входной тип примитивов - точки (По факту только 1, и то она никак не используется)
-layout(triangle_strip, max_vertices = 3) out;  // Выходной тип примитивов - треугольники
+layout(points) in;                               // Входной тип примитивов - точки (По факту только 1, и то она никак не используется)
+layout(triangle_strip, max_vertices = 146) out;  // Выходной тип примитивов - треугольники
 
 // Вершинные данные
 struct RayTraceVertex
 {
-    vec3 p; // Позиция
-    vec3 n; // Нормаль
-};
+    // Позиция:
+    float px;
+    float py;
+    float pz;
+    // Нормаль:
+    float nx;
+    float ny;
+    float nz;
+}; // float - универсальное выравнивание, оно совпадает со своим размеров и ничего не нужно конвертировать
 
 // Вершинные данные треугольника для использования в шейдере
 struct RayTraceVertexTringle
@@ -21,9 +27,13 @@ struct RayTraceVertexTringle
 // Ограничивающая сфера
 struct RayTraceBS
 {
-    vec3 c; // центер
-    float r; // радиус
-};
+    // центер:
+    float cx;
+    float cy;
+    float cz;
+    // радиус:
+    float r;
+}; // float - универсальное выравнивание...
 
 // Индексы дочерних узлов дерева в массиве
 struct RayTraceChildIndex
@@ -65,12 +75,18 @@ layout(std430, binding = 2) buffer Bvh
 uniform mat4 view;
 uniform mat4 projection;
 
+uniform int startNodeIndex;
+uniform int endNodeIndex;
+
+out vec3 color;
+
 // Генерация примитива - треугольник
-void genPrimitiveTriangle(RayTraceVertexTringle triangle)
+void genPrimitiveTriangle(RayTraceVertexTringle triangle, mat4 model)
 {
-    vec4 v1 = projection * view * vec4(triangle.v1.p, 1.0);
-    vec4 v2 = projection * view * vec4(triangle.v2.p, 1.0);
-    vec4 v3 = projection * view * vec4(triangle.v3.p, 1.0);
+    color = vec3(0.0, 1.0, 0.0);
+    vec4 v1 = projection * view * model * vec4(triangle.v1.px, triangle.v1.py, triangle.v1.pz, 1.0);
+    vec4 v2 = projection * view * model * vec4(triangle.v2.px, triangle.v2.py, triangle.v2.pz, 1.0);
+    vec4 v3 = projection * view * model * vec4(triangle.v3.px, triangle.v3.py, triangle.v3.pz, 1.0);
 
     gl_Position = v1;
     EmitVertex();
@@ -89,21 +105,21 @@ void main()
     int numBvhNodes = bvh.length();
     RayTraceBVHNode node;
 
-    // Обход элементов дерева через по массиву напрямую
-    for (int i = 0; i < numBvhNodes; ++i)
+    // Обход элементов дерева через массив напрямую
+    for (int i = startNodeIndex; i <= endNodeIndex && i < numBvhNodes; ++i)
     {
         node = bvh[i];
 
         // Нужно нарисовать ограничивающий объем
-        if (node.DI.matrix > 0)
+        if (node.DI.matrix >= 0)
         {
             // Рисование сферы...
         }
 
         // Нужно нарисовать треугольник
-        if (node.DI.triangle > 0)
+        if (node.DI.triangle >= 0)
         {
-            genPrimitiveTriangle(triangles[node.DI.triangle]);
+            genPrimitiveTriangle(triangles[node.DI.triangle], matrices[node.DI.matrix]);
         }
     }
 }
