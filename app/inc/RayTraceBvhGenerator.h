@@ -7,6 +7,7 @@
 #include <vector>
 #include <map>
 
+#include "RayTraceTriangleStruct.h"
 #include "RayTraceBvhStruct.h"
 #include "Matrix4D.h"
 

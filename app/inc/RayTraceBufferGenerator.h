@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "Matrix4D.h"
+#include "RayTraceTriangleStruct.h"
 #include "RayTraceBvhStruct.h"
 
 #include "winapi_GLextensions.h"

@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "RayTraceTriangleStruct.h"
 #include "RayTraceBvhStruct.h"
 
 bool genRayTraceTriangles(
