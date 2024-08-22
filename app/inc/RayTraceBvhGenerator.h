@@ -44,6 +44,8 @@ private:
 
     void addSubTree(const std::vector<RayTraceBVHNode>& root, const std::string& name);
 
+    void updateTreeParentIndeces(int currentNodeIndex, int parentIndex);
+
 public:
     const std::vector<RayTraceVertexTringle>& getVerteces() const;
 
