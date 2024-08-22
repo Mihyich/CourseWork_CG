@@ -185,7 +185,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         genRayTraceTriangles(triangles, vertices, normales, indeces);
         BVH.addMesh(triangles, m, "Plane");
 
-        LoadModel("Models/Rabbit.obj", vertices, normales, indeces, true);
+        LoadModel("Models/Cube.obj", vertices, normales, indeces, true);
         genRayTraceTriangles(triangles, vertices, normales, indeces);
         BVH.addMesh(triangles, modelModel, "Rabbit");
 
@@ -203,6 +203,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             printf("!!!\nBVH tree has incorrect bounding spheres\n!!!\n");
         }
+
+        BVH.writeBVHTreeToDot("BVHtree.dot");
 
         genRayTraceVertexSSBO(BVH.getVerteces(), VertexSSBO);
         genRayTraceMatrixSSBO(BVH.getMatrices(), MatrixSSBO);
@@ -449,7 +451,9 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE_ESM, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL_ESM, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE_VSM, (LPARAM)0);
-        SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL_VSM, (LPARAM)0);
+        // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL_VSM, (LPARAM)0);
+
+        SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)RAY_TRACING_DEBUG, (LPARAM)0);
 
         return EXIT_SUCCESS;
     }
@@ -758,6 +762,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     RenderDataRTD.VertexSSBO = &VertexSSBO;
                     RenderDataRTD.MatrixSSBO = &MatrixSSBO;
                     RenderDataRTD.BvhSSBO = &BvhSSBO;
+                    RenderDataRTD.nodeCount = (int)BVH.getBvh().size();
                     RenderDataRTD.client_width = &client_width;
                     RenderDataRTD.client_height = &client_height;
                     RenderDataRTD.shader = &shader_RT_BVH;
@@ -964,6 +969,10 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         if (depthBufferExp.Texture) glDeleteTextures(1, &depthBufferExp.Texture);
         if (depthBufferExp.RBO) glDeleteRenderbuffers(1, &depthBufferExp.RBO);
         if (depthBufferExp.FBO) glDeleteFramebuffers(1, &depthBufferExp.FBO);
+
+        if (VertexSSBO) glDeleteBuffers(1, &VertexSSBO);
+        if (MatrixSSBO) glDeleteBuffers(1, &MatrixSSBO);
+        if (BvhSSBO) glDeleteBuffers(1, &BvhSSBO);
 
         shader.delete_program();
         shader_DBD.delete_program();
