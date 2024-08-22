@@ -838,6 +838,13 @@ void __cdecl mat4_set_look_at(pmat4 m, cpvec3 pos, cpvec3 dst, cpvec3 up)
     );
 }
 
+void __cdecl mat4_set_look_to(pmat4 m, cpvec3 pos, cpvec3 dir, cpvec3 up)
+{
+    vec3 dst;
+    vec3_sum(pos, dir, &dst);
+    mat4_set_look_at(m, pos, &dst, up);
+}
+
 void __cdecl mat4_set_scale_to_point(pmat4 m, cpvec3 scale, cpvec3 point)
 {
     mat4_set_x_basis(m, scale->x, 0.f, 0.f, 0.f);
