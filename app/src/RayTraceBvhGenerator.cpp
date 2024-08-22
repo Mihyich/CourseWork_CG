@@ -171,6 +171,7 @@ int RayTraceBVHTree::buildSubtree(std::vector<RayTraceBVHNode>& root, const std:
 
     // Заполнение текущего узла
     RTnode.BS = computeBoundingSphere(triangles);
+    // RTnode.BS = computeBoundingSphere(root[leftChildIndex].BS, root[rightChildIndex].BS);
     RTnode.CI = { leftChildIndex, rightChildIndex };
     RTnode.DI = { -1, modelIndex }; // Не листовой узел
 
