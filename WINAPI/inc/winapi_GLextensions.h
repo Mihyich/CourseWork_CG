@@ -53,6 +53,7 @@ extern PFNGLBINDBUFFERPROC glBindBuffer;
 extern PFNGLBINDBUFFERBASEPROC glBindBufferBase;
 extern PFNGLBUFFERDATAPROC glBufferData;
 extern PFNGLBUFFERSUBDATAPROC glBufferSubData;
+extern PFNGLBINDBUFFERRANGEPROC glBindBufferRange;
 // Кадровый буфер
 extern PFNGLGENFRAMEBUFFERSPROC glGenFramebuffers;
 extern PFNGLBINDFRAMEBUFFERPROC glBindFramebuffer;
