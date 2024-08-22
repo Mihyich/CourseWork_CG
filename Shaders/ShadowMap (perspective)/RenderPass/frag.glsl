@@ -55,7 +55,7 @@ vec3 computePointLightColor(vec3 fragPos, vec3 normal, PointLight light)
     // Расстояние до источника света
     float distance = length(light.position - fragPos);
     
-    // Интенсивность света с учетом расстояния (падение света по квадрату расстояния)
+    // Интенсивность света с учетом расстояния (уменьшение света по квадрату расстояния)
     float attenuation = max(1.0 - (distance / light.radius), 0.0);
     
     // Расчет диффузного освещения
@@ -75,7 +75,7 @@ vec3 computeSpotLightColor(vec3 fragPos, vec3 normal, SpotLight light)
     // Расстояние до источника света
     float distance = length(light.position - fragPos);
     
-    // Интенсивность света с учетом расстояния (падение света по квадрату расстояния)
+    // Интенсивность света с учетом расстояния (уменьшение света по квадрату расстояния)
     float attenuation = max(1.0 - (distance / light.radius), 0.0);
     
     // Расчет диффузного освещения
@@ -85,8 +85,8 @@ vec3 computeSpotLightColor(vec3 fragPos, vec3 normal, SpotLight light)
     float spotEffect = dot(normalize(light.direction), -lightDir);
     
     // Проверка попадания в конус
-    float theta = radians(light.innerCutoff);
-    float phi = radians(light.outerCutoff);
+    float theta = cos(light.innerCutoff);
+    float phi = cos(light.outerCutoff);
     float epsilon = theta - phi;
     float intensity = clamp((spotEffect - phi) / epsilon, 0.0, 1.0);
     
@@ -105,7 +105,7 @@ vec3 computeLightColor(vec3 fragPos, vec3 normal)
     if (light.type == 0)
     {
         pl.position = light.position;
-        pl.radius = 10;
+        pl.radius = light.option.x;
         pl.color = light.color;
         pl.intensity =  light.option.y;
 
@@ -121,7 +121,7 @@ vec3 computeLightColor(vec3 fragPos, vec3 normal)
         sl.color = light.color;
         sl.intensity = light.option.y;
 
-        diff = vec3(0, 1, 0); // computeSpotLightColor(fragPos, normal, sl);
+        diff = computeSpotLightColor(fragPos, normal, sl);
     }
 
     return diff;
