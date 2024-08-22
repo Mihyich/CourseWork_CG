@@ -23,6 +23,10 @@
 #include "PlaneMeshGenerator.h"
 
 
+#include "LightStruct.h"
+#include "Light.h"
+
+
 #include "RayTraceBvhStruct.h"
 #include "RayTraceTrianglesGenerator.h"
 #include "RayTraceBvhGenerator.h"
