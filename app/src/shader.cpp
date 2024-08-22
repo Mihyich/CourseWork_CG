@@ -599,6 +599,11 @@ GLint Shader::get_attrib_location(const GLchar *name) const
     return it != uniforms.end() ? it->second : SHADER_LOCATION_NOT_FOUNDED;
 }
 
+GLuint Shader::getProgramId() const
+{
+    return this->program_id;
+}
+
 const char *Shader::get_name(void) const
 {
     return &name[0];

@@ -110,6 +110,8 @@ public:
 
     GLint get_attrib_location(const GLchar *name) const;
 
+    GLuint getProgramId() const;
+
     const char *get_name(void) const;
 };
 
