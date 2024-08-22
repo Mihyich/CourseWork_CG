@@ -17,7 +17,7 @@ struct RayTraceVertex
 }; // float - универсальное выравнивание, оно совпадает со своим размеров и ничего не нужно конвертировать
 
 // Вершинные данные треугольника для использования в шейдере
-struct RayTraceVertexTringle
+struct RayTraceVertexTriangle
 {
     RayTraceVertex v1; // Вершина 1
     RayTraceVertex v2; // Вершина 2
@@ -61,7 +61,7 @@ struct RayTraceBVHNode
 layout(std430, binding = 0) buffer Triangles
 {
     // Входной буфер, хранящий вершинные данные всей сцены
-    RayTraceVertexTringle triangles[];
+    RayTraceVertexTriangle triangles[];
 };
 
 layout(std430, binding = 1) buffer Matrices
@@ -86,7 +86,7 @@ uniform int endNodeIndex;
 out vec3 color; // Отправляемый монотонный цвет 
 
 // Генерация примитива - треугольник
-void genPrimitiveTriangle(RayTraceVertexTringle triangle, mat4 model, vec3 col)
+void genPrimitiveTriangle(RayTraceVertexTriangle triangle, mat4 model, vec3 col)
 {
     mat4 pvm = projection * view * model;
 
