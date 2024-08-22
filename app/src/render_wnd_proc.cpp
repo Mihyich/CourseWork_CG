@@ -111,22 +111,18 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         { 0.f, 1.f, 1.f }, // Цвет (12 байт)
         0.f,               // Выравнивание для GLSL vec3 (еще 4 байта)
         // Кратность 16 =========================================================================
-        20.f,              // Радиус действия (4 байта)
+        40.f,              // Радиус действия (4 байта)
         2.f,               // Интенсивность (4 байта)
         degrees_to_radians(30), // Угол (в радианах) внутреннего конуса (4 байта)
         degrees_to_radians(45), // Угол (в радианах) внешнего конуса (4 байта)
         // Кратность 16 =========================================================================
-        1,                 // Тип источника света: 0 - PointLight; 1 - SpotLight (4 байта)
+        0,                 // Тип источника света: 0 - PointLight; 1 - SpotLight (4 байта)
         0.f,               // Дополнительные паддинги,
         0.f,               // чтобы сделать размер структуры
         0.f                // кратным 16 (3 * 4 = 12 байт)
         // Кратность 16 =========================================================================
     };
 
-    static vec3 lightPos = {0, 5, 3};
-    // static vec3 lightDir = {0, -1, 0};
-    static vec3 lightDst;
-    static vec3 lightUp = {0, 1, 0};
     static mat4 lightView;
     static mat4 lightProjectionPerspective;
     static mat4 lightProjectionOrthogonal;
@@ -192,9 +188,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         genLightUBO(light, lightUBO);
 
-        // vec3_sum(&lightPos, &lightDir, &lightDst);
-        lightDst = {0, 2, 0};
-        mat4_set_look_at(&lightView, &lightPos, &lightDst, &lightUp);
+        mat4_set_look_to(&lightView, &light.position, &light.direction, &viewUp);
         mat4_set_perspective_projection(&lightProjectionPerspective, 1920, 1080, lightProjNear, lightProjFar, lightProjFov);
         mat4_set_ortho_projection_with_aspect(&lightProjectionOrthogonal, -2, 2, -2, 2, 0.1f, 50, 1920, 1080);
 
@@ -294,7 +288,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_P_RP.create_from_file("Shaders/ShadowMap (perspective)/RenderPass/frag.glsl", GL_FRAGMENT_SHADER);
         shader_SM_P_RP.link_program();
         shader_SM_P_RP.init_uniforms_and_attribs();
-        shader_SM_P_RP.print_uniforms_and_attribs(true, true);
+        shader_SM_P_RP.print_uniforms_and_attribs();
         shader_SM_P_RP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
         shader_SM_P_RP.delete_shader(GL_VERTEX_SHADER);
         shader_SM_P_RP.delete_shader(GL_FRAGMENT_SHADER);
@@ -447,38 +441,32 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         shader_SM_PCF_O_RP.use();
         glUniform1i(shader_SM_PCF_O_RP.get_uniform_location("shadowMap"), 0);
-        uniform_vec3f(shader_SM_PCF_O_RP.get_uniform_location("lightPos"), &lightPos);
 
         shader_SM_PCF_P_RP.use();
         glUniform1i(shader_SM_PCF_P_RP.get_uniform_location("shadowMap"), 0);
-        uniform_vec3f(shader_SM_PCF_P_RP.get_uniform_location("lightPos"), &lightPos);
 
         shader_SM_ESM_O_RP.use();
         glUniform1i(shader_SM_ESM_O_RP.get_uniform_location("shadowMap"), 0);
-        uniform_vec3f(shader_SM_ESM_O_RP.get_uniform_location("lightPos"), &lightPos);
 
         shader_SM_ESM_P_RP.use();
         glUniform1i(shader_SM_ESM_P_RP.get_uniform_location("shadowMap"), 0);
-        uniform_vec3f(shader_SM_ESM_P_RP.get_uniform_location("lightPos"), &lightPos);
 
         shader_SM_VSM_O_RP.use();
         glUniform1i(shader_SM_VSM_O_RP.get_uniform_location("shadowMap"), 0);
-        uniform_vec3f(shader_SM_VSM_O_RP.get_uniform_location("lightPos"), &lightPos);
 
         shader_SM_VSM_P_RP.use();
         glUniform1i(shader_SM_VSM_P_RP.get_uniform_location("shadowMap"), 0);
-        uniform_vec3f(shader_SM_VSM_P_RP.get_uniform_location("lightPos"), &lightPos);
 
         // Подключить UBO буфер ко всем шейдером его поддерживающих
         glBindBufferRange(GL_UNIFORM_BUFFER, 0, lightUBO, 0, sizeof(Light));
 
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE, (LPARAM)0);
-        SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL, (LPARAM)0);
+        // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE_PCF, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL_PCF, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE_ESM, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL_ESM, (LPARAM)0);
-        // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE_VSM, (LPARAM)0);
+        SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE_VSM, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL_VSM, (LPARAM)0);
 
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)RAY_TRACING_DEBUG, (LPARAM)0);
