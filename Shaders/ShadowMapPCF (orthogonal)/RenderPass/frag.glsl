@@ -131,12 +131,8 @@ vec3 computeLightColor(vec3 fragPos, vec3 normal)
 float ShadowCalculation(vec4 fragPosLightSpace)
 {
     // Конвертация из [-1, 1] в [0, 1]
-    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    vec3 projCoords = fragPosLightSpace.xyz;
     projCoords = projCoords * 0.5 + 0.5;
-
-    // Проверка на тень
-    if (projCoords.z > 1.0)
-        return 0.0;
     
     // Тень с использованием PCF
     float shadow = 0.0;
