@@ -59,26 +59,30 @@ struct RayTraceBVHNode
 
 layout(std430, binding = 0) buffer Triangles
 {
+    // Входной буфер, хранящий вершинные данные всей сцены
     RayTraceVertexTringle triangles[];
 };
 
 layout(std430, binding = 1) buffer Matrices
 {
+    // Входной буфер, хранящий матрицы модели для каждого объекта в сцене
     mat4 matrices[];
 };
 
 layout(std430, binding = 2) buffer Bvh
 {
+    // Входной буфер, хранящий дерево BVH
     RayTraceBVHNode bvh[];
 };
 
 uniform mat4 view;
 uniform mat4 projection;
 
+// Индексы нодов массиве BVH, которые необходимо обработать при текущем запуске
 uniform int startNodeIndex;
 uniform int endNodeIndex;
 
-out vec3 color;
+out vec3 color; // Отправляемый монотонный цвет 
 
 // Генерация примитива - треугольник
 void genPrimitiveTriangle(RayTraceVertexTringle triangle, mat4 model, vec3 col)
@@ -142,8 +146,8 @@ void genPrimitiveBox(RayTraceBS RTBS, mat4 model, vec3 col)
 void main()
 {
     int numBvhNodes = bvh.length();
-    vec3 col;
     RayTraceBVHNode node;
+    vec3 col;
 
     // Обход элементов дерева через массив напрямую
     for (int i = startNodeIndex; i <= endNodeIndex && i < numBvhNodes; ++i)
