@@ -264,6 +264,8 @@ const std::vector<RayTraceBVHNode>& RayTraceBVHTree::getBvh() const
 
 void RayTraceBVHTree::writeBVHTreeToDot(const std::string& filename) const
 {
+    std::string fillcolor; // цвет заливки
+
     std::ofstream file(filename);
     if (!file.is_open())
     {
@@ -272,27 +274,56 @@ void RayTraceBVHTree::writeBVHTreeToDot(const std::string& filename) const
     }
 
     file << "digraph BVHTree {\n";
-    file << "  node [shape=box];\n";
+    file << "\tnode [shape=box];\n";
 
     for (size_t i = 0; i < nodes.size(); ++i)
     {
         const auto& node = nodes[i];
-        file << "  " << i << " [label=\"Node " << i
+
+        if (node.DI.matrix < 0)
+        {
+            fillcolor = "#0000C0";
+        }
+        else
+        {
+            if (node.DI.triangle < 0)
+            {
+                fillcolor = "#C00000";
+            }
+            else
+            {
+                fillcolor = "#00C000";
+            }
+        }
+
+        file << "\t\t" << i << " [label=\"Node " << i
              << "\\nCenter: (" << node.BS.c.x << ", " << node.BS.c.y << ", " << node.BS.c.z << ")"
              << "\\nRadius: " << node.BS.r
              << "\\nTriangleIndex: " << node.DI.triangle
              << "\\nModelIndex: " << node.DI.matrix
              << "\\nParent: " << node.parent
              << "\\nLeft: " << node.CI.left << " Right: " << node.CI.right
-             << "\"];\n";
+             << "\""
+             << " style=filled fillcolor=\"" + fillcolor + "\" color=\"#000000\""
+             << "];\n";
+
+        // std::cout << "Node " << i
+        //      << " Center: (" << node.BS.c.x << ",\t" << node.BS.c.y << ",\t" << node.BS.c.z << ")"
+        //      << "\tRadius: " << node.BS.r
+        //      << "\tTriangleIndex: " << node.DI.triangle
+        //      << "\tModelIndex: " << node.DI.matrix
+        //      << "\tParent: " << node.parent
+        //      << "\tLeft: " << node.CI.left
+        //      << "\tRight: " << node.CI.right
+        //      << "\n";
 
         if (node.CI.left != -1)
         {
-            file << "  " << i << " -> " << node.CI.left << " [label=\"left\"];\n";
+            file << "\t\t" << i << " -> " << node.CI.left << " [label=\"left\"];\n";
         }
         if (node.CI.right != -1)
         {
-            file << "  " << i << " -> " << node.CI.right << " [label=\"right\"];\n";
+            file << "\t\t" << i << " -> " << node.CI.right << " [label=\"right\"];\n";
         }
     }
 
