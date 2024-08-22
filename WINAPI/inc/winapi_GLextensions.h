@@ -134,6 +134,9 @@ extern PFNGLUNIFORM4DVPROC glUniform4dv;
 extern PFNGLUNIFORMMATRIX2FVPROC glUniformMatrix2fv;
 extern PFNGLUNIFORMMATRIX3FVPROC glUniformMatrix3fv;
 extern PFNGLUNIFORMMATRIX4FVPROC glUniformMatrix4fv;
+// Униформные блоки
+extern PFNGLGETUNIFORMBLOCKINDEXPROC glGetUniformBlockIndex;
+extern PFNGLUNIFORMBLOCKBINDINGPROC glUniformBlockBinding;
 
 // получть адрес функции из драйвера
 // #n - строкатизация, пример: abc -> "abc"
