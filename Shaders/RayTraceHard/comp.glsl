@@ -140,6 +140,34 @@ struct Triangle
     vec3 v3; // 3 позиция вершины
 };
 
+// Вычисление барицентрических координат
+vec3 computeBarycentricCoordinates(vec3 P, vec3 A, vec3 B, vec3 C)
+{
+    vec3 v0 = B - A;
+    vec3 v1 = C - A;
+    vec3 v2 = P - A;
+
+    float d00 = dot(v0, v0);
+    float d01 = dot(v0, v1);
+    float d11 = dot(v1, v1);
+    float d20 = dot(v2, v0);
+    float d21 = dot(v2, v1);
+
+    float denom = d00 * d11 - d01 * d01;
+    float v = (d11 * d20 - d01 * d21) / denom;
+    float w = (d00 * d21 - d01 * d20) / denom;
+    float u = 1.0 - v - w;
+
+    return vec3(u, v, w);
+}
+
+// Интерполяция векторов
+vec3 interpolateVector(vec3 A, vec3 B, vec3 C, vec3 barycentricCoords)
+{
+    // сдается мне что, это банальное умножение матрицы на вектор
+    return barycentricCoords.x * A + barycentricCoords.y * B + barycentricCoords.z * C;
+}
+
 // Трассировка сферы
 // Положительный результат даже если луч находится внутри сферы
 bool traceRayBoundingSphere(RayTraceBS RTBS, Ray ray)
@@ -239,6 +267,8 @@ vec4 traceRayBVH(Ray ray)
 
     float t; // Расстояние до тругольника
     float closestT = FLT_MAX; // Ближайшее расстояние до треугольника
+    int closestTriangleIndex; // Индекс ближайшего треугольника
+    int closestMatrixIndex; // Индекс ближайшей матрица для этого треугольника
 
     vec4 color = vec4(0.0, 0.0, 0.0, 1.0); // Нет света
 
@@ -308,7 +338,12 @@ vec4 traceRayBVH(Ray ray)
                 // Попал!
                 
                 // Тест глубины (запомнить ближайшее расстояние)
-                closestT = min(closestT, t);
+                if (t < closestT)
+                {
+                    closestTriangleIndex = triangleIndex;
+                    closestMatrixIndex = matrixIndex;
+                    closestT = t;
+                }
 
                 // Переход к следующему узлу
                 ++curIndex;
