@@ -340,9 +340,9 @@ vec4 traceRayBVH(Ray ray)
     int matrixIndex; // индекс матрицы
     int triangleIndex; // индекс треугольника
 
-    vec4 tmpPos1; //
-    vec4 tmpPos2; // Кешированные позиции
-    vec4 tmpPos3; //
+    vec3 tmpPos1; //
+    vec3 tmpPos2; // Кешированные позиции
+    vec3 tmpPos3; //
 
     vec3 tmpNorm1; //
     vec3 tmpNorm2; // Кешированные нормали
@@ -381,7 +381,7 @@ vec4 traceRayBVH(Ray ray)
             TRBS.r = node.BS.r; // радиус ограничивающей сферы
 
             // Учет локальности данных* (перевод в мировые)
-            tmpPos1 = model * vec4(node.BS.cx, node.BS.cy, node.BS.cz, 1.0);
+            tmpPos1 = vec3(model * vec4(node.BS.cx, node.BS.cy, node.BS.cz, 1.0));
             TRBS.cx = tmpPos1.x;
             TRBS.cy = tmpPos1.y;
             TRBS.cz = tmpPos1.z;
@@ -410,7 +410,7 @@ vec4 traceRayBVH(Ray ray)
             TRBS.r = node.BS.r; // радиус ограничивающей сферы
 
             // Учет локальности данных* (перевод в мировые)
-            tmpPos1 = model * vec4(node.BS.cx, node.BS.cy, node.BS.cz, 1.0);
+            tmpPos1 = vec3(model * vec4(node.BS.cx, node.BS.cy, node.BS.cz, 1.0));
             TRBS.cx = tmpPos1.x;
             TRBS.cy = tmpPos1.y;
             TRBS.cz = tmpPos1.z;
@@ -452,24 +452,33 @@ vec4 traceRayBVH(Ray ray)
         // Подготовить нормали
 
         // Поизиция фрагмента
-        FragPos = ray.origin + closesT * ray.dir;
+        FragPos = ray.origin + closestT * ray.dir;
+
+        // Матрица модели
+        model = matrices[closestMatrixIndex];
+
+        // Перевод позиций вершин в мировое пространство
+
+        tmpPos1 = vec3(model * vec4(triangles[closestTriangleIndex].v1.px, triangles[closestTriangleIndex].v1.py, triangles[closestTriangleIndex].v1.pz, 1.0));
+        tmpPos2 = vec3(model * vec4(triangles[closestTriangleIndex].v2.px, triangles[closestTriangleIndex].v2.py, triangles[closestTriangleIndex].v2.pz, 1.0));
+        tmpPos3 = vec3(model * vec4(triangles[closestTriangleIndex].v3.px, triangles[closestTriangleIndex].v3.py, triangles[closestTriangleIndex].v3.pz, 1.0));
 
         // Нормальная матрица
         normModel = transpose(inverse(mat3(model)));
 
         // Перевод нормалей в мировое пространство
-        tmpNorm1 = normModel * vec3(triangles[triangleIndex].v1.nx, triangles[triangleIndex].v1.ny, triangles[triangleIndex].v1.nz);
-        tmpNorm2 = normModel * vec3(triangles[triangleIndex].v2.nx, triangles[triangleIndex].v2.ny, triangles[triangleIndex].v2.nz);
-        tmpNorm3 = normModel * vec3(triangles[triangleIndex].v3.nx, triangles[triangleIndex].v3.ny, triangles[triangleIndex].v3.nz);
+        tmpNorm1 = normModel * vec3(triangles[closestTriangleIndex].v1.nx, triangles[closestTriangleIndex].v1.ny, triangles[closestTriangleIndex].v1.nz);
+        tmpNorm2 = normModel * vec3(triangles[closestTriangleIndex].v2.nx, triangles[closestTriangleIndex].v2.ny, triangles[closestTriangleIndex].v2.nz);
+        tmpNorm3 = normModel * vec3(triangles[closestTriangleIndex].v3.nx, triangles[closestTriangleIndex].v3.ny, triangles[closestTriangleIndex].v3.nz);
 
         // Барицентрические координаты
-        barycentricCoords = computeBarycentricCoordinates(FragPos, tmpNorm1, tmpNorm2, tmpNorm3);
+        barycentricCoords = computeBarycentricCoordinates(FragPos, tmpPos1, tmpPos2, tmpPos3);
 
         // Интерполированная нормаль
         FragNorm = interpolateVector(barycentricCoords, tmpNorm1, tmpNorm2, tmpNorm3);
 
         // Вычисление освещения
-        color = vec4(computeLightColor(FragPos, FragNorm), 1.0);
+        color = vec4(computeLightColor(FragPos, tmpNorm1), 1.0);
     }
 
     return color;
