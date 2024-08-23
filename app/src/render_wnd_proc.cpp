@@ -67,7 +67,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static ShadowMapVsmOrthogonalRenderData RenderDataSMOVSM;
     static ShadowMapVsmPerspectiveRenderData RenderDataSMPVSM;
 
-    static RayTracingDebugRenderData RenderDataRTD;
+    static RayTracingRenderData RenderDataRTD;
 
     static CameraMode camera_mode = ORBITTING;
     static float orbitting_x_rot = 0.0f;
@@ -504,14 +504,14 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL, (LPARAM)0);
-        SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE_PCF, (LPARAM)0);
+        // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE_PCF, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL_PCF, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE_ESM, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL_ESM, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE_VSM, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL_VSM, (LPARAM)0);
 
-        // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)RAY_TRACING_DEBUG, (LPARAM)0);
+        SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)RAY_TRACING_DEBUG, (LPARAM)0);
 
         std::cout << sizeof(Light) << std::endl;
         std::cout << alignof(Light) << std::endl;

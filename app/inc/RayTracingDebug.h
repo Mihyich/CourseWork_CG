@@ -3,6 +3,6 @@
 
 #include "RayTracingRenderData.h"
 
-void RayTracingDrawBvh(RayTracingDebugRenderData& data);
+void RayTracingDrawBvh(RayTracingRenderData& data);
 
 #endif // RAY_TRACING_DEBUG_H
