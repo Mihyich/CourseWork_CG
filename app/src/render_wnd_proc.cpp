@@ -819,16 +819,24 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 }
 
                 case RAY_TRACING_DEBUG:
+                case RAY_TRACING_HARD:
                 {
                     RenderDataRTD.VertexSSBO = &VertexSSBO;
                     RenderDataRTD.MatrixSSBO = &MatrixSSBO;
                     RenderDataRTD.BvhSSBO = &BvhSSBO;
+                    RenderDataRTD.rayTracedTexture = &rayTracedTexture;
                     RenderDataRTD.nodeCount = (int)BVH.getBvh().size();
+                    RenderDataRTD.texture_width = &rayTracingTextureWidth;
+                    RenderDataRTD.texture_height = &rayTracingTextureHeight;
                     RenderDataRTD.client_width = &client_width;
                     RenderDataRTD.client_height = &client_height;
-                    RenderDataRTD.shader = &shader_RT_BVH;
+                    RenderDataRTD.shaderDebugBvh = &shader_RT_BVH;
+                    RenderDataRTD.shaderRayTracing = &shader_RT_HARD;
+                    RenderDataRTD.shaderImageOut = &shader_IO;
+                    RenderDataRTD.viewPos = &viewPos;
                     RenderDataRTD.view = &view;
                     RenderDataRTD.projection = &projection;
+                    RenderDataRTD.quadVAO = &quadVAO;
                     break;
                 }
                 
@@ -998,6 +1006,12 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             case RAY_TRACING_DEBUG:
             {
                 RayTracingDrawBvh(RenderDataRTD);
+                break;
+            }
+
+            case RAY_TRACING_HARD:
+            {
+                RayTracingHard(RenderDataRTD);
                 break;
             }
             
