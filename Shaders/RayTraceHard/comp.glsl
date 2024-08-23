@@ -225,7 +225,8 @@ vec3 traceRayBVH(Ray ray)
 {
     RayTraceBVHNode node; // Текущий узел BVH
     RayTraceBS TRBS; // Текущий огриничивающий объем (сфера)
-    RayTraceVertexTriangle triangle; // Текущий треугольник
+    RayTraceVertexTriangle triangle; // Текущий треугольник c вершинными данными
+    Triangle trig; // Треугольник для трассировки
     mat4 model; // Текущая матрица модели
     mat3 normModel; // Нормальная матрица модели
     int curIndex = 0; // Корневой узел в массиве ВСЕГДА лежит в самом начале
@@ -308,11 +309,11 @@ vec3 traceRayBVH(Ray ray)
             tmpPos2 = model * vec4(triangles[triangleIndex].v2.px, triangles[triangleIndex].v2.py, triangles[triangleIndex].v2.pz, 1.0);
             tmpPos3 = model * vec4(triangles[triangleIndex].v3.px, triangles[triangleIndex].v3.py, triangles[triangleIndex].v3.pz, 1.0);
 
-            triangle.v1.px = tmpPos1.x; triangle.v2.px = tmpPos2.x; triangle.v3.px = tmpPos3.x; 
-            triangle.v1.py = tmpPos1.y; triangle.v2.py = tmpPos2.y; triangle.v3.py = tmpPos3.y;
-            triangle.v1.pz = tmpPos1.z; triangle.v2.pz = tmpPos2.z; triangle.v3.pz = tmpPos3.z;
+            trig.v1 = vec3(tmpPos1);
+            trig.v2 = vec3(tmpPos2);
+            trig.v3 = vec3(tmpPos3);
 
-            if (traceRayTriangle(triangle, ray, t))
+            if (traceRayTriangle(trig, ray, t))
             {
                 // Попал!
 
@@ -328,6 +329,10 @@ vec3 traceRayBVH(Ray ray)
                 // triangle.v1.nx = tmpNorm1.x; triangle.v2.nx = tmpNorm2.x; triangle.v3.nx = tmpNorm3.x; 
                 // triangle.v1.ny = tmpNorm1.y; triangle.v2.ny = tmpNorm2.y; triangle.v3.ny = tmpNorm3.y;
                 // triangle.v1.nz = tmpNorm1.z; triangle.v2.nz = tmpNorm2.z; triangle.v3.nz = tmpNorm3.z;
+
+                // triangle.v1.px = tmpPos1.x; triangle.v2.px = tmpPos2.x; triangle.v3.px = tmpPos3.x;
+                // triangle.v1.py = tmpPos1.y; triangle.v2.py = tmpPos2.y; triangle.v3.py = tmpPos3.y;
+                // triangle.v1.pz = tmpPos1.z; triangle.v2.pz = tmpPos2.z; triangle.v3.pz = tmpPos3.z;
 
                 color = vec3(1.0, 1.0, 1.0);
             }
