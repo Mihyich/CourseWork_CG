@@ -123,7 +123,7 @@ uniform mat4 projection;
 #define FLT_MAX 3.402823466e+38
 
 // Выходное изображение
-layout(rgb32f, binding = 4) uniform image2D colorImage;
+layout(rgba32f, binding = 4) uniform image2D colorImage;
 
 // Луч
 struct Ray
