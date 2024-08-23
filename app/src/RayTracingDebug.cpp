@@ -47,10 +47,10 @@ void RayTracingDrawBvh(RayTracingRenderData& data)
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    data.shader->use();
+    data.shaderDebugBvh->use();
 
-    uniform_matrix4f(data.shader->get_uniform_location("view"), data.view);
-    uniform_matrix4f(data.shader->get_uniform_location("projection"), data.projection);
+    uniform_matrix4f(data.shaderDebugBvh->get_uniform_location("view"), data.view);
+    uniform_matrix4f(data.shaderDebugBvh->get_uniform_location("projection"), data.projection);
 
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, *data.VertexSSBO);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, *data.MatrixSSBO);
@@ -62,8 +62,8 @@ void RayTracingDrawBvh(RayTracingRenderData& data)
         startNodeIndex = i * enableNodeBatch;
         endNodeIndex = startNodeIndex + enableNodeBatch - 1;
 
-        glUniform1i(data.shader->get_uniform_location("startNodeIndex"), startNodeIndex);
-        glUniform1i(data.shader->get_uniform_location("endNodeIndex"), endNodeIndex);
+        glUniform1i(data.shaderDebugBvh->get_uniform_location("startNodeIndex"), startNodeIndex);
+        glUniform1i(data.shaderDebugBvh->get_uniform_location("endNodeIndex"), endNodeIndex);
 
         // Вызов отрисовки одной точки, ЧТО ВЫЗОВЕТ ГЕОМЕТРИЧЕСКИЙ ШЕЙДЕР ОДИН РАЗ
         glDrawArrays(GL_POINTS, 0, 1);
@@ -74,8 +74,8 @@ void RayTracingDrawBvh(RayTracingRenderData& data)
         startNodeIndex = data.nodeCount - extraNodeCount;
         endNodeIndex = data.nodeCount - 1;
 
-        glUniform1i(data.shader->get_uniform_location("startNodeIndex"), startNodeIndex);
-        glUniform1i(data.shader->get_uniform_location("endNodeIndex"), endNodeIndex);
+        glUniform1i(data.shaderDebugBvh->get_uniform_location("startNodeIndex"), startNodeIndex);
+        glUniform1i(data.shaderDebugBvh->get_uniform_location("endNodeIndex"), endNodeIndex);
 
         // Вызов отрисовки одной точки, ЧТО ВЫЗОВЕТ ГЕОМЕТРИЧЕСКИЙ ШЕЙДЕР ОДИН РАЗ
         glDrawArrays(GL_POINTS, 0, 1);
