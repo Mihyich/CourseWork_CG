@@ -168,6 +168,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     static Shader shader_RT_BVH; // RayTracing BVH Debug
 
+    static Shader shader_RT_HARD; // RayTracing Hard
+
     switch (message)
     {
     case WM_INIT_GL_OPTIONS:
@@ -195,7 +197,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         GenDepthFrameBuffer(depthBuffer, 1920, 1080);
         GenExpDepthFrameBuffer(depthBufferExp, 1920, 1080);
 
-        mat4 m;
+        mat4 m, rot;
         std::vector<vec3> vertices;
         std::vector<vec3> normales;
         std::vector<unsigned int> indeces;
@@ -206,9 +208,22 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         genRayTraceTriangles(triangles, vertices, normales, indeces);
         BVH.addMesh(triangles, m, "Plane");
 
+        m = modelModel;
+        mat4_set_rotate_x_degrees(&rot, 45.f);
+        mat4_compose(&m, &rot);
         LoadModel("Models/Cube.obj", vertices, normales, indeces, true);
         genRayTraceTriangles(triangles, vertices, normales, indeces);
-        BVH.addMesh(triangles, modelModel, "Rabbit");
+        BVH.addMesh(triangles, m, "Rabbit");
+
+        mat4_set_translate(&m, 5, 2, 0);
+        LoadModel("Models/cylinder.obj", vertices, normales, indeces, true);
+        genRayTraceTriangles(triangles, vertices, normales, indeces);
+        BVH.addMesh(triangles, m, "Cube1");
+
+        mat4_set_translate(&m, -5, 2, 0);
+        LoadModel("Models/Rabbit.obj", vertices, normales, indeces, true);
+        genRayTraceTriangles(triangles, vertices, normales, indeces);
+        BVH.addMesh(triangles, m, "Cube2");
 
         if (!BVH.checkLinkRanges())
         {
@@ -425,6 +440,14 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_RT_BVH.delete_shader(GL_GEOMETRY_SHADER);
         shader_RT_BVH.delete_shader(GL_FRAGMENT_SHADER);
 
+        shader_RT_HARD.set_shader_name("Shaders/RayTraceHard");
+        shader_RT_HARD.create_from_file("Shaders/RayTraceHard/comp.glsl", GL_COMPUTE_SHADER);
+        shader_RT_HARD.link_program();
+        shader_RT_HARD.init_uniforms_and_attribs();
+        shader_RT_HARD.print_uniforms_and_attribs();
+        shader_RT_HARD.report(REPORT_CS | REPORT_PROG);
+        shader_RT_HARD.delete_shader(GL_COMPUTE_SHADER);
+
         shader.use();
         uniform_matrix4f(shader.get_uniform_location("model"), &planeModel);
         uniform_matrix4f(shader.get_uniform_location("view"), &view);
@@ -462,11 +485,11 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL, (LPARAM)0);
-        // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE_PCF, (LPARAM)0);
+        SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE_PCF, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL_PCF, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE_ESM, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL_ESM, (LPARAM)0);
-        SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE_VSM, (LPARAM)0);
+        // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE_VSM, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL_VSM, (LPARAM)0);
 
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)RAY_TRACING_DEBUG, (LPARAM)0);
@@ -1014,6 +1037,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_VSM_P_DP.delete_program();
         shader_SM_VSM_P_RP.delete_program();
         shader_RT_BVH.delete_program();
+        shader_RT_HARD.delete_program();
 
         PostQuitMessage(0);
         return DefWindowProc(hWnd, message, wParam, lParam);
