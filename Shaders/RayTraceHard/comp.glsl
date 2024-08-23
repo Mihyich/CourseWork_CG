@@ -162,7 +162,7 @@ vec3 computeBarycentricCoordinates(vec3 P, vec3 A, vec3 B, vec3 C)
 }
 
 // Интерполяция векторов
-vec3 interpolateVector(vec3 A, vec3 B, vec3 C, vec3 barycentricCoords)
+vec3 interpolateVector(vec3 barycentricCoords, vec3 A, vec3 B, vec3 C)
 {
     // сдается мне что, это банальное умножение матрицы на вектор
     return barycentricCoords.x * A + barycentricCoords.y * B + barycentricCoords.z * C;
@@ -383,7 +383,7 @@ vec4 traceRayBVH(Ray ray)
         barycentricCoords = computeBarycentricCoordinates(FragPos, tmpNorm1, tmpNorm2, tmpNorm3);
 
         // Интерполированная нормаль
-        FragNorm = interpolateVector(tmpNorm1, tmpNorm2, tmpNorm3, barycentricCoords);
+        FragNorm = interpolateVector(barycentricCoords, tmpNorm1, tmpNorm2, tmpNorm3);
 
         closestT /= 50.0;
         color = vec4(closestT, closestT, closestT, 1.0);
