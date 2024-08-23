@@ -299,13 +299,9 @@ vec4 traceRayBVH(Ray ray)
             TRBS.cz = tmpPos1.z;
 
             // То же и для треугольника (пока только позиции)
-            tmpPos1 = model * vec4(triangles[triangleIndex].v1.px, triangles[triangleIndex].v1.py, triangles[triangleIndex].v1.pz, 1.0);
-            tmpPos2 = model * vec4(triangles[triangleIndex].v2.px, triangles[triangleIndex].v2.py, triangles[triangleIndex].v2.pz, 1.0);
-            tmpPos3 = model * vec4(triangles[triangleIndex].v3.px, triangles[triangleIndex].v3.py, triangles[triangleIndex].v3.pz, 1.0);
-
-            trig.v1 = vec3(tmpPos1);
-            trig.v2 = vec3(tmpPos2);
-            trig.v3 = vec3(tmpPos3);
+            trig.v1 = vec3(model * vec4(triangles[triangleIndex].v1.px, triangles[triangleIndex].v1.py, triangles[triangleIndex].v1.pz, 1.0));
+            trig.v2 = vec3(model * vec4(triangles[triangleIndex].v2.px, triangles[triangleIndex].v2.py, triangles[triangleIndex].v2.pz, 1.0));
+            trig.v3 = vec3(model * vec4(triangles[triangleIndex].v3.px, triangles[triangleIndex].v3.py, triangles[triangleIndex].v3.pz, 1.0));
 
             if (traceRayTriangle(trig, ray, t))
             {
