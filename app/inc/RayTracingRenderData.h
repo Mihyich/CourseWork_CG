@@ -27,6 +27,8 @@ struct RayTracingRenderData
 
     mat4* view;
     mat4* projection;
+
+    GLuint* quadVAO;
 };
 
 #endif // RAY_TRACING_RENDER_DATA_H
