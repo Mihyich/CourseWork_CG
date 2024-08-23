@@ -140,17 +140,6 @@ struct Triangle
     vec3 v3; // 3 позиция вершины
 };
 
-// Отбраковка треугольников, повернутых спикой к лучу
-// true - надо отбраковывать
-// false - не надо
-bool backFaceCulling(Triangle triangle, Ray ray)
-{
-    vec3 edge1 = triangle.v2 - triangle.v1;
-    vec3 edge2 = triangle.v3 - triangle.v1;
-    vec3 normal = cross(edge1, edge2);
-    return dot(normal, ray.dir) > 0.0;
-}
-
 // Трассировка сферы
 // Положительный результат даже если луч находится внутри сферы
 bool traceRayBoundingSphere(RayTraceBS RTBS, Ray ray)
