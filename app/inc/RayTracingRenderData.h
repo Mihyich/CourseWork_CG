@@ -6,6 +6,7 @@
 #include "shader.h"
 #include "shader_extensions.h"
 
+#include "Vector3D.h"
 #include "Matrix4D.h"
 
 struct RayTracingRenderData
@@ -27,6 +28,7 @@ struct RayTracingRenderData
     Shader* shaderRayTracing;
     Shader* shaderImageOut;
 
+    vec3* viewPos;
     mat4* view;
     mat4* projection;
 
