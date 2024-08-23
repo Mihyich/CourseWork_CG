@@ -23,7 +23,9 @@ struct RayTracingRenderData
     GLsizei* client_width;
     GLsizei* client_height;
 
-    Shader* shader;
+    Shader* shaderDebugBvh;
+    Shader* shaderRayTracing;
+    Shader* shaderImageOut;
 
     mat4* view;
     mat4* projection;
