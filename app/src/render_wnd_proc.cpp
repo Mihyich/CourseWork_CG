@@ -168,6 +168,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     static Shader shader_RT_BVH; // RayTracing BVH Debug
 
+    static Shader shader_IO; // ImageOut
+
     static Shader shader_RT_HARD; // RayTracing Hard
 
     switch (message)
@@ -440,6 +442,16 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_RT_BVH.delete_shader(GL_GEOMETRY_SHADER);
         shader_RT_BVH.delete_shader(GL_FRAGMENT_SHADER);
 
+        shader_IO.set_shader_name("Shaders/ImageOut");
+        shader_IO.create_from_file("Shaders/ImageOut/vert.glsl", GL_VERTEX_SHADER);
+        shader_IO.create_from_file("Shaders/ImageOut/frag.glsl", GL_FRAGMENT_SHADER);
+        shader_IO.link_program();
+        shader_IO.init_uniforms_and_attribs();
+        shader_IO.print_uniforms_and_attribs();
+        shader_IO.report(REPORT_VS | REPORT_FS | REPORT_PROG);
+        shader_IO.delete_shader(GL_VERTEX_SHADER);
+        shader_IO.delete_shader(GL_FRAGMENT_SHADER);
+
         shader_RT_HARD.set_shader_name("Shaders/RayTraceHard");
         shader_RT_HARD.create_from_file("Shaders/RayTraceHard/comp.glsl", GL_COMPUTE_SHADER);
         shader_RT_HARD.link_program();
@@ -479,6 +491,9 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         shader_SM_VSM_P_RP.use();
         glUniform1i(shader_SM_VSM_P_RP.get_uniform_location("shadowMap"), 0);
+
+        shader_IO.use();
+        glUniform1i(shader_IO.get_uniform_location("colorImage"), 0);
 
         // Подключить UBO буфер ко всем шейдером его поддерживающих
         glBindBufferRange(GL_UNIFORM_BUFFER, 0, lightUBO, 0, sizeof(Light));
@@ -1037,6 +1052,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_VSM_P_DP.delete_program();
         shader_SM_VSM_P_RP.delete_program();
         shader_RT_BVH.delete_program();
+        shader_IO.delete_program();
         shader_RT_HARD.delete_program();
 
         PostQuitMessage(0);
