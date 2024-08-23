@@ -221,7 +221,7 @@ int skipSubTree(int index)
 }
 
 // Обхода BVH дерева
-vec3 traceRayBVH(Ray ray)
+vec4 traceRayBVH(Ray ray)
 {
     RayTraceBVHNode node; // Текущий узел BVH
     RayTraceBS TRBS; // Текущий огриничивающий объем (сфера)
@@ -246,7 +246,7 @@ vec3 traceRayBVH(Ray ray)
     float t; // Расстояние до тругольника
     float closestT = FLT_MAX; // Ближайшее расстояние до треугольника
 
-    vec3 color = vec3(0.0, 0.0, 0.0); // Нет света
+    vec4 color = vec4(0.0, 0.0, 0.0, 1.0); // Нет света
 
     while (curIndex > -1 && curIndex < bvhLenght)
     {
@@ -334,7 +334,7 @@ vec3 traceRayBVH(Ray ray)
                 // triangle.v1.py = tmpPos1.y; triangle.v2.py = tmpPos2.y; triangle.v3.py = tmpPos3.y;
                 // triangle.v1.pz = tmpPos1.z; triangle.v2.pz = tmpPos2.z; triangle.v3.pz = tmpPos3.z;
 
-                color = vec3(1.0, 1.0, 1.0);
+                color = vec4(1.0, 1.0, 1.0, 1.0);
             }
             else
             {
@@ -352,7 +352,7 @@ vec3 traceRayBVH(Ray ray)
 void main()
 {
     Ray ray; // Я, лучик...
-    vec3 color; // Цвет света
+    vec4 color; // Цвет света
 
     // Координаты пикселя (x, y) на экране
     ivec2 pixelCoord = ivec2(gl_GlobalInvocationID.xy);
