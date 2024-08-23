@@ -42,6 +42,7 @@ extern PFNWGLGETSWAPINTERVALEXTPROC wglGetSwapIntervalEXT;
 // Тектуры
 extern PFNGLGENERATEMIPMAPPROC glGenerateMipmap;
 extern PFNGLACTIVETEXTUREPROC glActiveTexture;
+extern PFNGLBINDIMAGETEXTUREPROC glBindImageTexture;
 // Объект массива вершин
 extern PFNGLGENVERTEXARRAYSPROC glGenVertexArrays;
 extern PFNGLDELETEVERTEXARRAYSPROC glDeleteVertexArrays;
