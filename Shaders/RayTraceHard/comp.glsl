@@ -335,6 +335,7 @@ vec4 traceRayBVH(Ray ray)
                 // triangle.v1.pz = tmpPos1.z; triangle.v2.pz = tmpPos2.z; triangle.v3.pz = tmpPos3.z;
 
                 color = vec4(1.0, 1.0, 1.0, 1.0);
+                ++curIndex;
             }
             else
             {
@@ -377,6 +378,7 @@ void main()
 
     // Запуск обхода BVH дерева
     color = traceRayBVH(ray);
+    // color = vec4(1.0, 0.0, 0.0, 1.0);
 
     // Запись результата
     imageStore(colorImage, pixelCoord, color);
