@@ -311,25 +311,9 @@ vec4 traceRayBVH(Ray ray)
             {
                 // Попал!
                 
+                // Тест глубины
                 if (t < closestT)
                 {
-
-                    // Подготовить нормали
-
-                    // Нормальная матрица
-                    // normModel = transpose(inverse(mat3(model)));
-
-                    // tmpNorm1 = normModel * vec3(triangles[triangleIndex].v1.nx, triangles[triangleIndex].v1.ny, triangles[triangleIndex].v1.nz);
-                    // tmpNorm2 = normModel * vec3(triangles[triangleIndex].v2.nx, triangles[triangleIndex].v2.ny, triangles[triangleIndex].v2.nz);
-                    // tmpNorm3 = normModel * vec3(triangles[triangleIndex].v3.nx, triangles[triangleIndex].v3.ny, triangles[triangleIndex].v3.nz);
-
-                    // triangle.v1.nx = tmpNorm1.x; triangle.v2.nx = tmpNorm2.x; triangle.v3.nx = tmpNorm3.x; 
-                    // triangle.v1.ny = tmpNorm1.y; triangle.v2.ny = tmpNorm2.y; triangle.v3.ny = tmpNorm3.y;
-                    // triangle.v1.nz = tmpNorm1.z; triangle.v2.nz = tmpNorm2.z; triangle.v3.nz = tmpNorm3.z;
-
-                    // triangle.v1.px = tmpPos1.x; triangle.v2.px = tmpPos2.x; triangle.v3.px = tmpPos3.x;
-                    // triangle.v1.py = tmpPos1.y; triangle.v2.py = tmpPos2.y; triangle.v3.py = tmpPos3.y;
-                    // triangle.v1.pz = tmpPos1.z; triangle.v2.pz = tmpPos2.z; triangle.v3.pz = tmpPos3.z;
                     closestT = t;
                     t /= 50.0;
                     color = vec4(t, t, t, 1.0);
@@ -379,7 +363,6 @@ void main()
 
     // Запуск обхода BVH дерева
     color = traceRayBVH(ray);
-    // color = vec4(1.0, 0.0, 0.0, 1.0);
 
     // Запись результата
     imageStore(colorImage, pixelCoord, color);
