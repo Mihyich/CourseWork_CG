@@ -91,6 +91,7 @@ extern PFNGLDETACHSHADERPROC glDetachShader;
 extern PFNGLISSHADERPROC glIsShader;
 extern PFNGLISPROGRAMPROC glIsProgram;
 extern PFNGLDISPATCHCOMPUTEPROC glDispatchCompute;
+extern PFNGLMEMORYBARRIERPROC glMemoryBarrier;
 // распределение униформ по шейдерам
 extern PFNGLGETPROGRAMSTAGEIVPROC glGetProgramStageiv;
 extern PFNGLGETACTIVESUBROUTINEUNIFORMIVPROC glGetActiveSubroutineUniformiv;
