@@ -51,7 +51,11 @@
 #include "ShadowMapVsmOrthogonal.h"
 #include "ShadowMapVsmPerspective.h"
 
+
+#include "RayTracingRenderData.h"
+
 #include "RayTracingDebug.h"
+
 
 #include "app_args.h"
 #include "user_msgs.h"
