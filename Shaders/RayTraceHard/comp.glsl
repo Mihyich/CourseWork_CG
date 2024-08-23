@@ -355,7 +355,7 @@ void main()
     vec3 color; // Цвет света
 
     // Координаты пикселя (x, y) на экране
-    ivec2 pixelCoord = gl_GlobalInvocationID.xy;
+    ivec2 pixelCoord = ivec2(gl_GlobalInvocationID.xy);
 
     // Размеры изображения
     ivec2 imageSize = imageSize(colorImage);
