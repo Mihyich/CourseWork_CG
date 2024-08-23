@@ -210,7 +210,7 @@ bool traceRayTriangle(Triangle triangle, Ray ray, out float t)
 // в положительном направлении
 int skipSubTree(int index)
 {
-    while (bvh[index].CI.right || bvh[index].CI.left)
+    while (bvh[index].CI.right > -1 || bvh[index].CI.left > -1)
     {
         index = bvh[index].CI.right > -1 ? bvh[index].CI.right : bvh[index].CI.left;
     }
