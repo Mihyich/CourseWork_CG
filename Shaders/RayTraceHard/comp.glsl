@@ -181,7 +181,12 @@ bool traceRayTriangle(Triangle triangle, Ray ray, out float t)
 {
     vec3 edge1 = triangle.v2 - triangle.v1;
     vec3 edge2 = triangle.v3 - triangle.v1;
+    vec3 normal = cross(edge1, edge2);
     vec3 h = cross(ray.dir, edge2);
+
+    if (dot(normal, ray.dir) < 0.0)
+        return false;
+
     float a = dot(edge1, h);
 
     if (a > -EPSILON && a < EPSILON)
