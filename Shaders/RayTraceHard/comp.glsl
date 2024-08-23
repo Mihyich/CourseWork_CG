@@ -155,11 +155,11 @@ bool backFaceCulling(Triangle triangle, Ray ray)
 // Положительный результат даже если луч находится внутри сферы
 bool traceRayBoundingSphere(RayTraceBS RTBS, Ray ray)
 {
-    vec3 oc = ray.origin - vec3(sphere.cx, sphere.cy, sphere.cz);
+    vec3 oc = ray.origin - vec3(RTBS.cx, RTBS.cy, RTBS.cz);
 
-    float a = dot(ray.direction, ray.direction);
-    float b = 2.0 * dot(oc, ray.direction);
-    float c = dot(oc, oc) - sphere.r * sphere.r;
+    float a = dot(ray.dir, ray.dir);
+    float b = 2.0 * dot(oc, ray.dir);
+    float c = dot(oc, oc) - RTBS.r * RTBS.r;
 
     float discriminant = b * b - 4.0 * a * c;
 
