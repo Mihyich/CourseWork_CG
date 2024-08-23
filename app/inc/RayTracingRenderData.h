@@ -8,37 +8,23 @@
 
 #include "Matrix4D.h"
 
-struct RayTracingDebugRenderData
+struct RayTracingRenderData
 {
     GLuint* VertexSSBO;
     GLuint* MatrixSSBO;
     GLuint* BvhSSBO;
+    GLuint* rayTracedTexture;
 
     int nodeCount;
+
+    GLsizei* texture_width;
+    GLsizei* texture_height;
 
     GLsizei* client_width;
     GLsizei* client_height;
 
     Shader* shader;
 
-    mat4* view;
-    mat4* projection;
-};
-
-struct RayTracingHardRenderData
-{
-    GLuint* VertexSSBO;
-    GLuint* MatrixSSBO;
-    GLuint* BvhSSBO;
-    GLuint* RayTracedTexture;
-
-    GLsizei* client_width;
-    GLsizei* client_height;
-
-    Shader* shaderRayTracing;
-    Shader* shaderImageOut;
-
-    vec3* viewPos;
     mat4* view;
     mat4* projection;
 };
