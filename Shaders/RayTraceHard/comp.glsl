@@ -265,6 +265,10 @@ vec4 traceRayBVH(Ray ray)
     vec3 tmpNorm2; // Кешированные нормали
     vec3 tmpNorm3; //
 
+    vec3 FragPos; // Позиция фрагмента
+    vec3 FragNorm; // Нормаль фрагмента
+    vec3 barycentricCoords; // барицентрические, вспомогательные координаты
+
     float t; // Расстояние до тругольника
     float closestT = FLT_MAX; // Ближайшее расстояние до треугольника
     int closestTriangleIndex; // Индекс ближайшего треугольника
@@ -362,6 +366,25 @@ vec4 traceRayBVH(Ray ray)
     // Следовательно, нужно рассчитать освещение
     if (closestT < FLT_MAX)
     {
+        // Подготовить нормали
+
+        // Поизиция фрагмента
+        FragPos = ray.origin + closesT * ray.dir;
+
+        // Нормальная матрица
+        normModel = transpose(inverse(mat3(model)));
+
+        // Перевод нормалей в мировое пространство
+        tmpNorm1 = normModel * vec3(triangles[triangleIndex].v1.nx, triangles[triangleIndex].v1.ny, triangles[triangleIndex].v1.nz);
+        tmpNorm2 = normModel * vec3(triangles[triangleIndex].v2.nx, triangles[triangleIndex].v2.ny, triangles[triangleIndex].v2.nz);
+        tmpNorm3 = normModel * vec3(triangles[triangleIndex].v3.nx, triangles[triangleIndex].v3.ny, triangles[triangleIndex].v3.nz);
+
+        // Барицентрические координаты
+        barycentricCoords = computeBarycentricCoordinates(FragPos, tmpNorm1, tmpNorm2, tmpNorm3);
+
+        // Интерполированная нормаль
+        FragNorm = interpolateVector(tmpNorm1, tmpNorm2, tmpNorm3, barycentricCoords);
+
         closestT /= 50.0;
         color = vec4(closestT, closestT, closestT, 1.0);
     }
