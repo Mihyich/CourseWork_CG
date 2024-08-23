@@ -113,12 +113,16 @@ layout(std430, binding = 3) buffer Bvh
     RayTraceBVHNode bvh[];
 };
 
+layout (local_size_x = 16, local_size_y = 16) in;
+
 uniform vec3 viewPos;
 uniform mat4 view;
 uniform mat4 projection;
 
 #define EPSILON 0.0001
+#define FLT_MAX 3.402823466e+38
 
+// Выходное изображение
 layout(rgb32f, binding = 4) uniform image2D colorImage;
 
 // Луч
@@ -173,7 +177,7 @@ bool traceRayBoundingSphere(RayTraceBS RTBS, Ray ray)
 
 // Трассировка треугольника (Möller–Trumbore)
 // обещает обрабатывать как CWW треугольники, так и CW
-bool traceRayTriangle(Triangle triangle, Ray ray)
+bool traceRayTriangle(Triangle triangle, Ray ray, out float t)
 {
     vec3 edge1 = triangle.v2 - triangle.v1;
     vec3 edge2 = triangle.v3 - triangle.v1;
@@ -196,41 +200,72 @@ bool traceRayTriangle(Triangle triangle, Ray ray)
     if (v < 0.0 || u + v > 1.0)
         return false;
 
-    float t = f * dot(edge2, q);
+    t = f * dot(edge2, q);
 
     return t > EPSILON;
 }
 
-int skipSubTree
+// Поиск следующего индекса узла, идущего сразу
+// после поддерева узла по индексу index
+// в положительном направлении
+int skipSubTree(int index)
+{
+    while (bvh[index].CI.right || bvh[index].CI.left)
+    {
+        index = bvh[index].CI.right > -1 ? bvh[index].CI.right : bvh[index].CI.left;
+    }
 
-// Запуск обхода BVH дерева
-void traceRayBVH(Ray ray)
+    ++index;
+
+    return index;
+}
+
+// Обхода BVH дерева
+vec3 traceRayBVH(Ray ray)
 {
     RayTraceBVHNode node; // Текущий узел BVH
     RayTraceBS TRBS; // Текущий огриничивающий объем (сфера)
     RayTraceVertexTriangle triangle; // Текущий треугольник
     mat4 model; // Текущая матрица модели
+    mat3 normModel; // Нормальная матрица модели
     int curIndex = 0; // Корневой узел в массиве ВСЕГДА лежит в самом начале
-    int maxIndex = bvh.length() - 1; // Максимально возможный индекс
+    int bvhLenght = bvh.length(); // Количество узлов дерева BVH
 
-    vec4 tmpPos1;
+    int matrixIndex; // индекс матрицы
+    int triangleIndex; // индекс треугольника
 
-    while (curIndex > -1)
+    vec4 tmpPos1; //
+    vec4 tmpPos2; // Кешированные позиции
+    vec4 tmpPos3; //
+
+    vec3 tmpNorm1; //
+    vec3 tmpNorm2; // Кешированные нормали
+    vec3 tmpNorm3; //
+
+    float t; // Расстояние до тругольника
+    float closestT = FLT_MAX; // Ближайшее расстояние до треугольника
+
+    vec3 color = vec3(0.0, 0.0, 0.0); // Нет света
+
+    while (curIndex > -1 && curIndex < bvhLenght)
     {
         // Получить текущий узел
         node = bvh[curIndex];
 
+        matrixIndex = node.DI.matrix;
+        triangleIndex = node.DI.triangle;
+
         // Если узел не связующий (нет матрицы)
-        if (node.DI.matrix < 0)
+        if (matrixIndex < 0)
         {
             // Все первые 3 под-пункта выполнены
             ++curIndex; // Вжух... (づ￣ 3￣)づ (Продолжить ПРЕФИКСНЫЙ обход дерева)
         }
         // Если узел связующий (есть матрица, но нет треугольника)
-        else if (node.DI.triangle < 0)
+        else if (triangleIndex < 0)
         {
             // Подготовка данных
-            model = matrices[node.DI.matrix]; // Матрицы модели
+            model = matrices[matrixIndex]; // Матрицы модели
             TRBS.r = node.BS.r; // радиус ограничивающей сферы
 
             // Учет локальности данных* (перевод в мировые)
@@ -251,15 +286,68 @@ void traceRayBVH(Ray ray)
             {
                 // Мимо!
 
+                // Оптимизицонный подбор индекса следующего узла
+                curIndex = skipSubTree(curIndex);
+            }
+        }
+        // Если узел - лист (есть матрица и треугольник)
+        else
+        {
+            // Подготовка данных
+            model = matrices[matrixIndex]; // Матрицы модели
+            TRBS.r = node.BS.r; // радиус ограничивающей сферы
 
+            // Учет локальности данных* (перевод в мировые)
+            tmpPos1 = model * vec4(node.BS.cx, node.BS.cy, node.BS.cz, 1.0);
+            TRBS.cx = tmpPos1.x;
+            TRBS.cy = tmpPos1.y;
+            TRBS.cz = tmpPos1.z;
+
+            // То же и для треугольника (пока только позиции)
+            tmpPos1 = model * vec4(triangles[triangleIndex].v1.px, triangles[triangleIndex].v1.py, triangles[triangleIndex].v1.pz, 1.0);
+            tmpPos2 = model * vec4(triangles[triangleIndex].v2.px, triangles[triangleIndex].v2.py, triangles[triangleIndex].v2.pz, 1.0);
+            tmpPos3 = model * vec4(triangles[triangleIndex].v3.px, triangles[triangleIndex].v3.py, triangles[triangleIndex].v3.pz, 1.0);
+
+            triangle.v1.px = tmpPos1.x; triangle.v2.px = tmpPos2.x; triangle.v3.px = tmpPos3.x; 
+            triangle.v1.py = tmpPos1.y; triangle.v2.py = tmpPos2.y; triangle.v3.py = tmpPos3.y;
+            triangle.v1.pz = tmpPos1.z; triangle.v2.pz = tmpPos2.z; triangle.v3.pz = tmpPos3.z;
+
+            if (traceRayTriangle(triangle, ray, t))
+            {
+                // Попал!
+
+                // Подготовить нормали
+
+                // Нормальная матрица
+                // normModel = transpose(inverse(mat3(model)));
+
+                // tmpNorm1 = normModel * vec3(triangles[triangleIndex].v1.nx, triangles[triangleIndex].v1.ny, triangles[triangleIndex].v1.nz);
+                // tmpNorm2 = normModel * vec3(triangles[triangleIndex].v2.nx, triangles[triangleIndex].v2.ny, triangles[triangleIndex].v2.nz);
+                // tmpNorm3 = normModel * vec3(triangles[triangleIndex].v3.nx, triangles[triangleIndex].v3.ny, triangles[triangleIndex].v3.nz);
+
+                // triangle.v1.nx = tmpNorm1.x; triangle.v2.nx = tmpNorm2.x; triangle.v3.nx = tmpNorm3.x; 
+                // triangle.v1.ny = tmpNorm1.y; triangle.v2.ny = tmpNorm2.y; triangle.v3.ny = tmpNorm3.y;
+                // triangle.v1.nz = tmpNorm1.z; triangle.v2.nz = tmpNorm2.z; triangle.v3.nz = tmpNorm3.z;
+
+                color = vec3(1.0, 1.0, 1.0);
+            }
+            else
+            {
+                // Мимо!
+
+                // Оптимизационный подбор индекса следующего узла
+                curIndex = skipSubTree(curIndex);
             }
         }
     }
+
+    return color;
 }
 
 void main()
 {
     Ray ray; // Я, лучик...
+    vec3 color; // Цвет света
 
     // Координаты пикселя (x, y) на экране
     ivec2 pixelCoord = gl_GlobalInvocationID.xy;
@@ -281,6 +369,12 @@ void main()
 
     // позиция камеры ВСЕГДА чуть ближе, чем проекционная плоскость усеченной пирамиды
     ray.dir = normalize(ray.origin - viewPos);
+
+    // Запуск обхода BVH дерева
+    color = traceRayBVH(ray);
+
+    // Запись результата
+    imageStore(colorImage, pixelCoord, color);
 }
 
 /*
@@ -358,9 +452,15 @@ BVH дерево строится ПРЕФИКСНО, соответственн
 
 Решение 1: (итеративный метод)
 
-1. Найти самый крайний правый узел. Это будет треугольник (так задумывалось дерево)
+1. Найти самый крайний приоритетно правый узел. Это будет треугольник (так задумывалось дерево)
 
 2. К найденному индексу прибавить 1. Та-да, либо нашлась новая ветка, либо мы достигли лимит индексов
+
+Учитывая ПРЕФИКСНО-обходную способность дерева, индекс узла на массиве предшевствующий требуемому узлу,
+будет лежать в самом низу, начиная от текущего узла, как можно правее. Навсякий случай, лучше
+предположить, что в дереве может быть ошибка и учесть возможномть несуществования правого узла, только
+левого. В таком случае нужно перейти в него и продолжить искать правый, пока не получится найти лист.
+Как только он найден, искомый индекс = найденный + 1.
 
 Решение 2: (ПИЗДЕЦ метод, ноооо вкусный) Пока не поддерживается
 
@@ -369,9 +469,13 @@ BVH дерево строится ПРЕФИКСНО, соответственн
 не всегда. Скорее всего из-за не точностей при распределении треугольников...
 
 Пока мысли только о том, что можно дополнить узлы информацией о том, является ли их
-поддерево сбалансированным?
+поддерево сбалансированным?..
 
-Поэтому пока что реализуем первый метод
+Либо исправлять алгоритм построения дерева?..
+
+Либо использовать вообще другой?..
+
+Поэтому пока что реализация первого метода
 
 ===========================================================================================================
 | Учет локальности данных*                                                                                |
