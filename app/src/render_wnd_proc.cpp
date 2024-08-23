@@ -137,6 +137,9 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static GLuint VertexSSBO = 0;
     static GLuint MatrixSSBO = 0;
     static GLuint BvhSSBO = 0;
+    static GLuint rayTracedTexture = 0;
+    static GLsizei rayTracingTextureWidth = 1920;
+    static GLsizei rayTracingTextureHeight = 1080;
 
     static Shader shader;
 
@@ -247,6 +250,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         genRayTraceVertexSSBO(BVH.getVerteces(), VertexSSBO);
         genRayTraceMatrixSSBO(BVH.getMatrices(), MatrixSSBO);
         genRayTraceBvhSSBO(BVH.getBvh(), BvhSSBO);
+        genRayTracedTexture(rayTracedTexture, rayTracingTextureWidth, rayTracingTextureHeight);
 
         SetupOpenGLServices();
 
@@ -1032,6 +1036,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         if (VertexSSBO) glDeleteBuffers(1, &VertexSSBO);
         if (MatrixSSBO) glDeleteBuffers(1, &MatrixSSBO);
         if (BvhSSBO) glDeleteBuffers(1, &BvhSSBO);
+        if (rayTracedTexture) glDeleteTextures(1, &rayTracedTexture);
 
         shader.delete_program();
         shader_DBD.delete_program();
