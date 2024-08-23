@@ -307,13 +307,8 @@ vec4 traceRayBVH(Ray ray)
             {
                 // Попал!
                 
-                // Тест глубины
-                if (t < closestT)
-                {
-                    closestT = t;
-                    t /= 50.0;
-                    color = vec4(t, t, t, 1.0);
-                }
+                // Тест глубины (запомнить ближайшее расстояние)
+                closestT = min(closestT, t);
 
                 // Переход к следующему узлу
                 ++curIndex;
@@ -326,6 +321,14 @@ vec4 traceRayBVH(Ray ray)
                 curIndex = skipSubTree(curIndex);
             }
         }
+    }
+
+    // Если ближайшее расстояние изменилось, значит было столкновение с треугольником
+    // Следовательно, нужно рассчитать освещение
+    if (closestT < FLT_MAX)
+    {
+        closestT /= 50.0;
+        color = vec4(closestT, closestT, closestT, 1.0);
     }
 
     return color;
