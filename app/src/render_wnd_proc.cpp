@@ -138,8 +138,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static GLuint MatrixSSBO = 0;
     static GLuint BvhSSBO = 0;
     static GLuint rayTracedTexture = 0;
-    static GLsizei rayTracingTextureWidth = 1920;
-    static GLsizei rayTracingTextureHeight = 1080;
+    static GLsizei rayTracingTextureWidth = 800;
+    static GLsizei rayTracingTextureHeight = 600;
 
     static Shader shader;
 
