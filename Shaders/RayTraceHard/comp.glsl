@@ -140,6 +140,89 @@ struct Triangle
     vec3 v3; // 3 позиция вершины
 };
 
+// Вычисление цвета света от точечного источника света
+vec3 computePointLightColor(vec3 fragPos, vec3 normal, PointLight light)
+{
+    // Вектор от фрагмента до источника света
+    vec3 lightDir = normalize(light.position - fragPos);
+    
+    // Расстояние до источника света
+    float distance = length(light.position - fragPos);
+    
+    // Интенсивность света с учетом расстояния (уменьшение света по квадрату расстояния)
+    float attenuation = max(1.0 - (distance / light.radius), 0.0);
+    
+    // Расчет диффузного освещения
+    float diff = max(dot(normal, lightDir), 0.0);
+    
+    // Цвет освещения
+    vec3 lightColor = light.color * light.intensity * attenuation;
+    
+    return lightColor * diff;
+}
+
+// Вычисление цвета света от прожектороного источника света
+vec3 computeSpotLightColor(vec3 fragPos, vec3 normal, SpotLight light)
+{
+    // Вектор от фрагмента до источника света
+    vec3 lightDir = normalize(light.position - fragPos);
+    
+    // Расстояние до источника света
+    float distance = length(light.position - fragPos);
+    
+    // Интенсивность света с учетом расстояния (уменьшение света по квадрату расстояния)
+    float attenuation = max(1.0 - (distance / light.radius), 0.0);
+    
+    // Расчет диффузного освещения
+    float diff = max(dot(normal, lightDir), 0.0);
+    
+    // Угол между направлением источника света и направлением к источнику света
+    float spotEffect = dot(normalize(light.direction), -lightDir);
+    
+    // Проверка попадания в конус
+    float theta = cos(light.innerCutoff);
+    float phi = cos(light.outerCutoff);
+    float epsilon = theta - phi;
+    float intensity = clamp((spotEffect - phi) / epsilon, 0.0, 1.0);
+    
+    // Цвет освещения
+    vec3 lightColor = light.color * light.intensity * attenuation * intensity;
+    
+    return lightColor * diff;
+}
+
+// Лаунчер вычисления цвета света от источника света
+vec3 computeLightColor(vec3 fragPos, vec3 normal)
+{
+    PointLight pl;
+    SpotLight sl;
+    vec3 diff;
+
+    if (light.type == 0)
+    {
+        pl.position = light.position;
+        pl.radius = light.option.x;
+        pl.color = light.color;
+        pl.intensity =  light.option.y;
+
+        diff = computePointLightColor(fragPos, normal, pl);
+    }
+    else
+    {
+        sl.position = light.position;
+        sl.direction = light.direction;
+        sl.innerCutoff = light.cutoff.x;
+        sl.outerCutoff = light.cutoff.y;
+        sl.radius = light.option.x;
+        sl.color = light.color;
+        sl.intensity = light.option.y;
+
+        diff = computeSpotLightColor(fragPos, normal, sl);
+    }
+
+    return diff;
+}
+
 // Вычисление барицентрических координат
 vec3 computeBarycentricCoordinates(vec3 P, vec3 A, vec3 B, vec3 C)
 {
