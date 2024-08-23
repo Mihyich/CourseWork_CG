@@ -169,8 +169,8 @@ bool traceRayBoundingSphere(RayTraceBS RTBS, Ray ray)
     }
     
     float sqrtDisc = sqrt(discriminant);
-    t1 = (-b - sqrtDisc) / (2.0 * a);
-    t2 = (-b + sqrtDisc) / (2.0 * a);
+    float t1 = (-b - sqrtDisc) / (2.0 * a);
+    float t2 = (-b + sqrtDisc) / (2.0 * a);
     
     return t1 > 0.0 || t2 > 0.0;
 }
