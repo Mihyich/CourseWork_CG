@@ -31,6 +31,7 @@
 #include "RayTraceTrianglesGenerator.h"
 #include "RayTraceBvhGenerator.h"
 #include "RayTraceBufferGenerator.h"
+#include "RayTraceTextureGenerator.h"
 
 
 #include "DepthBufferGenerator.h"
@@ -55,6 +56,7 @@
 #include "RayTracingRenderData.h"
 
 #include "RayTracingDebug.h"
+#include "RayTracingHard.h"
 
 
 #include "app_args.h"
