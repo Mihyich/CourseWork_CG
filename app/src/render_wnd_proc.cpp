@@ -252,28 +252,46 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         GenDepthFrameBuffer(depthBuffer, 1920, 1080);
         GenExpDepthFrameBuffer(depthBufferExp, 1920, 1080);
 
-        mat4 m, rot;
+        // Вау-эффект, для первого RayTracing дерева, потом автоматически дерево перестроится
+        // по желанию пользователя загрузить новую модель
+
+        mat4 m;
+        vec3 rot;
+        vec3 pos;
+        vec3 scale = {1, 1, 1};
         std::vector<vec3> vertices;
         std::vector<vec3> normales;
         std::vector<unsigned int> indeces;
         
         mat4_set_ordinary(&m);
-        genPlaneMeshVNI(vertices, normales, indeces, 20.f);
+        genPlaneMeshVNI(vertices, normales, indeces, 50.f);
         BVH.addMesh(vertices, normales, indeces, m, "Plane");
 
-        m = modelModel;
-        mat4_set_rotate_x_degrees(&rot, 45.f);
-        mat4_compose(&m, &rot);
-        LoadModel("Models/Cube.obj", vertices, normales, indeces, true);
-        BVH.addMesh(vertices, normales, indeces, m, "Rabbit");
+        LoadModel("Models/monkey.obj", vertices, normales, indeces, true);
 
-        mat4_set_translate(&m, 5, 2, 0);
-        LoadModel("Models/cylinder.obj", vertices, normales, indeces, true);
-        BVH.addMesh(vertices, normales, indeces, m, "Cube1");
+        pos = {0, 2, -2};
+        rot = {-45, 0, 0};
+        mat4_set_TRS_degrees(&m, &rot, &pos, &scale);
+        BVH.addMesh(vertices, normales, indeces, m, "monkey1");
 
-        mat4_set_translate(&m, -5, 2, 0);
-        LoadModel("Models/Rabbit.obj", vertices, normales, indeces, true);
-        BVH.addMesh(vertices, normales, indeces, m, "Cube2");
+        pos = {2, 2, 0};
+        rot = {-45, 90, 0};
+        mat4_set_TRS_degrees(&m, &rot, &pos, &scale);
+        BVH.addMesh(vertices, normales, indeces, m, "monkey2");
+
+        pos = {0, 2, 2};
+        rot = {-45, 180, 0};
+        mat4_set_TRS_degrees(&m, &rot, &pos, &scale);
+        BVH.addMesh(vertices, normales, indeces, m, "monkey3");
+
+        pos = {-2, 2, 0};
+        rot = {-45, -90, 0};
+        mat4_set_TRS_degrees(&m, &rot, &pos, &scale);
+        BVH.addMesh(vertices, normales, indeces, m, "monkey4");
+
+        // mat4_set_translate(&m, -5, 2, 0);
+        // LoadModel("Models/monkey.obj", vertices, normales, indeces, true);
+        // BVH.addMesh(vertices, normales, indeces, m, "monkey3");
 
         if (!BVH.checkLinkRanges())
         {
