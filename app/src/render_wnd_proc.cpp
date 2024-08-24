@@ -111,7 +111,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         { 0.f, 1.f, 1.f }, // Цвет (12 байт)
         0.f,               // Выравнивание для GLSL vec3 (еще 4 байта)
         // Кратность 16 =========================================================================
-        40.f,              // Радиус действия (4 байта)
+        20.f,              // Радиус действия (4 байта)
         2.f,               // Интенсивность (4 байта)
         degrees_to_radians(30), // Угол (в радианах) внутреннего конуса (4 байта)
         degrees_to_radians(45), // Угол (в радианах) внешнего конуса (4 байта)
@@ -138,8 +138,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static GLuint MatrixSSBO = 0;
     static GLuint BvhSSBO = 0;
     static GLuint rayTracedTexture = 0;
-    static GLsizei rayTracingTextureWidth = 800;
-    static GLsizei rayTracingTextureHeight = 600;
+    static GLsizei rayTracingTextureWidth = 1920;
+    static GLsizei rayTracingTextureHeight = 1080;
 
     static Shader shader;
 
