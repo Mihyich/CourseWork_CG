@@ -35,8 +35,6 @@ void RayTraceBVHTree::addMesh(std::vector<RayTraceTriangle>& triangles, const ma
     }
 
     addSubTree(subTree, resName);
-
-    updateTreeParentIndeces(0, -1);
 }
 
 void RayTraceBVHTree::updateVerteces(std::vector<RayTraceTriangle>& triangles)
@@ -168,7 +166,6 @@ int RayTraceBVHTree::buildSubtree(std::vector<RayTraceBVHNode>& root, const std:
         RTnode.BS = computeBoundingSphere(triangles);
         RTnode.CI = { -1, -1 }; // Нет потомков
         RTnode.DI = { triangles[0].index, modelIndex };
-        RTnode.parent = -1;
 
         root.push_back(RTnode);
         return  root.size() - 1;
@@ -189,7 +186,6 @@ int RayTraceBVHTree::buildSubtree(std::vector<RayTraceBVHNode>& root, const std:
     // RTnode.BS = computeBoundingSphere(root[leftChildIndex].BS, root[rightChildIndex].BS);
     RTnode.CI = { leftChildIndex, rightChildIndex };
     RTnode.DI = { -1, modelIndex }; // Не листовой узел
-    RTnode.parent = -1;
 
     root[currentIndex] = RTnode;
     return currentIndex;
@@ -238,7 +234,6 @@ void RayTraceBVHTree::addSubTree(const std::vector<RayTraceBVHNode>& root, const
         nodes[0].CI.right = newStartIndexForSubTree; // Корень нового поддерева
         nodes[0].DI.triangle = -1; // это не листовой узел
         nodes[0].DI.matrix = -1; // Узел не в меше, матрица не нужна
-        nodes[0].parent = -1; // Нет родителя
 
         // 6. Обновить ссылочные данные на корневые узлы мешей в массиве
         for (auto& m : meshes) { ++m.second; }
@@ -246,17 +241,6 @@ void RayTraceBVHTree::addSubTree(const std::vector<RayTraceBVHNode>& root, const
         // 7. Сохранить новый меш
         meshes.insert(std::make_pair(name, newStartIndexForSubTree));
     }
-}
-
-void RayTraceBVHTree::updateTreeParentIndeces(int currentNodeIndex, int parentIndex)
-{
-    if (currentNodeIndex <= -1)
-        return;
-
-    nodes[currentNodeIndex].parent = parentIndex;
-
-    updateTreeParentIndeces(nodes[currentNodeIndex].CI.left, currentNodeIndex);
-    updateTreeParentIndeces(nodes[currentNodeIndex].CI.right, currentNodeIndex);
 }
 
 const std::vector<RayTraceVertexTringle>& RayTraceBVHTree::getVerteces() const
@@ -313,7 +297,6 @@ void RayTraceBVHTree::writeBVHTreeToDot(const std::string& filename) const
              << "\\nRadius: " << node.BS.r
              << "\\nTriangleIndex: " << node.DI.triangle
              << "\\nModelIndex: " << node.DI.matrix
-             << "\\nParent: " << node.parent
              << "\\nLeft: " << node.CI.left << " Right: " << node.CI.right
              << "\""
              << " style=filled fillcolor=\"" + fillcolor + "\" color=\"#000000\""

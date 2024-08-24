@@ -24,7 +24,6 @@ struct RayTraceBVHNode
     RayTraceBS BS;         // Ограничивающая сфера
     RayTraceChildIndex CI; // Дочерние индексы
     RayTraceDataIndex DI;  // Индексы данных
-    int parent;            // Индекс родительского узла
 };
 
 #endif // RAY_TRACE_BVH_STRUCT_H
