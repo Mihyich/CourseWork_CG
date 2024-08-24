@@ -206,29 +206,24 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         std::vector<vec3> vertices;
         std::vector<vec3> normales;
         std::vector<unsigned int> indeces;
-        std::vector<RayTraceTriangle> triangles;
         
         mat4_set_ordinary(&m);
         genPlaneMeshVNI(vertices, normales, indeces, 20.f);
-        genRayTraceTriangles(triangles, vertices, normales, indeces);
-        BVH.addMesh(triangles, m, "Plane");
+        BVH.addMesh(vertices, normales, indeces, m, "Plane");
 
         m = modelModel;
         mat4_set_rotate_x_degrees(&rot, 45.f);
         mat4_compose(&m, &rot);
         LoadModel("Models/Cube.obj", vertices, normales, indeces, true);
-        genRayTraceTriangles(triangles, vertices, normales, indeces);
-        BVH.addMesh(triangles, m, "Rabbit");
+        BVH.addMesh(vertices, normales, indeces, m, "Rabbit");
 
         mat4_set_translate(&m, 5, 2, 0);
         LoadModel("Models/cylinder.obj", vertices, normales, indeces, true);
-        genRayTraceTriangles(triangles, vertices, normales, indeces);
-        BVH.addMesh(triangles, m, "Cube1");
+        BVH.addMesh(vertices, normales, indeces, m, "Cube1");
 
         mat4_set_translate(&m, -5, 2, 0);
         LoadModel("Models/Rabbit.obj", vertices, normales, indeces, true);
-        genRayTraceTriangles(triangles, vertices, normales, indeces);
-        BVH.addMesh(triangles, m, "Cube2");
+        BVH.addMesh(vertices, normales, indeces, m, "Cube2");
 
         if (!BVH.checkLinkRanges())
         {
