@@ -156,6 +156,12 @@ vec3 randDir(vec2 seed)
     return vec3(sin(phi) * cos(theta), sin(phi) * sin(theta), cos(phi));
 }
 
+// Случайная позиция на сфере
+vec3 randPointOnSphere(vec3 center, float radius, vec2 seed)
+{
+    return center + randDir(seed) * radius;
+}
+
 // Вычисление цвета света от точечного источника света
 vec3 computePointLightColor(vec3 fragPos, vec3 normal, PointLight light)
 {
