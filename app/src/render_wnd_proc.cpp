@@ -677,6 +677,9 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         wchar_to_char(&wpath, &path);
         rs = GenModelMesh(path, modelVAO, modelVBO, modelEBO, modelIndexCount, CCW);
         rs = rs && RebuildBVHTree(BVH, path, CCW, modelModel, modelName, VertexSSBO, MatrixSSBO, BvhSSBO);
+
+        // Обновить этот важный параметр (очень-очень)
+        RenderDataRT.debug.nodeCount = (int)BVH.getBvh().size();
         
         IsmodelLoading = false;
         return rs;
