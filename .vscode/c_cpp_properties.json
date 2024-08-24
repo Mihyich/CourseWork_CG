@@ -4,7 +4,8 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/app/inc/",
-                "${workspaceFolder}/app/src/",
+                "${workspaceFolder}/ShadowMap/inc/",
+                "${workspaceFolder}/RayTracing/inc/",
                 "${workspaceFolder}/LA/inc/",
                 "${workspaceFolder}/WINAPI/inc/",
                 "C:/assimp/include/"
