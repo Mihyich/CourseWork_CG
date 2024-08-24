@@ -139,6 +139,12 @@ struct Triangle
     vec3 v3; // 3 позиция вершины
 };
 
+// Cлучайное значение
+float rand(vec2 n)
+{ 
+	return fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453);
+}
+
 // Вычисление цвета света от точечного источника света
 vec3 computePointLightColor(vec3 fragPos, vec3 normal, PointLight light)
 {
