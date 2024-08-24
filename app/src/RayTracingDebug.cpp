@@ -24,7 +24,7 @@ int calcMaxEmitCount(int outComponentCount)
     return totalOutComponentCount / outComponentCount;
 }
 
-void RayTracingDrawBvh(RayTracingRenderData& data)
+void RayTracingDrawBvh(RayTracingHardRenderData& data)
 {
     // В любом случае чтобы запустить шеометрический шейдер, нужно вызвать отрисовку хотя бы точки
     static GLuint pointVAO = 0;

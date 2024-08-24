@@ -53,7 +53,7 @@
 #include "ShadowMapVsmPerspective.h"
 
 
-#include "RayTracingRenderData.h"
+#include "RayTracingHardRenderData.h"
 
 #include "RayTracingDebug.h"
 #include "RayTracingHard.h"

@@ -1,5 +1,5 @@
-#ifndef RAY_TRACING_RENDER_DATA_H
-#define RAY_TRACING_RENDER_DATA_H
+#ifndef RAY_TRACING_HARD_RENDER_DATA_H
+#define RAY_TRACING_HARD_RENDER_DATA_H
 
 #include "winapi_GLextensions.h"
 
@@ -9,7 +9,7 @@
 #include "Vector3D.h"
 #include "Matrix4D.h"
 
-struct RayTracingRenderData
+struct RayTracingHardRenderData
 {
     GLuint* VertexSSBO;
     GLuint* MatrixSSBO;
@@ -35,4 +35,4 @@ struct RayTracingRenderData
     GLuint* quadVAO;
 };
 
-#endif // RAY_TRACING_RENDER_DATA_H
+#endif // RAY_TRACING_HARD_RENDER_DATA_H

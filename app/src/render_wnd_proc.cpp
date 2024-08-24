@@ -179,7 +179,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static ShadowMapVsmOrthogonalRenderData RenderDataSMOVSM;
     static ShadowMapVsmPerspectiveRenderData RenderDataSMPVSM;
 
-    static RayTracingRenderData RenderDataRTD;
+    static RayTracingHardRenderData RenderDataRTD;
 
     static CameraMode camera_mode = ORBITTING;
     static float orbitting_x_rot = 0.0f;

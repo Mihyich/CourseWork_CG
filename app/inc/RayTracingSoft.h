@@ -1,0 +1,6 @@
+#ifndef RAY_TRACING_SOFT
+#define RAY_TRACING_SOFT
+
+
+
+#endif // RAY_TRACING_SOFT

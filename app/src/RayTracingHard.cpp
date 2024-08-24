@@ -1,6 +1,6 @@
 #include "RayTracingHard.h"
 
-void TracingPath(RayTracingRenderData& data)
+void TracingPath(RayTracingHardRenderData& data)
 {
     data.shaderRayTracing->use();
 
@@ -25,7 +25,7 @@ void TracingPath(RayTracingRenderData& data)
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, 0);
 }
 
-void OutputPath(RayTracingRenderData& data)
+void OutputPath(RayTracingHardRenderData& data)
 {
     mat4 quadModel; mat4_set_ordinary(&quadModel);
 
@@ -46,7 +46,7 @@ void OutputPath(RayTracingRenderData& data)
     glBindVertexArray(0);
 }
 
-void RayTracingHard(RayTracingRenderData& data)
+void RayTracingHard(RayTracingHardRenderData& data)
 {
     TracingPath(data);
     OutputPath(data);

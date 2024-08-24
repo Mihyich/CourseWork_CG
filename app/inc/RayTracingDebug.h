@@ -1,8 +1,8 @@
 #ifndef RAY_TRACING_DEBUG_H
 #define RAY_TRACING_DEBUG_H
 
-#include "RayTracingRenderData.h"
+#include "RayTracingHardRenderData.h"
 
-void RayTracingDrawBvh(RayTracingRenderData& data);
+void RayTracingDrawBvh(RayTracingHardRenderData& data);
 
 #endif // RAY_TRACING_DEBUG_H
