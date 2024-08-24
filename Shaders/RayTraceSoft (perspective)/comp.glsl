@@ -610,7 +610,7 @@ vec4 traceRayBVH(Ray ray)
         vec3 spherePos;
         for (int i = 0; i < shadowRayCount; ++i)
         {
-            spherePos = randPointOnSphere(light.position, 1.0, vec2(gl_GlobalInvocationID.xy));
+            spherePos = randPointOnSphere(light.position, 0.05, vec2(gl_GlobalInvocationID.xy));
             shadow += traceRayShadow(FragPos, spherePos);
         }
         shadow /= shadowRayCount;
