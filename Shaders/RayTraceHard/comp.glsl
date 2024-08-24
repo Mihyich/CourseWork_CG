@@ -324,6 +324,116 @@ int skipSubTree(int index)
     return index;
 }
 
+// Обхода BVH дерева для трассировки тени (HARD)
+bool traceRayShadow(vec3 FragPos, vec3 lightPos)
+{
+    Ray shadowRay; // Я, теневой лучик...
+    RayTraceBVHNode node; // Текущий узел BVH
+    RayTraceBS TRBS; // Текущий огриничивающий объем (сфера)
+    Triangle trig; // Треугольник для трассировки
+    mat4 model; // Текущая матрица модели
+    int curIndex = 0; // Корневой узел в массиве ВСЕГДА лежит в самом начале
+    int bvhLenght = bvh.length(); // Количество узлов дерева BVH
+
+    int matrixIndex; // индекс матрицы
+    int triangleIndex; // индекс треугольника
+
+    vec3 tmpPos1; // Кешированная позиция
+
+    float t; // Расстояние до тругольника
+    float closestT; // Расстояние до источника света
+
+    vec3 dist = lightPos - FragPos;
+
+    // Вычислить луч:
+    shadowRay.origin = FragPos;
+    shadowRay.dir = normalize(dist);
+
+    // Вычислить расстояние до источника света
+    closestT = length(dist);
+
+    while (curIndex > -1 && curIndex < bvhLenght)
+    {
+        // Получить текущий узел
+        node = bvh[curIndex];
+
+        matrixIndex = node.DI.matrix;
+        triangleIndex = node.DI.triangle;
+
+        // Если узел не связующий (нет матрицы)
+        if (matrixIndex < 0)
+        {
+            // Все первые 3 под-пункта выполнены
+            ++curIndex; // Вжух... (づ￣ 3￣)づ (Продолжить ПРЕФИКСНЫЙ обход дерева)
+        }
+        // Если узел связующий (есть матрица, но нет треугольника)
+        else if (triangleIndex < 0)
+        {
+            // Подготовка данных
+            model = matrices[matrixIndex]; // Матрицы модели
+            TRBS.r = node.BS.r; // радиус ограничивающей сферы
+
+            // Учет локальности данных* (перевод в мировые)
+            tmpPos1 = vec3(model * vec4(node.BS.cx, node.BS.cy, node.BS.cz, 1.0));
+            TRBS.cx = tmpPos1.x;
+            TRBS.cy = tmpPos1.y;
+            TRBS.cz = tmpPos1.z;
+
+            // Трассировка
+            if (traceRayBoundingSphere(TRBS, shadowRay))
+            {
+                // Попал!
+
+                // Все 3 под-пункта пункта 2 выполнены (погружение в дерево)
+                ++curIndex; // Вжух... (づ￣ 3￣)づ
+            }
+            else
+            {
+                // Мимо!
+
+                // Оптимизицонный подбор индекса следующего узла
+                curIndex = skipSubTree(curIndex);
+            }
+        }
+        // Если узел - лист (есть матрица и треугольник)
+        else
+        {
+            // Подготовка данных
+            model = matrices[matrixIndex]; // Матрицы модели
+
+            // Перевод позиция в мировые координаты
+            trig.v1 = vec3(model * vec4(triangles[triangleIndex].v1.px, triangles[triangleIndex].v1.py, triangles[triangleIndex].v1.pz, 1.0));
+            trig.v2 = vec3(model * vec4(triangles[triangleIndex].v2.px, triangles[triangleIndex].v2.py, triangles[triangleIndex].v2.pz, 1.0));
+            trig.v3 = vec3(model * vec4(triangles[triangleIndex].v3.px, triangles[triangleIndex].v3.py, triangles[triangleIndex].v3.pz, 1.0));
+
+            if (traceRayTriangle(trig, shadowRay, t))
+            {
+                // Попал!
+                
+                // Тест глубины
+                if (t < closestT)
+                {
+                    // Неважно, будет ли это самый ближайший треугольник или дальний,
+                    // самое главаное: между FragPos и LightPos есть треугольник
+                    return true;
+                }
+
+                // Переход к следующему узлу
+                ++curIndex;
+            }
+            else
+            {
+                // Мимо!
+
+                // Оптимизационный подбор индекса следующего узла
+                curIndex = skipSubTree(curIndex);
+            }
+        }
+    }
+
+    return false; // Нет перекрывающего треугольника между FragPos и LightPos
+}
+
 // Обхода BVH дерева
 vec4 traceRayBVH(Ray ray)
 {
