@@ -582,7 +582,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL_VSM, (LPARAM)0);
 
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)RAY_TRACING_DEBUG, (LPARAM)0);
-        SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)RAY_TRACING_HARD, (LPARAM)0);
+        SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)RAY_TRACING_HARD_PERSPECTIVE, (LPARAM)0);
 
         std::cout << sizeof(Light) << std::endl;
         std::cout << alignof(Light) << std::endl;
@@ -892,7 +892,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 }
 
                 case RAY_TRACING_DEBUG:
-                case RAY_TRACING_HARD:
+                case RAY_TRACING_HARD_PERSPECTIVE:
                 {
                     RenderDataRTD.VertexSSBO = &VertexSSBO;
                     RenderDataRTD.MatrixSSBO = &MatrixSSBO;
@@ -1082,7 +1082,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 break;
             }
 
-            case RAY_TRACING_HARD:
+            case RAY_TRACING_HARD_PERSPECTIVE:
             {
                 RayTracingHard(RenderDataRTD);
                 break;
