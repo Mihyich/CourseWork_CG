@@ -18,6 +18,8 @@
 #include "RayTraceBoundingAabb.h"
 #include "RayTraceBoundingSphere.h"
 
+#include "RayTraceTrianglesGenerator.h"
+
 class RayTraceBVHTree
 {
 private:
@@ -29,6 +31,12 @@ private:
     int nonameMeshes = 0;
 
 public:
+    void addMesh(
+        const std::vector<vec3>& vertices,
+        const std::vector<vec3>& normales,
+        const std::vector<unsigned int>& indeces,
+        const mat4& model, const std::string& name
+    );
 
     void addMesh(std::vector<RayTraceTriangle>& triangles, const mat4& model, const std::string& name);
 
@@ -63,6 +71,8 @@ public:
 
 private:
     int getNextNodeIndex(int currentIndex) const;
+
+    void Destoy();
 };
 
 #endif // RAY_TRACE_BVH_GENERATOR_H

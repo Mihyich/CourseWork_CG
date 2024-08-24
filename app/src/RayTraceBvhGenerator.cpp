@@ -1,5 +1,17 @@
 #include "RayTraceBvhGenerator.h"
 
+void RayTraceBVHTree::addMesh(
+        const std::vector<vec3>& vertices,
+        const std::vector<vec3>& normales,
+        const std::vector<unsigned int>& indeces,
+        const mat4& model, const std::string& name
+    )
+{
+    std::vector<RayTraceTriangle> triangles;
+    genRayTraceTriangles(triangles, vertices, normales, indeces);
+    addMesh(triangles, model, name);
+}
+
 void RayTraceBVHTree::addMesh(std::vector<RayTraceTriangle>& triangles, const mat4& model, const std::string& name)
 {
     int modelIndex = models.size();
