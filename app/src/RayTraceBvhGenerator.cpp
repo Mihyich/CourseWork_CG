@@ -447,3 +447,13 @@ int RayTraceBVHTree::getNextNodeIndex(int currentIndex) const
     // Нет дочерних
     return -1;
 }
+
+void RayTraceBVHTree::Destoy()
+{
+    verteces.clear();
+    models.clear();
+    nodes.clear();
+    
+    meshes.clear();
+    nonameMeshes = 0;
+}
