@@ -4,17 +4,17 @@ CCPP := g++
 RC := windres
 
 # пути
-INC := app\inc
-SRC := app\src
-RSRC := app\rsrc
-LA_INC := LA\inc
-LA_SRC := LA\src
-WINAPI_INC := WINAPI\inc
-WINAPI_SRC := WINAPI\src
-ASSIMP_INC := C:\assimp\include
+INC := app/inc
+SRC := app/src
+RSRC := app/rsrc
+LA_INC := LA/inc
+LA_SRC := LA/src
+WINAPI_INC := WINAPI/inc
+WINAPI_SRC := WINAPI/src
+ASSIMP_INC := C:/assimp/include
 OUT := out
-OUT_R := $(OUT)\Release
-OUT_D := $(OUT)\Debug
+OUT_R := $(OUT)/Release
+OUT_D := $(OUT)/Debug
 
 # флаги
 CFLAGS := -std=c99 -Wall -Wextra -Wpedantic -DUNICODE -D_UNICODE
@@ -66,7 +66,7 @@ WINAPI_OBJ := $(patsubst $(WINAPI_SRC)/%.cpp,$(OUT)/%.o,$(filter %.cpp,$(WINAPI_
 
 # линковка программы (порядок библиотек имеет значение)
 app.exe : $(APP_OBJ) $(OUT)/resource.o WINAPI.lib LA.lib
-	$(CCPP) -mwindows -o $@ $^ -lgdi32 -ldwmapi -lopengl32 -Lc:\assimp\build\bin -lassimp-5
+	$(CCPP) -mwindows -o $@ $^ -lgdi32 -ldwmapi -lopengl32 -Lc:/assimp/build/bin -lassimp-5
 
 # линковка библиотеки
 LA.lib : $(LA_OBJ)
@@ -101,15 +101,15 @@ $(OUT)/resource.o : $(RSRC)/resource.rc | out_folder
 # Компоновка конец =======================================================================
 
 # Создать папку для объектников
-.PHONY: out_folder
 out_folder:
 	@if not exist "$(OUT)" mkdir "$(OUT)"
 	@if not exist "$(OUT_D)" mkdir "$(OUT_D)"
 	@if not exist "$(OUT_R)" mkdir "$(OUT_R)"
+.PHONY: out_folder
 
-.PHONY: clean
 clean:
 	@if exist "$(OUT)" rd /s /q $(OUT)
 	@if exist ".\*.exe" del /q .\*.exe
 	@if exist ".\*dll" del /q .\*dll
 	@if exist ".\*lib" del /q .\*lib
+.PHONY: clean
