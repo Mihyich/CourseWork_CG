@@ -86,7 +86,6 @@ struct RayTraceBVHNode
     RayTraceBS BS;         // Ограничиавющая сфера
     RayTraceChildIndex CI; // Дочерние индексы
     RayTraceDataIndex DI;  // Индексы данных
-    int parent;            // Индекс родительского узла (-1 если нет)
 };
 
 layout(std140, binding = 0) uniform Lighting
