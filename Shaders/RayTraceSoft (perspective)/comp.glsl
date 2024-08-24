@@ -346,7 +346,7 @@ int skipSubTree(int index)
     return index;
 }
 
-// Обхода BVH дерева для трассировки тени (HARD)
+// Обход BVH дерева для трассировки тени (HARD)
 float traceRayShadow(vec3 FragPos, vec3 lightPos)
 {
     Ray shadowRay; // Я, теневой лучик...
@@ -456,7 +456,7 @@ float traceRayShadow(vec3 FragPos, vec3 lightPos)
     return 1.0; // Нет перекрывающего треугольника между FragPos и LightPos
 }
 
-// Обхода BVH дерева
+// Обход BVH дерева
 vec4 traceRayBVH(Ray ray)
 {
     RayTraceBVHNode node; // Текущий узел BVH
@@ -643,4 +643,4 @@ void main()
     imageStore(colorImage, pixelCoord, color);
 }
 
-// Основной алгоритм смотреть в "./RayTracHard (perspective)/comp.glsl"
+// Основной алгоритм смотреть в "./RayTraceHard (perspective)/comp.glsl"
