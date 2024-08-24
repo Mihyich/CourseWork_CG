@@ -204,6 +204,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static GLuint planeEBO = 0;
     static Matrix4D planeModel;
 
+    static std::string modelPath = "Models/Rabbit.obj";
+    static std::string modelName = "Rabbit";
     static GLuint modelVAO = 0;
     static GLuint modelVBO = 0;
     static GLuint modelEBO = 0;
@@ -302,7 +304,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         GenPlaneMesh(planeVAO, planeVBO, planeEBO, 40.f);
         mat4_set_ordinary(&planeModel);
 
-        GenModelMesh("Models/Rabbit.obj", modelVAO, modelVBO, modelEBO, modelIndexCount, true);
+        GenModelMesh(modelPath, modelVAO, modelVBO, modelEBO, modelIndexCount, true);
         mat4_set_translate(&modelModel, 0, 2, 0);
 
         genLightUBO(light, lightUBO);
@@ -523,8 +525,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_IO.delete_shader(GL_VERTEX_SHADER);
         shader_IO.delete_shader(GL_FRAGMENT_SHADER);
 
-        shader_RT_HARD.set_shader_name("Shaders/RayTraceHard");
-        shader_RT_HARD.create_from_file("Shaders/RayTraceHard/comp.glsl", GL_COMPUTE_SHADER);
+        shader_RT_HARD.set_shader_name("Shaders/RayTraceHard (perspective)");
+        shader_RT_HARD.create_from_file("Shaders/RayTraceHard (perspective)/comp.glsl", GL_COMPUTE_SHADER);
         shader_RT_HARD.link_program();
         shader_RT_HARD.init_uniforms_and_attribs();
         shader_RT_HARD.print_uniforms_and_attribs();
