@@ -114,6 +114,8 @@ layout(std430, binding = 3) buffer Bvh
 
 layout (local_size_x = 16, local_size_y = 16) in;
 
+uniform int shadowRayCount;
+
 uniform vec3 viewPos;
 uniform mat4 view;
 uniform mat4 projection;
@@ -600,11 +602,21 @@ vec4 traceRayBVH(Ray ray)
         // Интерполированная нормаль
         FragNorm = interpolateVector(barycentricCoords, tmpNorm1, tmpNorm2, tmpNorm3);
 
+        // Диффузная состовляющая света
         vec3 diffuse = computeLightColor(FragPos, FragNorm);
-        diffuse *= traceRayShadow(FragPos, light.position);
+
+        // Мягкая семплированная тень
+        float shadow = 0.0;
+        vec3 spherePos;
+        for (int i = 0; i < shadowRayCount; ++i)
+        {
+            spherePos = randPointOnSphere(light.pos, 1.0, vec2(gl_GlobalInvocationID.xy));
+            shadow += traceRayShadow(FragPos, spherePos);
+        }
+        shadow /= shadowRayCount;
 
         // Вычисление освещения
-        color = vec4(diffuse, 1.0);
+        color = vec4(diffuse * shadow, 1.0);
     }
 
     return color;
