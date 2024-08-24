@@ -120,6 +120,7 @@ uniform mat4 projection;
 
 #define EPSILON 0.0001
 #define FLT_MAX 3.402823466e+38
+#define PI 3.141592653589
 
 // Выходное изображение
 layout(rgba32f, binding = 4) uniform image2D colorImage;
@@ -139,10 +140,20 @@ struct Triangle
     vec3 v3; // 3 позиция вершины
 };
 
-// Cлучайное значение
-float rand(vec2 n)
+// Псевдослучайное значение в диапазоне [0, 1]
+float rand(vec2 seed)
 { 
-	return fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453);
+	return fract(sin(dot(seed, vec2(12.9898, 4.1414))) * 43758.5453);
+}
+
+// Случайное направление
+vec3 randDir(vec2 seed)
+{
+    float theta = rand(seed) * 2.0 * PI; // Случайный угол в диапазоне [0, 2*Pi]
+    float phi = acos(2.0 * rand(seed + vec2(1.0)) - 1.0); // Случайный угол в диапазоне [0, Pi]
+
+    // Преобразование углов в вектор
+    return vec3(sin(phi) * cos(theta), sin(phi) * sin(theta), cos(phi));
 }
 
 // Вычисление цвета света от точечного источника света
