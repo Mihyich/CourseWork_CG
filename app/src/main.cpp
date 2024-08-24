@@ -36,7 +36,7 @@ INT WINAPI WinMain(
 
     // Создание родительского окна
     app::MainWnd.Create(
-        L"Shadow CookBox 1.0.0",
+        L"Shadow CookBox 1.0.0 - Release x64 (Beta)",
         app::hInst, nCmdShow,
         MainWndProc,
         L"MainWnd",
