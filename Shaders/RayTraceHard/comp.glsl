@@ -515,15 +515,8 @@ vec4 traceRayBVH(Ray ray)
         {
             // Подготовка данных
             model = matrices[matrixIndex]; // Матрицы модели
-            TRBS.r = node.BS.r; // радиус ограничивающей сферы
 
-            // Учет локальности данных* (перевод в мировые)
-            tmpPos1 = vec3(model * vec4(node.BS.cx, node.BS.cy, node.BS.cz, 1.0));
-            TRBS.cx = tmpPos1.x;
-            TRBS.cy = tmpPos1.y;
-            TRBS.cz = tmpPos1.z;
-
-            // То же и для треугольника (пока только позиции)
+            // Перевод позиций в мировые координаты
             trig.v1 = vec3(model * vec4(triangles[triangleIndex].v1.px, triangles[triangleIndex].v1.py, triangles[triangleIndex].v1.pz, 1.0));
             trig.v2 = vec3(model * vec4(triangles[triangleIndex].v2.px, triangles[triangleIndex].v2.py, triangles[triangleIndex].v2.pz, 1.0));
             trig.v3 = vec3(model * vec4(triangles[triangleIndex].v3.px, triangles[triangleIndex].v3.py, triangles[triangleIndex].v3.pz, 1.0));
