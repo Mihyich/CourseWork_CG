@@ -329,7 +329,6 @@ vec4 traceRayBVH(Ray ray)
 {
     RayTraceBVHNode node; // Текущий узел BVH
     RayTraceBS TRBS; // Текущий огриничивающий объем (сфера)
-    RayTraceVertexTriangle triangle; // Текущий треугольник c вершинными данными
     Triangle trig; // Треугольник для трассировки
     mat4 model; // Текущая матрица модели
     mat3 normModel; // Нормальная матрица модели
