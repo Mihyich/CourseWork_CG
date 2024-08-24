@@ -288,6 +288,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static Shader shader_IO; // ImageOut
 
     static Shader shader_RT_HARD; // RayTracing Hard
+    static Shader shader_RT_P_SOFT; // RayTracing Soft Perspective
 
     static bool IsmodelLoading = false;
 
@@ -535,6 +536,14 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_RT_HARD.print_uniforms_and_attribs();
         shader_RT_HARD.report(REPORT_CS | REPORT_PROG);
         shader_RT_HARD.delete_shader(GL_COMPUTE_SHADER);
+
+        shader_RT_P_SOFT.set_shader_name("Shaders/RayTraceSoft (perspective)");
+        shader_RT_P_SOFT.create_from_file("Shaders/RayTraceSoft (perspective)/comp.glsl", GL_COMPUTE_SHADER);
+        shader_RT_P_SOFT.link_program();
+        shader_RT_P_SOFT.init_uniforms_and_attribs();
+        shader_RT_P_SOFT.print_uniforms_and_attribs();
+        shader_RT_P_SOFT.report(REPORT_CS | REPORT_PROG);
+        shader_RT_P_SOFT.delete_shader(GL_COMPUTE_SHADER);
 
         shader.use();
         uniform_matrix4f(shader.get_uniform_location("model"), &planeModel);
@@ -1167,6 +1176,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_RT_BVH.delete_program();
         shader_IO.delete_program();
         shader_RT_HARD.delete_program();
+        shader_RT_P_SOFT.delete_program();
 
         PostQuitMessage(0);
         return DefWindowProc(hWnd, message, wParam, lParam);
