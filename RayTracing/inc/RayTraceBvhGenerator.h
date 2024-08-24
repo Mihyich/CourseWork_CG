@@ -31,6 +31,8 @@ private:
     int nonameMeshes = 0;
 
 public:
+    RayTraceBVHTree& operator=(const RayTraceBVHTree& bvh);
+
     void addMesh(
         const std::vector<vec3>& vertices,
         const std::vector<vec3>& normales,
@@ -58,6 +60,10 @@ public:
     const std::vector<mat4>& getMatrices() const;
 
     const std::vector<RayTraceBVHNode>& getBvh() const;
+
+    const std::map<std::string, int>& getMeshes() const;
+
+    int getNoNameMeshes() const;
 
     void writeBVHTreeToDot(const std::string& filename) const;
 

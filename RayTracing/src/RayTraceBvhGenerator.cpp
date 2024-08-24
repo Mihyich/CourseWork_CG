@@ -1,5 +1,42 @@
 #include "RayTraceBvhGenerator.h"
 
+RayTraceBVHTree& RayTraceBVHTree::operator=(const RayTraceBVHTree& bvh)
+{
+    size_t s1 = this->verteces.size();
+    size_t s2 = this->models.size();
+    size_t s3 = this->nodes.size();
+    size_t s4 = this->meshes.size();
+
+    
+    std::cout << "Curent sizes:\n";
+    std::cout << s1 << '\t' << s2 << '\t' << s3 << '\t' << s4 << std::endl;
+
+    s1 = bvh.getVerteces().size();
+    s2 = bvh.getMatrices().size();
+    s3 = bvh.getBvh().size();
+    s4 = bvh.getMeshes().size();
+
+    std::cout << "New sizes:\n";
+    std::cout << s1 << '\t' << s2 << '\t' << s3 << '\t' << s4 << std::endl;
+
+    
+    this->verteces = bvh.getVerteces();
+    this->models = bvh.getMatrices();
+    this->nodes = bvh.getBvh();
+    this->meshes = bvh.getMeshes();
+    this->nonameMeshes = bvh.getNoNameMeshes();
+
+    s1 = this->verteces.size();
+    s2 = this->models.size();
+    s3 = this->nodes.size();
+    s4 = this->meshes.size();
+
+    std::cout << "Updated sizes:\n";
+    std::cout << s1 << '\t' << s2 << '\t' << s3 << '\t' << s4 << "\n\n";
+
+    return *this;
+}
+
 void RayTraceBVHTree::addMesh(
         const std::vector<vec3>& vertices,
         const std::vector<vec3>& normales,
@@ -256,6 +293,16 @@ const std::vector<mat4>& RayTraceBVHTree::getMatrices() const
 const std::vector<RayTraceBVHNode>& RayTraceBVHTree::getBvh() const
 {
     return this->nodes;
+}
+
+const std::map<std::string, int>& RayTraceBVHTree::getMeshes() const
+{
+    return this->meshes;
+}
+
+int RayTraceBVHTree::getNoNameMeshes() const
+{
+    return this->nonameMeshes;
 }
 
 void RayTraceBVHTree::writeBVHTreeToDot(const std::string& filename) const
