@@ -50,7 +50,8 @@ bool RebuildBVHTree(
     bool CCW,
     const mat4& modelModel,
     const std::string& modelName,
-    GLuint& VertexSSBO, GLuint& MatrixSSBO, GLuint& BvhSSBO)
+    GLuint& VertexSSBO, GLuint& MatrixSSBO, GLuint& BvhSSBO
+)
 {
     mat4 m;
     std::vector<vec3> vertices;
@@ -63,7 +64,7 @@ bool RebuildBVHTree(
     genPlaneMeshVNI(vertices, normales, indeces, 20.f);
     newBVH.addMesh(vertices, normales, indeces, m, "Plane");
 
-    rs *= LoadModel(modelPath, vertices, normales, indeces, CCW);
+    rs = rs && LoadModel(modelPath, vertices, normales, indeces, CCW);
     newBVH.addMesh(vertices, normales, indeces, modelModel, modelName);
 
     if (rs)
@@ -92,6 +93,67 @@ bool RebuildBVHTree(
     }
 
     return rs;
+}
+
+void BuildPresentationBVHTree(
+    RayTraceBVHTree& BVH,
+    GLuint& VertexSSBO, GLuint& MatrixSSBO, GLuint& BvhSSBO
+)
+{
+    mat4 m;
+    vec3 rot;
+    vec3 pos;
+    vec3 scale = {1, 1, 1};
+    std::vector<vec3> vertices;
+    std::vector<vec3> normales;
+    std::vector<unsigned int> indeces;
+    
+    mat4_set_ordinary(&m);
+    genPlaneMeshVNI(vertices, normales, indeces, 50.f);
+    BVH.addMesh(vertices, normales, indeces, m, "Plane");
+
+    LoadModel("Models/monkey.obj", vertices, normales, indeces, true);
+
+    pos = {0, 2, -2};
+    rot = {-45, 0, 0};
+    mat4_set_TRS_degrees(&m, &rot, &pos, &scale);
+    BVH.addMesh(vertices, normales, indeces, m, "monkey1");
+
+    pos = {2, 2, 0};
+    rot = {-45, 90, 0};
+    mat4_set_TRS_degrees(&m, &rot, &pos, &scale);
+    BVH.addMesh(vertices, normales, indeces, m, "monkey2");
+
+    pos = {0, 2, 2};
+    rot = {-45, 180, 0};
+    mat4_set_TRS_degrees(&m, &rot, &pos, &scale);
+    BVH.addMesh(vertices, normales, indeces, m, "monkey3");
+
+    pos = {-2, 2, 0};
+    rot = {-45, -90, 0};
+    mat4_set_TRS_degrees(&m, &rot, &pos, &scale);
+    BVH.addMesh(vertices, normales, indeces, m, "monkey4");
+
+    if (!BVH.checkLinkRanges())
+    {
+        printf("!!!\nBVH tree has error linking ranges\n!!!\n");
+    }
+    
+    if (!BVH.checkCycles())
+    {
+        printf("!!!\nBVH tree has cycles\n!!!\n");
+    }
+
+    if (!BVH.checkBoundingSpheres())
+    {
+        printf("!!!\nBVH tree has incorrect bounding spheres\n!!!\n");
+    }
+
+    BVH.writeBVHTreeToDot("BVHtree.dot");
+
+    genRayTraceVertexSSBO(BVH.getVerteces(), VertexSSBO);
+    genRayTraceMatrixSSBO(BVH.getMatrices(), MatrixSSBO);
+    genRayTraceBvhSSBO(BVH.getBvh(), BvhSSBO);
 }
 
 LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -158,7 +220,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         { 0.f, -1.f, -1.f }, // Направление (12 байт)
         0.f,               // Выравнивание для GLSL vec3 (еще 4 байта)
         // Кратность 16 =========================================================================
-        { 0.f, 1.f, 1.f }, // Цвет (12 байт)
+        { 1.f, 1.f, 1.f }, // Цвет (12 байт)
         0.f,               // Выравнивание для GLSL vec3 (еще 4 байта)
         // Кратность 16 =========================================================================
         20.f,              // Радиус действия (4 байта)
@@ -166,7 +228,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         degrees_to_radians(30), // Угол (в радианах) внутреннего конуса (4 байта)
         degrees_to_radians(45), // Угол (в радианах) внешнего конуса (4 байта)
         // Кратность 16 =========================================================================
-        0,                 // Тип источника света: 0 - PointLight; 1 - SpotLight (4 байта)
+        1,                 // Тип источника света: 0 - PointLight; 1 - SpotLight (4 байта)
         0.f,               // Дополнительные паддинги,
         0.f,               // чтобы сделать размер структуры
         0.f                // кратным 16 (3 * 4 = 12 байт)
@@ -254,65 +316,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         // Вау-эффект, для первого RayTracing дерева, потом автоматически дерево перестроится
         // по желанию пользователя загрузить новую модель
-
-        mat4 m;
-        vec3 rot;
-        vec3 pos;
-        vec3 scale = {1, 1, 1};
-        std::vector<vec3> vertices;
-        std::vector<vec3> normales;
-        std::vector<unsigned int> indeces;
-        
-        mat4_set_ordinary(&m);
-        genPlaneMeshVNI(vertices, normales, indeces, 50.f);
-        BVH.addMesh(vertices, normales, indeces, m, "Plane");
-
-        LoadModel("Models/monkey.obj", vertices, normales, indeces, true);
-
-        pos = {0, 2, -2};
-        rot = {-45, 0, 0};
-        mat4_set_TRS_degrees(&m, &rot, &pos, &scale);
-        BVH.addMesh(vertices, normales, indeces, m, "monkey1");
-
-        pos = {2, 2, 0};
-        rot = {-45, 90, 0};
-        mat4_set_TRS_degrees(&m, &rot, &pos, &scale);
-        BVH.addMesh(vertices, normales, indeces, m, "monkey2");
-
-        pos = {0, 2, 2};
-        rot = {-45, 180, 0};
-        mat4_set_TRS_degrees(&m, &rot, &pos, &scale);
-        BVH.addMesh(vertices, normales, indeces, m, "monkey3");
-
-        pos = {-2, 2, 0};
-        rot = {-45, -90, 0};
-        mat4_set_TRS_degrees(&m, &rot, &pos, &scale);
-        BVH.addMesh(vertices, normales, indeces, m, "monkey4");
-
-        // mat4_set_translate(&m, -5, 2, 0);
-        // LoadModel("Models/monkey.obj", vertices, normales, indeces, true);
-        // BVH.addMesh(vertices, normales, indeces, m, "monkey3");
-
-        if (!BVH.checkLinkRanges())
-        {
-            printf("!!!\nBVH tree has error linking ranges\n!!!\n");
-        }
-        
-        if (!BVH.checkCycles())
-        {
-            printf("!!!\nBVH tree has cycles\n!!!\n");
-        }
-
-        if (!BVH.checkBoundingSpheres())
-        {
-            printf("!!!\nBVH tree has incorrect bounding spheres\n!!!\n");
-        }
-
-        BVH.writeBVHTreeToDot("BVHtree.dot");
-
-        genRayTraceVertexSSBO(BVH.getVerteces(), VertexSSBO);
-        genRayTraceMatrixSSBO(BVH.getMatrices(), MatrixSSBO);
-        genRayTraceBvhSSBO(BVH.getBvh(), BvhSSBO);
+        BuildPresentationBVHTree(BVH, VertexSSBO, MatrixSSBO, BvhSSBO);
         genRayTracedTexture(rayTracedTexture, rayTracingTextureWidth, rayTracingTextureHeight);
 
         SetupOpenGLServices();
