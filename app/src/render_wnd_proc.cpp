@@ -179,7 +179,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static ShadowMapVsmOrthogonalRenderData RenderDataSMOVSM;
     static ShadowMapVsmPerspectiveRenderData RenderDataSMPVSM;
 
-    static RayTracingHardRenderData RenderDataRTD;
+    static RayTracingRenderData RenderDataRT;
 
     static CameraMode camera_mode = ORBITTING;
     static float orbitting_x_rot = 0.0f;
@@ -892,24 +892,34 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 }
 
                 case RAY_TRACING_DEBUG:
+                {
+                    RenderDataRT.debug.VertexSSBO = &VertexSSBO;
+                    RenderDataRT.debug.MatrixSSBO = &MatrixSSBO;
+                    RenderDataRT.debug.BvhSSBO = &BvhSSBO;
+                    RenderDataRT.debug.nodeCount = (int)BVH.getBvh().size();
+                    RenderDataRT.debug.client_width = &client_width;
+                    RenderDataRT.debug.client_height = &client_height;
+                    RenderDataRT.debug.shaderDebugBvh = &shader_RT_BVH;
+                    RenderDataRT.debug.view = &view;
+                    RenderDataRT.debug.projection = &projection;
+                    break;
+                }
                 case RAY_TRACING_HARD_PERSPECTIVE:
                 {
-                    RenderDataRTD.VertexSSBO = &VertexSSBO;
-                    RenderDataRTD.MatrixSSBO = &MatrixSSBO;
-                    RenderDataRTD.BvhSSBO = &BvhSSBO;
-                    RenderDataRTD.rayTracedTexture = &rayTracedTexture;
-                    RenderDataRTD.nodeCount = (int)BVH.getBvh().size();
-                    RenderDataRTD.texture_width = &rayTracingTextureWidth;
-                    RenderDataRTD.texture_height = &rayTracingTextureHeight;
-                    RenderDataRTD.client_width = &client_width;
-                    RenderDataRTD.client_height = &client_height;
-                    RenderDataRTD.shaderDebugBvh = &shader_RT_BVH;
-                    RenderDataRTD.shaderRayTracing = &shader_RT_HARD;
-                    RenderDataRTD.shaderImageOut = &shader_IO;
-                    RenderDataRTD.viewPos = &viewPos;
-                    RenderDataRTD.view = &view;
-                    RenderDataRTD.projection = &projection;
-                    RenderDataRTD.quadVAO = &quadVAO;
+                    RenderDataRT.hard.VertexSSBO = &VertexSSBO;
+                    RenderDataRT.hard.MatrixSSBO = &MatrixSSBO;
+                    RenderDataRT.hard.BvhSSBO = &BvhSSBO;
+                    RenderDataRT.hard.rayTracedTexture = &rayTracedTexture;
+                    RenderDataRT.hard.texture_width = &rayTracingTextureWidth;
+                    RenderDataRT.hard.texture_height = &rayTracingTextureHeight;
+                    RenderDataRT.hard.client_width = &client_width;
+                    RenderDataRT.hard.client_height = &client_height;
+                    RenderDataRT.hard.shaderRayTracing = &shader_RT_HARD;
+                    RenderDataRT.hard.shaderImageOut = &shader_IO;
+                    RenderDataRT.hard.viewPos = &viewPos;
+                    RenderDataRT.hard.view = &view;
+                    RenderDataRT.hard.projection = &projection;
+                    RenderDataRT.hard.quadVAO = &quadVAO;
                     break;
                 }
                 
@@ -1078,13 +1088,13 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
             case RAY_TRACING_DEBUG:
             {
-                RayTracingDrawBvh(RenderDataRTD);
+                RayTracingDrawBvh(RenderDataRT.debug);
                 break;
             }
 
             case RAY_TRACING_HARD_PERSPECTIVE:
             {
-                RayTracingHard(RenderDataRTD);
+                RayTracingHard(RenderDataRT.hard);
                 break;
             }
             
