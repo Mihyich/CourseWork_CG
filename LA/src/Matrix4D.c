@@ -881,6 +881,50 @@ void __cdecl mat4_set_rotate_around_point(pmat4 m, cpvec3 axis, cpvec3 point, fl
     m->w_basis.w = 1.f;
 }
 
+void __cdecl mat4_set_TRS(pmat4 m, cpvec3 pos, cpvec3 rot, cpvec3 scale)
+{
+    mat4 S;
+    mat4 Rx;
+    mat4 Ry;
+    mat4 Rz;
+    mat4 T;
+
+    mat4_set_scale(&S, scale->x, scale->y, scale->z);
+    mat4_set_rotate_x(&Rx, rot->x);
+    mat4_set_rotate_y(&Ry, rot->y);
+    mat4_set_rotate_z(&Rz, rot->z);
+    mat4_set_translate(&T, pos->x, pos->y, pos->z);
+
+    mat4_set_ordinary(m);
+    mat4_compose(m, &T);
+    mat4_compose(m, &Rz);
+    mat4_compose(m, &Ry);
+    mat4_compose(m, &Rx);
+    mat4_compose(m, &S);
+}
+
+void __cdecl mat4_set_TRS_degrees(pmat4 m, cpvec3 rot, cpvec3 pos, cpvec3 scale)
+{
+    mat4 S;
+    mat4 Rx;
+    mat4 Ry;
+    mat4 Rz;
+    mat4 T;
+
+    mat4_set_scale(&S, scale->x, scale->y, scale->z);
+    mat4_set_rotate_x_degrees(&Rx, rot->x);
+    mat4_set_rotate_y_degrees(&Ry, rot->y);
+    mat4_set_rotate_z_degrees(&Rz, rot->z);
+    mat4_set_translate(&T, pos->x, pos->y, pos->z);
+
+    mat4_set_ordinary(m);
+    mat4_compose(m, &T);
+    mat4_compose(m, &Rz);
+    mat4_compose(m, &Ry);
+    mat4_compose(m, &Rx);
+    mat4_compose(m, &S);
+}
+
 int __cdecl mat4_is_equal(cpmat4 m1, cpmat4 m2)
 {
     return

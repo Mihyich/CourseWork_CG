@@ -109,6 +109,10 @@ void __cdecl mat4_set_scale_to_point(pmat4 m, cpvec3 scale, cpvec3 point);
 
 void __cdecl mat4_set_rotate_around_point(pmat4 m, cpvec3 axis, cpvec3 point, float rad);
 
+void __cdecl mat4_set_TRS(pmat4 m, cpvec3 pos, cpvec3 rot, cpvec3 scale);
+
+void __cdecl mat4_set_TRS_degrees(pmat4 m, cpvec3 rot, cpvec3 pos, cpvec3 scale);
+
 int __cdecl mat4_is_equal(cpmat4 m1, cpmat4 m2);
 
 #ifdef __cplusplus
