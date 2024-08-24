@@ -325,7 +325,7 @@ int skipSubTree(int index)
 }
 
 // Обхода BVH дерева для трассировки тени (HARD)
-bool traceRayShadow(vec3 FragPos, vec3 lightPos)
+float traceRayShadow(vec3 FragPos, vec3 lightPos)
 {
     Ray shadowRay; // Я, теневой лучик...
     RayTraceBVHNode node; // Текущий узел BVH
@@ -415,7 +415,7 @@ bool traceRayShadow(vec3 FragPos, vec3 lightPos)
                 {
                     // Неважно, будет ли это самый ближайший треугольник или дальний,
                     // самое главаное: между FragPos и LightPos есть треугольник
-                    return true;
+                    return 0.0;
                 }
 
                 // Переход к следующему узлу
@@ -431,7 +431,7 @@ bool traceRayShadow(vec3 FragPos, vec3 lightPos)
         }
     }
 
-    return false; // Нет перекрывающего треугольника между FragPos и LightPos
+    return 1.0; // Нет перекрывающего треугольника между FragPos и LightPos
 }
 
 // Обхода BVH дерева
@@ -578,8 +578,11 @@ vec4 traceRayBVH(Ray ray)
         // Интерполированная нормаль
         FragNorm = interpolateVector(barycentricCoords, tmpNorm1, tmpNorm2, tmpNorm3);
 
+        vec3 diffuse = computeLightColor(FragPos, FragNorm);
+        diffuse *= traceRayShadow(FragPos, light.position);
+
         // Вычисление освещения
-        color = vec4(computeLightColor(FragPos, FragNorm), 1.0);
+        color = vec4(diffuse, 1.0);
     }
 
     return color;
