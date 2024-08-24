@@ -44,6 +44,56 @@ void SetupOpenGLServices()
     glCullFace(GL_BACK);
 }
 
+bool RebuildBVHTree(
+    RayTraceBVHTree& BVH,
+    const std::string& modelPath,
+    bool CCW,
+    const mat4& modelModel,
+    const std::string& modelName,
+    GLuint& VertexSSBO, GLuint& MatrixSSBO, GLuint& BvhSSBO)
+{
+    mat4 m;
+    std::vector<vec3> vertices;
+    std::vector<vec3> normales;
+    std::vector<unsigned int> indeces;
+    RayTraceBVHTree newBVH;
+    bool rs = true;
+    
+    mat4_set_ordinary(&m);
+    genPlaneMeshVNI(vertices, normales, indeces, 20.f);
+    newBVH.addMesh(vertices, normales, indeces, m, "Plane");
+
+    rs *= LoadModel(modelPath, vertices, normales, indeces, CCW);
+    newBVH.addMesh(vertices, normales, indeces, modelModel, modelName);
+
+    if (rs)
+    {
+        if (!newBVH.checkLinkRanges())
+        {
+            printf("!!!\nBVH tree has error linking ranges\n!!!\n");
+        }
+        
+        if (!newBVH.checkCycles())
+        {
+            printf("!!!\nBVH tree has cycles\n!!!\n");
+        }
+
+        if (!newBVH.checkBoundingSpheres())
+        {
+            printf("!!!\nBVH tree has incorrect bounding spheres\n!!!\n");
+        }
+
+        // newBVH.writeBVHTreeToDot("BVHtree.dot");
+
+        BVH = newBVH;
+        genRayTraceVertexSSBO(newBVH.getVerteces(), VertexSSBO);
+        genRayTraceMatrixSSBO(newBVH.getMatrices(), MatrixSSBO);
+        genRayTraceBvhSSBO(newBVH.getBvh(), BvhSSBO);
+    }
+
+    return rs;
+}
+
 LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     static RECT client_rect = {0, 0, 0, 0};
@@ -597,7 +647,9 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         wchar_to_char(&wpath, &path);
 
-        return GenModelMesh(path, modelVAO, modelVBO, modelEBO, modelIndexCount, CCW);
+        return 
+            GenModelMesh(path, modelVAO, modelVBO, modelEBO, modelIndexCount, CCW) &&
+            RebuildBVHTree(BVH, path, CCW, modelModel, path, VertexSSBO, MatrixSSBO, BvhSSBO);
     }
 
     case WM_SET_WIREFRAME:
