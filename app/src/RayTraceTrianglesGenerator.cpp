@@ -2,9 +2,9 @@
 
 bool genRayTraceTriangles(
     std::vector<RayTraceTriangle>& triangles,
-    std::vector<vec3>& vertices,
-    std::vector<vec3>& normales,
-    std::vector<unsigned int>& indeces)
+    const std::vector<vec3>& vertices,
+    const std::vector<vec3>& normales,
+    const std::vector<unsigned int>& indeces)
 {
     RayTraceTriangle RTT;
 
