@@ -579,7 +579,7 @@ vec4 traceRayBVH(Ray ray)
         FragNorm = interpolateVector(barycentricCoords, tmpNorm1, tmpNorm2, tmpNorm3);
 
         // Вычисление освещения
-        color = vec4(computeLightColor(FragPos, tmpNorm1), 1.0);
+        color = vec4(computeLightColor(FragPos, FragNorm), 1.0);
     }
 
     return color;
