@@ -204,8 +204,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static GLuint planeEBO = 0;
     static Matrix4D planeModel;
 
-    static std::string modelPath = "Models/Rabbit.obj";
-    static std::string modelName = "Rabbit";
+    static std::string modelPath = "Models/Monkey.obj";
+    static std::string modelName = "Monkey";
     static GLuint modelVAO = 0;
     static GLuint modelVBO = 0;
     static GLuint modelEBO = 0;
@@ -318,7 +318,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         // Вау-эффект, для первого RayTracing дерева, потом автоматически дерево перестроится
         // по желанию пользователя загрузить новую модель
-        BuildPresentationBVHTree(BVH, VertexSSBO, MatrixSSBO, BvhSSBO);
+        // BuildPresentationBVHTree(BVH, VertexSSBO, MatrixSSBO, BvhSSBO);
+        RebuildBVHTree(BVH, modelPath, true, modelModel, modelName, VertexSSBO, MatrixSSBO, BvhSSBO);
         genRayTracedTexture(rayTracedTexture, rayTracingTextureWidth, rayTracingTextureHeight);
 
         SetupOpenGLServices();
