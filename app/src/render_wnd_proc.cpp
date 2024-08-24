@@ -255,6 +255,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static GLsizei rayTracingTextureWidth = 1920;
     static GLsizei rayTracingTextureHeight = 1080;
 
+    static int shadowRayCount = 9;
+
     static Shader shader;
 
     static Shader shader_DBD; // Depth Buffer Debug
@@ -580,6 +582,9 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_IO.use();
         glUniform1i(shader_IO.get_uniform_location("colorImage"), 0);
 
+        shader_RT_P_SOFT.use();
+        glUniform1i(shader_RT_P_SOFT.get_uniform_location("shadowRayCount"), shadowRayCount);
+
         // Подключить UBO буфер ко всем шейдером его поддерживающих
         glBindBufferRange(GL_UNIFORM_BUFFER, 0, lightUBO, 0, sizeof(Light));
 
@@ -592,8 +597,9 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE_VSM, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL_VSM, (LPARAM)0);
 
-        SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)RAY_TRACING_DEBUG, (LPARAM)0);
+        // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)RAY_TRACING_DEBUG, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)RAY_TRACING_HARD_PERSPECTIVE, (LPARAM)0);
+        SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)RAY_TRACING_SOFT_PERSPECTIVE, (LPARAM)0);
 
         std::cout << sizeof(Light) << std::endl;
         std::cout << alignof(Light) << std::endl;
@@ -939,6 +945,24 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     RenderDataRT.hard.quadVAO = &quadVAO;
                     break;
                 }
+                case RAY_TRACING_SOFT_PERSPECTIVE:
+                {
+                    RenderDataRT.soft.VertexSSBO = &VertexSSBO;
+                    RenderDataRT.soft.MatrixSSBO = &MatrixSSBO;
+                    RenderDataRT.soft.BvhSSBO = &BvhSSBO;
+                    RenderDataRT.soft.rayTracedTexture = &rayTracedTexture;
+                    RenderDataRT.soft.texture_width = &rayTracingTextureWidth;
+                    RenderDataRT.soft.texture_height = &rayTracingTextureHeight;
+                    RenderDataRT.soft.client_width = &client_width;
+                    RenderDataRT.soft.client_height = &client_height;
+                    RenderDataRT.soft.shaderRayTracing = &shader_RT_P_SOFT;
+                    RenderDataRT.soft.shaderImageOut = &shader_IO;
+                    RenderDataRT.soft.viewPos = &viewPos;
+                    RenderDataRT.soft.view = &view;
+                    RenderDataRT.soft.projection = &projection;
+                    RenderDataRT.soft.quadVAO = &quadVAO;
+                    break;
+                }
                 
                 default:
                     break;
@@ -1114,6 +1138,12 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 case RAY_TRACING_HARD_PERSPECTIVE:
                 {
                     RayTracingHard(RenderDataRT.hard);
+                    break;
+                }
+
+                case RAY_TRACING_SOFT_PERSPECTIVE:
+                {
+                    RayTracingSoft(RenderDataRT.soft);
                     break;
                 }
                 

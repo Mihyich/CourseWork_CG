@@ -57,6 +57,7 @@
 
 #include "RayTracingDebug.h"
 #include "RayTracingHard.h"
+#include "RayTracingSoft.h"
 
 
 #include "app_args.h"
