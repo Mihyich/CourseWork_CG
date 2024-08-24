@@ -46,7 +46,7 @@ void OutputPath(RayTracingSoftRenderData& data)
     glBindVertexArray(0);
 }
 
-void RayTracingHard(RayTracingSoftRenderData& data)
+void RayTracingSoft(RayTracingSoftRenderData& data)
 {
     TracingPath(data);
     OutputPath(data);
