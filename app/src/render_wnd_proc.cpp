@@ -87,9 +87,9 @@ bool RebuildBVHTree(
         // newBVH.writeBVHTreeToDot("BVHtree.dot");
 
         BVH = newBVH;
-        genRayTraceVertexSSBO(newBVH.getVerteces(), VertexSSBO);
-        genRayTraceMatrixSSBO(newBVH.getMatrices(), MatrixSSBO);
-        genRayTraceBvhSSBO(newBVH.getBvh(), BvhSSBO);
+        genRayTraceVertexSSBO(BVH.getVerteces(), VertexSSBO);
+        genRayTraceMatrixSSBO(BVH.getMatrices(), MatrixSSBO);
+        genRayTraceBvhSSBO(BVH.getBvh(), BvhSSBO);
     }
 
     return rs;
@@ -288,6 +288,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static Shader shader_IO; // ImageOut
 
     static Shader shader_RT_HARD; // RayTracing Hard
+
+    static bool IsmodelLoading = false;
 
     switch (message)
     {
@@ -581,8 +583,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE_VSM, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL_VSM, (LPARAM)0);
 
-        // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)RAY_TRACING_DEBUG, (LPARAM)0);
-        SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)RAY_TRACING_HARD_PERSPECTIVE, (LPARAM)0);
+        SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)RAY_TRACING_DEBUG, (LPARAM)0);
+        // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)RAY_TRACING_HARD_PERSPECTIVE, (LPARAM)0);
 
         std::cout << sizeof(Light) << std::endl;
         std::cout << alignof(Light) << std::endl;
@@ -666,15 +668,18 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case WM_LOAD_MODEL:
     {
+        IsmodelLoading = true;
         std::string path;
         std::wstring wpath = (WCHAR*)wParam;
         bool CCW = (bool)lParam;
+        bool rs;
 
         wchar_to_char(&wpath, &path);
-
-        return 
-            GenModelMesh(path, modelVAO, modelVBO, modelEBO, modelIndexCount, CCW) &&
-            RebuildBVHTree(BVH, path, CCW, modelModel, path, VertexSSBO, MatrixSSBO, BvhSSBO);
+        rs = GenModelMesh(path, modelVAO, modelVBO, modelEBO, modelIndexCount, CCW);
+        rs = rs && RebuildBVHTree(BVH, path, CCW, modelModel, modelName, VertexSSBO, MatrixSSBO, BvhSSBO);
+        
+        IsmodelLoading = false;
+        return rs;
     }
 
     case WM_SET_WIREFRAME:
@@ -938,168 +943,171 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hWnd, &ps);
 
-        switch (shadowAlg)
+        if (!IsmodelLoading)
         {
-            case NO_SHADOW:
+            switch (shadowAlg)
             {
-                break;
-            }
+                case NO_SHADOW:
+                {
+                    break;
+                }
 
-            case NO_SHADOW_LIGHT:
-            {
-                break;
-            }
+                case NO_SHADOW_LIGHT:
+                {
+                    break;
+                }
 
-            case SHADOW_MAP_ORTHOGONAL:
-            {
-                ShadowMapOrthogonal(RenderDataSMO);
-                break;
-            }
+                case SHADOW_MAP_ORTHOGONAL:
+                {
+                    ShadowMapOrthogonal(RenderDataSMO);
+                    break;
+                }
 
-            case SHADOW_MAP_ORTHOGONAL_LIGHT:
-            {
-                break;
-            }
+                case SHADOW_MAP_ORTHOGONAL_LIGHT:
+                {
+                    break;
+                }
 
-            case SHADOW_MAP_ORTHOGONAL_DEBUG:
-            {
-                ShadowMapOrthogonalDebug(RenderDataSMO);
-                break;
-            }
+                case SHADOW_MAP_ORTHOGONAL_DEBUG:
+                {
+                    ShadowMapOrthogonalDebug(RenderDataSMO);
+                    break;
+                }
 
-            case SHADOW_MAP_PERSPECTIVE:
-            {
-                ShadowMapPerspective(RenderDataSMP);
-                break;
-            }
+                case SHADOW_MAP_PERSPECTIVE:
+                {
+                    ShadowMapPerspective(RenderDataSMP);
+                    break;
+                }
 
-            case SHADOW_MAP_PERSPECTIVE_LIGHT:
-            {
-                break;
-            }
+                case SHADOW_MAP_PERSPECTIVE_LIGHT:
+                {
+                    break;
+                }
 
-            case SHADOW_MAP_PERSPECTIVE_DEBUG:
-            {
-                ShadowMapPerspectiveDebug(RenderDataSMP);
-                break;
-            }
+                case SHADOW_MAP_PERSPECTIVE_DEBUG:
+                {
+                    ShadowMapPerspectiveDebug(RenderDataSMP);
+                    break;
+                }
 
-            case SHADOW_MAP_ORTHOGONAL_PCF:
-            {
-                ShadowMapPcfOrthogonal(RenderDataSMOPCF);
-                break;
-            }
+                case SHADOW_MAP_ORTHOGONAL_PCF:
+                {
+                    ShadowMapPcfOrthogonal(RenderDataSMOPCF);
+                    break;
+                }
 
-            case SHADOW_MAP_ORTHOGONAL_PCF_LIGHT:
-            {
-                break;
-            }
+                case SHADOW_MAP_ORTHOGONAL_PCF_LIGHT:
+                {
+                    break;
+                }
 
-            case SHADOW_MAP_ORTHOGONAL_PCF_DEBUG:
-            {
-                ShadowMapPcfOrthogonalDebug(RenderDataSMOPCF);
-                break;
-            }
+                case SHADOW_MAP_ORTHOGONAL_PCF_DEBUG:
+                {
+                    ShadowMapPcfOrthogonalDebug(RenderDataSMOPCF);
+                    break;
+                }
 
-            case SHADOW_MAP_PERSPECTIVE_PCF:
-            {
-                ShadowMapPcfPerspective(RenderDataSMPPCF);
-                break;
-            }
+                case SHADOW_MAP_PERSPECTIVE_PCF:
+                {
+                    ShadowMapPcfPerspective(RenderDataSMPPCF);
+                    break;
+                }
 
-            case SHADOW_MAP_PERSPECTIVE_PCF_LIGHT:
-            {
-                break;
-            }
+                case SHADOW_MAP_PERSPECTIVE_PCF_LIGHT:
+                {
+                    break;
+                }
 
-            case SHADOW_MAP_PERSPECTIVE_PCF_DEBUG:
-            {
-                ShadowMapPcfPerspectiveDebug(RenderDataSMPPCF);
-                break;
-            }
+                case SHADOW_MAP_PERSPECTIVE_PCF_DEBUG:
+                {
+                    ShadowMapPcfPerspectiveDebug(RenderDataSMPPCF);
+                    break;
+                }
 
-            case SHADOW_MAP_ORTHOGONAL_ESM:
-            {
-                ShadowMapEsmOrthogonal(RenderDataSMOESM);
-                break;
-            }
+                case SHADOW_MAP_ORTHOGONAL_ESM:
+                {
+                    ShadowMapEsmOrthogonal(RenderDataSMOESM);
+                    break;
+                }
 
-            case SHADOW_MAP_ORTHOGONAL_ESM_LIGHT:
-            {
-                break;
-            }
+                case SHADOW_MAP_ORTHOGONAL_ESM_LIGHT:
+                {
+                    break;
+                }
 
-            case SHADOW_MAP_ORTHOGONAL_ESM_DEBUG:
-            {
-                ShadowMapEsmOrthogonalDebug(RenderDataSMOESM);
-                break;
-            }
-            
-            case SHADOW_MAP_PERSPECTIVE_ESM:
-            {
-                ShadowMapEsmPerspective(RenderDataSMPESM);
-                break;
-            }
+                case SHADOW_MAP_ORTHOGONAL_ESM_DEBUG:
+                {
+                    ShadowMapEsmOrthogonalDebug(RenderDataSMOESM);
+                    break;
+                }
+                
+                case SHADOW_MAP_PERSPECTIVE_ESM:
+                {
+                    ShadowMapEsmPerspective(RenderDataSMPESM);
+                    break;
+                }
 
-            case SHADOW_MAP_PERSPECTIVE_ESM_LIGHT:
-            {
-                break;
-            }
+                case SHADOW_MAP_PERSPECTIVE_ESM_LIGHT:
+                {
+                    break;
+                }
 
-            case SHADOW_MAP_PERSPECTIVE_ESM_DEBUG:
-            {
-                ShadowMapEsmPerspectiveDebug(RenderDataSMPESM);
-                break;
-            }
+                case SHADOW_MAP_PERSPECTIVE_ESM_DEBUG:
+                {
+                    ShadowMapEsmPerspectiveDebug(RenderDataSMPESM);
+                    break;
+                }
 
-            case SHADOW_MAP_ORTHOGONAL_VSM:
-            {
-                ShadowMapVsmOrthogonal(RenderDataSMOVSM);
-                break;
-            }
+                case SHADOW_MAP_ORTHOGONAL_VSM:
+                {
+                    ShadowMapVsmOrthogonal(RenderDataSMOVSM);
+                    break;
+                }
 
-            case SHADOW_MAP_ORTHOGONAL_VSM_LIGHT:
-            {
-                break;
-            }
+                case SHADOW_MAP_ORTHOGONAL_VSM_LIGHT:
+                {
+                    break;
+                }
 
-            case SHADOW_MAP_ORTHOGONAL_VSM_DEBUG:
-            {
-                ShadowMapVsmOrthogonalDebug(RenderDataSMOVSM);
-                break;
-            }
+                case SHADOW_MAP_ORTHOGONAL_VSM_DEBUG:
+                {
+                    ShadowMapVsmOrthogonalDebug(RenderDataSMOVSM);
+                    break;
+                }
 
-            case SHADOW_MAP_PERSPECTIVE_VSM:
-            {
-                ShadowMapVsmPerspective(RenderDataSMPVSM);
-                break;
-            }
+                case SHADOW_MAP_PERSPECTIVE_VSM:
+                {
+                    ShadowMapVsmPerspective(RenderDataSMPVSM);
+                    break;
+                }
 
-            case SHADOW_MAP_PERSPECTIVE_VSM_LIGHT:
-            {
-                break;
-            }
+                case SHADOW_MAP_PERSPECTIVE_VSM_LIGHT:
+                {
+                    break;
+                }
 
-            case SHADOW_MAP_PERSPECTIVE_VSM_DEBUG:
-            {
-                ShadowMapVsmPerspectiveDebug(RenderDataSMPVSM);
-                break;
-            }
+                case SHADOW_MAP_PERSPECTIVE_VSM_DEBUG:
+                {
+                    ShadowMapVsmPerspectiveDebug(RenderDataSMPVSM);
+                    break;
+                }
 
-            case RAY_TRACING_DEBUG:
-            {
-                RayTracingDrawBvh(RenderDataRT.debug);
-                break;
-            }
+                case RAY_TRACING_DEBUG:
+                {
+                    RayTracingDrawBvh(RenderDataRT.debug);
+                    break;
+                }
 
-            case RAY_TRACING_HARD_PERSPECTIVE:
-            {
-                RayTracingHard(RenderDataRT.hard);
-                break;
+                case RAY_TRACING_HARD_PERSPECTIVE:
+                {
+                    RayTracingHard(RenderDataRT.hard);
+                    break;
+                }
+                
+                default:
+                    break;
             }
-            
-            default:
-                break;
         }
 
         SwapBuffers(hdc);
