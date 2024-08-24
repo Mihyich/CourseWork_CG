@@ -16,15 +16,12 @@ struct RayTracingHardRenderData
     GLuint* BvhSSBO;
     GLuint* rayTracedTexture;
 
-    int nodeCount;
-
     GLsizei* texture_width;
     GLsizei* texture_height;
 
     GLsizei* client_width;
     GLsizei* client_height;
 
-    Shader* shaderDebugBvh;
     Shader* shaderRayTracing;
     Shader* shaderImageOut;
 
