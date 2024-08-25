@@ -114,7 +114,8 @@ layout(std430, binding = 3) buffer Bvh
 
 layout (local_size_x = 16, local_size_y = 16) in;
 
-uniform int shadowRayCount;
+uniform int curFrameIndex; // Индекс текущего кадра (изображение строится в несколько проходов)
+uniform int shadowRayCount; // Количество лучей испускающихся для семплирования тени к источнику света
 
 uniform vec3 viewPos;
 uniform mat4 view;
@@ -572,18 +573,17 @@ vec4 traceRayBVH(Ray ray)
 
     // Если ближайшее расстояние изменилось, значит было столкновение с треугольником
     // Следовательно, нужно рассчитать освещение
-    if (closestT < FLT_MAX)
+    if (closestT < FLT_MAX && curFrameIndex < shadowRayCount)
     {
-        // Подготовить нормали
+        // Подготовить данные
 
-        // Поизиция фрагмента
+        // Позиция фрагмента
         FragPos = ray.origin + closestT * ray.dir;
 
         // Матрица модели
         model = matrices[closestMatrixIndex];
 
         // Перевод позиций вершин в мировое пространство
-
         tmpPos1 = vec3(model * vec4(triangles[closestTriangleIndex].v1.px, triangles[closestTriangleIndex].v1.py, triangles[closestTriangleIndex].v1.pz, 1.0));
         tmpPos2 = vec3(model * vec4(triangles[closestTriangleIndex].v2.px, triangles[closestTriangleIndex].v2.py, triangles[closestTriangleIndex].v2.pz, 1.0));
         tmpPos3 = vec3(model * vec4(triangles[closestTriangleIndex].v3.px, triangles[closestTriangleIndex].v3.py, triangles[closestTriangleIndex].v3.pz, 1.0));
@@ -605,18 +605,28 @@ vec4 traceRayBVH(Ray ray)
         // Диффузная состовляющая света
         vec3 diffuse = computeLightColor(FragPos, FragNorm);
 
-        // Мягкая семплированная тень
-        float shadow = 0.0;
-        vec3 spherePos;
-        for (int i = 0; i < shadowRayCount; ++i)
+        if (curFrameIndex > 0)
         {
-            spherePos = randPointOnSphere(light.position, 0.05, vec2(gl_GlobalInvocationID.xy));
-            shadow += traceRayShadow(FragPos, spherePos);
-        }
-        shadow /= shadowRayCount;
+            // Мягкая семплированная тень в нескольких этапах
 
-        // Вычисление освещения
-        color = vec4(diffuse * shadow, 1.0);
+            // Случайная позиция на сфере
+            vec3 spherePos = randPointOnSphere(light.position, 0.05, vec2(gl_GlobalInvocationID.xy));
+
+            // Алгортим Hard тени
+            float shadow = traceRayShadow(FragPos, spherePos);
+
+            // Расчет приращения к имеющемуся значению освещения
+            int prevFrameIndex = curFrameIndex - 1;
+            vec3 prevLight = imageLoad(colorImage, ivec2(gl_GlobalInvocationID.xy)).xyz;
+            vec3 dX = (prevFrameIndex * diffuse * shadow - prevLight) / (curFrameIndex * prevFrameIndex);
+
+            color = (prevLight + dx, 1.0);
+        }
+        else
+        {
+            float shadow = traceRayShadow(FragPos, light.position);
+            color = vec4(diffuse * shadow, 1.0);
+        }
     }
 
     return color;
