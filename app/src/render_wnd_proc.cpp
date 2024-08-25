@@ -541,7 +541,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_RT_HARD.delete_shader(GL_COMPUTE_SHADER);
 
         shader_RT_P_SOFT.set_shader_name("Shaders/RayTraceSoft (perspective)");
-        shader_RT_P_SOFT.create_from_file("Shaders/RayTraceSoft (perspective)/comp.glsl", GL_COMPUTE_SHADER);
+        shader_RT_P_SOFT.create_from_file("Shaders/RayTraceSoft (perspective)/TracingPath/comp.glsl", GL_COMPUTE_SHADER);
         shader_RT_P_SOFT.link_program();
         shader_RT_P_SOFT.init_uniforms_and_attribs();
         shader_RT_P_SOFT.print_uniforms_and_attribs();
