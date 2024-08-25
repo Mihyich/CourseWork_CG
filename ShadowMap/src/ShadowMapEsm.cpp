@@ -1,11 +1,11 @@
-#include "ShadowMapPcfPerspective.h"
+#include "ShadowMapEsm.h"
 
-void DepthPass(ShadowMapPcfRenderData& data)
+void DepthPass(ShadowMapEsmRenderData& data)
 {
     glViewport(0, 0, data.depthBuffer->width, data.depthBuffer->height);
 
     glBindFramebuffer(GL_FRAMEBUFFER, data.depthBuffer->FBO);
-    glClear(GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT);
 
     data.shaderDepthPass->use();
     uniform_matrix4f(data.shaderDepthPass->get_uniform_location("view"), data.lightView);
@@ -17,7 +17,7 @@ void DepthPass(ShadowMapPcfRenderData& data)
     glBindVertexArray(0);
 }
 
-void RenderPass(ShadowMapPcfRenderData& data)
+void RenderPass(ShadowMapEsmRenderData& data)
 {
     glViewport(0, 0, *data.client_width, *data.client_height);
 
@@ -44,7 +44,7 @@ void RenderPass(ShadowMapPcfRenderData& data)
     glBindVertexArray(0);
 }
 
-void DebugPass(ShadowMapPcfRenderData& data)
+void DebugPass(ShadowMapEsmRenderData& data)
 {
     mat4 quadModel; mat4_set_ordinary(&quadModel);
 
@@ -65,13 +65,13 @@ void DebugPass(ShadowMapPcfRenderData& data)
     glBindVertexArray(0);
 }
 
-void ShadowMapPcfPerspective(ShadowMapPcfRenderData& data)
+void ShadowMapEsm(ShadowMapEsmRenderData& data)
 {
     DepthPass(data);
     RenderPass(data);
 }
 
-void ShadowMapPcfPerspectiveDebug(ShadowMapPcfRenderData& data)
+void ShadowMapEsmDebug(ShadowMapEsmRenderData& data)
 {
     DepthPass(data);
     DebugPass(data);
