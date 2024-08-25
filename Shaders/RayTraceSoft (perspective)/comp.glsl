@@ -143,26 +143,27 @@ struct Triangle
     vec3 v3; // 3 позиция вершины
 };
 
-// Псевдослучайное значение в диапазоне [0, 1)
-float rand(vec2 seed)
-{ 
-	return fract(sin(dot(seed, vec2(12.9898, 4.1414))) * 43758.5453);
-}
-
-// Случайное направление
-vec3 randDir(vec2 seed)
+// Основная функция генерации случайных точек
+vec3 generatePointOnSphere(int sampleIndex, int sampleCount)
 {
-    float theta = rand(seed) * 2.0 * PI; // Случайный угол в диапазоне [0, 2*Pi]
-    float phi = acos(2.0 * rand(seed + vec2(1.0)) - 1.0); // Случайный угол в диапазоне [0, Pi]
+    float offset = 2.0 / float(sampleCount);
+    float increment = PI * (3.0 - sqrt(5.0)); // Золотое сечение
 
-    // Преобразование углов в вектор
-    return vec3(sin(phi) * cos(theta), sin(phi) * sin(theta), cos(phi));
+    float y = ((sampleIndex * offset) - 1.0) + (offset / 2.0);
+    float r = sqrt(1.0 - y * y);
+
+    float phi = float(sampleIndex) * increment;
+
+    float x = cos(phi) * r;
+    float z = sin(phi) * r;
+
+    return vec3(x, y, z);
 }
 
 // Случайная позиция на сфере
-vec3 randPointOnSphere(vec3 center, float radius, vec2 seed)
+vec3 randPointOnSphere(vec3 center, float radius, int sampleIndex, int sampleCount)
 {
-    return center + randDir(seed) * radius;
+    return center + generatePointOnSphere(sampleIndex, sampleCount) * radius;
 }
 
 // Вычисление цвета света от точечного источника света
@@ -610,7 +611,7 @@ vec4 traceRayBVH(Ray ray)
             // Мягкая семплированная тень в нескольких этапах
 
             // Случайная позиция на сфере
-            vec3 spherePos = randPointOnSphere(light.position, 0.05, vec2(gl_GlobalInvocationID.xy) * curFrameIndex);
+            vec3 spherePos = randPointOnSphere(light.position, 1.0, curFrameIndex, shadowRayCount);
 
             // Алгортим Hard тени
             float shadow = traceRayShadow(FragPos, spherePos);
