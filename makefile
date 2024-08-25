@@ -120,7 +120,7 @@ LA.lib : $(LA_OBJ)
 	ranlib $@
 
 # линковка библиотеки Winapi
-WINAPI.lib : $(WINAPI_OBJ) LA.lib
+WINAPI.lib : $(WINAPI_OBJ)
 	ar rcs $@ $^
 	ranlib $@
 
@@ -150,7 +150,7 @@ $(LA_OBJ) : $(OUT)/%.o : $(LA_SRC)/%.c | out_folder
 
 # компиляция библиотеки Winapi
 $(WINAPI_OBJ) : $(OUT)/%.o : $(WINAPI_SRC)/%.cpp | out_folder
-	$(CCPP) $(CPPFLAGS) -I$(LA_INC) -I$(WINAPI_INC) -c $< -o $@
+	$(CCPP) $(CPPFLAGS) -I$(WINAPI_INC) -c $< -o $@
 
 # компиляция скриптового ресурса
 $(OUT)/resource.o : $(APP_RSRC)/resource.rc | out_folder
