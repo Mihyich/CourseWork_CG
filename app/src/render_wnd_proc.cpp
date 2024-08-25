@@ -167,18 +167,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     static ShadowAlg shadowAlg = NO_SHADOW_LIGHT;
 
-    static ShadowMapOrthogonalRenderData RenderDataSMO;
-    static ShadowMapPerspectiveRenderData RenderDataSMP;
-
-    static ShadowMapPcfOrthogonalRenderData RenderDataSMOPCF;
-    static ShadowMapPcfPerspectiveRenderData RenderDataSMPPCF;
-
-    static ShadowMapEsmOrthogonalRenderData RenderDataSMOESM;
-    static ShadowMapEsmPerspectiveRenderData RenderDataSMPESM;
-
-    static ShadowMapVsmOrthogonalRenderData RenderDataSMOVSM;
-    static ShadowMapVsmPerspectiveRenderData RenderDataSMPVSM;
-
+    static ShadowMapRenderData RenderDataSM;
     static RayTracingRenderData RenderDataRT;
 
     static CameraMode camera_mode = ORBITTING;
@@ -299,8 +288,6 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
     case WM_INIT_GL_OPTIONS:
     {
-        ZeroMemory(&RenderDataSMP, sizeof(ShadowMapPerspectiveRenderData));
-
         mat4_set_look_at(&view, &viewPos, &viewDst, &viewUp);
         mat4_set_perspective_projection(&projection, 800, 600, projNear, projFar, projFov); // изначально перспектива наугад
 
@@ -742,22 +729,23 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 case SHADOW_MAP_ORTHOGONAL_LIGHT:
                 case SHADOW_MAP_ORTHOGONAL_DEBUG:
                 {
-                    RenderDataSMO.depthBuffer = &depthBuffer;
-                    RenderDataSMO.client_width = &client_width;
-                    RenderDataSMO.client_height = &client_height;
-                    RenderDataSMO.shaderDepthPass = &shader_SM_O_DP;
-                    RenderDataSMO.shaderRenderPass = &shader_SM_O_RP;
-                    RenderDataSMO.shaderDepthDebug = &shader_DBD;
-                    RenderDataSMO.view = &view;
-                    RenderDataSMO.projection = &projection;
-                    RenderDataSMO.lightView = &lightView;
-                    RenderDataSMO.lightProjection = &lightProjectionOrthogonal;
-                    RenderDataSMO.quadVAO = &quadVAO;
-                    RenderDataSMO.planeVAO = &planeVAO;
-                    RenderDataSMO.planeModel = &planeModel;
-                    RenderDataSMO.modelVAO = &modelVAO;
-                    RenderDataSMO.modelIndexCount = &modelIndexCount;
-                    RenderDataSMO.modelModel =  &modelModel;
+                    RenderDataSM.main.depthBuffer = &depthBuffer;
+                    RenderDataSM.main.client_width = &client_width;
+                    RenderDataSM.main.client_height = &client_height;
+                    RenderDataSM.main.shaderDepthPass = &shader_SM_O_DP;
+                    RenderDataSM.main.shaderRenderPass = &shader_SM_O_RP;
+                    RenderDataSM.main.shaderDepthDebug = &shader_DBD;
+                    RenderDataSM.main.view = &view;
+                    RenderDataSM.main.projection = &projection;
+                    RenderDataSM.main.lightView = &lightView;
+                    RenderDataSM.main.lightProjection = &lightProjectionOrthogonal;
+                    // RenderDataSM.main.shadowBias = &;
+                    RenderDataSM.main.quadVAO = &quadVAO;
+                    RenderDataSM.main.planeVAO = &planeVAO;
+                    RenderDataSM.main.planeModel = &planeModel;
+                    RenderDataSM.main.modelVAO = &modelVAO;
+                    RenderDataSM.main.modelIndexCount = &modelIndexCount;
+                    RenderDataSM.main.modelModel = &modelModel;
                     break;
                 }
 
@@ -765,22 +753,23 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 case SHADOW_MAP_PERSPECTIVE_LIGHT:
                 case SHADOW_MAP_PERSPECTIVE_DEBUG:
                 {
-                    RenderDataSMP.depthBuffer = &depthBuffer;
-                    RenderDataSMP.client_width = &client_width;
-                    RenderDataSMP.client_height = &client_height;
-                    RenderDataSMP.shaderDepthPass = &shader_SM_P_DP;
-                    RenderDataSMP.shaderRenderPass = &shader_SM_P_RP;
-                    RenderDataSMP.shaderDepthDebug = &shader_DBD;
-                    RenderDataSMP.view = &view;
-                    RenderDataSMP.projection = &projection;
-                    RenderDataSMP.lightView = &lightView;
-                    RenderDataSMP.lightProjection = &lightProjectionPerspective;
-                    RenderDataSMP.quadVAO = &quadVAO;
-                    RenderDataSMP.planeVAO = &planeVAO;
-                    RenderDataSMP.planeModel = &planeModel;
-                    RenderDataSMP.modelVAO = &modelVAO;
-                    RenderDataSMP.modelIndexCount = &modelIndexCount;
-                    RenderDataSMP.modelModel =  &modelModel;
+                    RenderDataSM.main.depthBuffer = &depthBuffer;
+                    RenderDataSM.main.client_width = &client_width;
+                    RenderDataSM.main.client_height = &client_height;
+                    RenderDataSM.main.shaderDepthPass = &shader_SM_P_DP;
+                    RenderDataSM.main.shaderRenderPass = &shader_SM_P_RP;
+                    RenderDataSM.main.shaderDepthDebug = &shader_DBD;
+                    RenderDataSM.main.view = &view;
+                    RenderDataSM.main.projection = &projection;
+                    RenderDataSM.main.lightView = &lightView;
+                    RenderDataSM.main.lightProjection = &lightProjectionPerspective;
+                    // RenderDataSM.main.shadowBias = &;
+                    RenderDataSM.main.quadVAO = &quadVAO;
+                    RenderDataSM.main.planeVAO = &planeVAO;
+                    RenderDataSM.main.planeModel = &planeModel;
+                    RenderDataSM.main.modelVAO = &modelVAO;
+                    RenderDataSM.main.modelIndexCount = &modelIndexCount;
+                    RenderDataSM.main.modelModel = &modelModel;
                     break;
                 }
 
@@ -788,22 +777,24 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 case SHADOW_MAP_ORTHOGONAL_PCF_LIGHT:
                 case SHADOW_MAP_ORTHOGONAL_PCF_DEBUG:
                 {
-                    RenderDataSMOPCF.depthBuffer = &depthBuffer;
-                    RenderDataSMOPCF.client_width = &client_width;
-                    RenderDataSMOPCF.client_height = &client_height;
-                    RenderDataSMOPCF.shaderDepthPass = &shader_SM_PCF_O_DP;
-                    RenderDataSMOPCF.shaderRenderPass = &shader_SM_PCF_O_RP;
-                    RenderDataSMOPCF.shaderDepthDebug = &shader_DBD;
-                    RenderDataSMOPCF.view = &view;
-                    RenderDataSMOPCF.projection = &projection;
-                    RenderDataSMOPCF.lightView = &lightView;
-                    RenderDataSMOPCF.lightProjection = &lightProjectionOrthogonal;
-                    RenderDataSMOPCF.quadVAO = &quadVAO;
-                    RenderDataSMOPCF.planeVAO = &planeVAO;
-                    RenderDataSMOPCF.planeModel = &planeModel;
-                    RenderDataSMOPCF.modelVAO = &modelVAO;
-                    RenderDataSMOPCF.modelIndexCount = &modelIndexCount;
-                    RenderDataSMOPCF.modelModel =  &modelModel;
+                    RenderDataSM.pcf.depthBuffer = &depthBuffer;
+                    RenderDataSM.pcf.client_width = &client_width;
+                    RenderDataSM.pcf.client_height = &client_height;
+                    RenderDataSM.pcf.shaderDepthPass = &shader_SM_PCF_O_DP;
+                    RenderDataSM.pcf.shaderRenderPass = &shader_SM_PCF_O_RP;
+                    RenderDataSM.pcf.shaderDepthDebug = &shader_DBD;
+                    RenderDataSM.pcf.view = &view;
+                    RenderDataSM.pcf.projection = &projection;
+                    RenderDataSM.pcf.lightView = &lightView;
+                    RenderDataSM.pcf.lightProjection = &lightProjectionOrthogonal;
+                    // RenderDataSM.pcf.shadowBias = &;
+                    // RenderDataSM.pcf.pcfRadius = &;
+                    RenderDataSM.pcf.quadVAO = &quadVAO;
+                    RenderDataSM.pcf.planeVAO = &planeVAO;
+                    RenderDataSM.pcf.planeModel = &planeModel;
+                    RenderDataSM.pcf.modelVAO = &modelVAO;
+                    RenderDataSM.pcf.modelIndexCount = &modelIndexCount;
+                    RenderDataSM.pcf.modelModel = &modelModel;
                     break;
                 }
 
@@ -811,22 +802,24 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 case SHADOW_MAP_PERSPECTIVE_PCF_LIGHT:
                 case SHADOW_MAP_PERSPECTIVE_PCF_DEBUG:
                 {
-                    RenderDataSMPPCF.depthBuffer = &depthBuffer;
-                    RenderDataSMPPCF.client_width = &client_width;
-                    RenderDataSMPPCF.client_height = &client_height;
-                    RenderDataSMPPCF.shaderDepthPass = &shader_SM_PCF_P_DP;
-                    RenderDataSMPPCF.shaderRenderPass = &shader_SM_PCF_P_RP;
-                    RenderDataSMPPCF.shaderDepthDebug = &shader_DBD;
-                    RenderDataSMPPCF.view = &view;
-                    RenderDataSMPPCF.projection = &projection;
-                    RenderDataSMPPCF.lightView = &lightView;
-                    RenderDataSMPPCF.lightProjection = &lightProjectionPerspective;
-                    RenderDataSMPPCF.quadVAO = &quadVAO;
-                    RenderDataSMPPCF.planeVAO = &planeVAO;
-                    RenderDataSMPPCF.planeModel = &planeModel;
-                    RenderDataSMPPCF.modelVAO = &modelVAO;
-                    RenderDataSMPPCF.modelIndexCount = &modelIndexCount;
-                    RenderDataSMPPCF.modelModel =  &modelModel;
+                    RenderDataSM.pcf.depthBuffer = &depthBuffer;
+                    RenderDataSM.pcf.client_width = &client_width;
+                    RenderDataSM.pcf.client_height = &client_height;
+                    RenderDataSM.pcf.shaderDepthPass = &shader_SM_PCF_P_DP;
+                    RenderDataSM.pcf.shaderRenderPass = &shader_SM_PCF_P_RP;
+                    RenderDataSM.pcf.shaderDepthDebug = &shader_DBD;
+                    RenderDataSM.pcf.view = &view;
+                    RenderDataSM.pcf.projection = &projection;
+                    RenderDataSM.pcf.lightView = &lightView;
+                    RenderDataSM.pcf.lightProjection = &lightProjectionPerspective;
+                    // RenderDataSM.pcf.shadowBias = &;
+                    // RenderDataSM.pcf.pcfRadius = &;
+                    RenderDataSM.pcf.quadVAO = &quadVAO;
+                    RenderDataSM.pcf.planeVAO = &planeVAO;
+                    RenderDataSM.pcf.planeModel = &planeModel;
+                    RenderDataSM.pcf.modelVAO = &modelVAO;
+                    RenderDataSM.pcf.modelIndexCount = &modelIndexCount;
+                    RenderDataSM.pcf.modelModel = &modelModel;
                     break;
                 }
 
@@ -834,22 +827,23 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 case SHADOW_MAP_ORTHOGONAL_ESM_LIGHT:
                 case SHADOW_MAP_ORTHOGONAL_ESM_DEBUG:
                 {
-                    RenderDataSMOESM.depthBuffer = &depthBufferExp;
-                    RenderDataSMOESM.client_width = &client_width;
-                    RenderDataSMOESM.client_height = &client_height;
-                    RenderDataSMOESM.shaderDepthPass = &shader_SM_ESM_O_DP;
-                    RenderDataSMOESM.shaderRenderPass = &shader_SM_ESM_O_RP;
-                    RenderDataSMOESM.shaderDepthDebug = &shader_DBD;
-                    RenderDataSMOESM.view = &view;
-                    RenderDataSMOESM.projection = &projection;
-                    RenderDataSMOESM.lightView = &lightView;
-                    RenderDataSMOESM.lightProjection = &lightProjectionOrthogonal;
-                    RenderDataSMOESM.quadVAO = &quadVAO;
-                    RenderDataSMOESM.planeVAO = &planeVAO;
-                    RenderDataSMOESM.planeModel = &planeModel;
-                    RenderDataSMOESM.modelVAO = &modelVAO;
-                    RenderDataSMOESM.modelIndexCount = &modelIndexCount;
-                    RenderDataSMOESM.modelModel =  &modelModel;
+                    RenderDataSM.esm.depthBuffer = &depthBufferExp;
+                    RenderDataSM.esm.client_width = &client_width;
+                    RenderDataSM.esm.client_height = &client_height;
+                    RenderDataSM.esm.shaderDepthPass = &shader_SM_ESM_O_DP;
+                    RenderDataSM.esm.shaderRenderPass = &shader_SM_ESM_O_RP;
+                    RenderDataSM.esm.shaderDepthDebug = &shader_DBD;
+                    RenderDataSM.esm.view = &view;
+                    RenderDataSM.esm.projection = &projection;
+                    RenderDataSM.esm.lightView = &lightView;
+                    RenderDataSM.esm.lightProjection = &lightProjectionOrthogonal;
+                    // RenderDataSM.esm.expK = &;
+                    RenderDataSM.esm.quadVAO = &quadVAO;
+                    RenderDataSM.esm.planeVAO = &planeVAO;
+                    RenderDataSM.esm.planeModel = &planeModel;
+                    RenderDataSM.esm.modelVAO = &modelVAO;
+                    RenderDataSM.esm.modelIndexCount = &modelIndexCount;
+                    RenderDataSM.esm.modelModel =  &modelModel;
                     break;
                 }
 
@@ -857,22 +851,23 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 case SHADOW_MAP_PERSPECTIVE_ESM_LIGHT:
                 case SHADOW_MAP_PERSPECTIVE_ESM_DEBUG:
                 {
-                    RenderDataSMPESM.depthBuffer = &depthBufferExp;
-                    RenderDataSMPESM.client_width = &client_width;
-                    RenderDataSMPESM.client_height = &client_height;
-                    RenderDataSMPESM.shaderDepthPass = &shader_SM_ESM_P_DP;
-                    RenderDataSMPESM.shaderRenderPass = &shader_SM_ESM_P_RP;
-                    RenderDataSMPESM.shaderDepthDebug = &shader_DBD;
-                    RenderDataSMPESM.view = &view;
-                    RenderDataSMPESM.projection = &projection;
-                    RenderDataSMPESM.lightView = &lightView;
-                    RenderDataSMPESM.lightProjection = &lightProjectionPerspective;
-                    RenderDataSMPESM.quadVAO = &quadVAO;
-                    RenderDataSMPESM.planeVAO = &planeVAO;
-                    RenderDataSMPESM.planeModel = &planeModel;
-                    RenderDataSMPESM.modelVAO = &modelVAO;
-                    RenderDataSMPESM.modelIndexCount = &modelIndexCount;
-                    RenderDataSMPESM.modelModel =  &modelModel;
+                    RenderDataSM.esm.depthBuffer = &depthBufferExp;
+                    RenderDataSM.esm.client_width = &client_width;
+                    RenderDataSM.esm.client_height = &client_height;
+                    RenderDataSM.esm.shaderDepthPass = &shader_SM_ESM_P_DP;
+                    RenderDataSM.esm.shaderRenderPass = &shader_SM_ESM_P_RP;
+                    RenderDataSM.esm.shaderDepthDebug = &shader_DBD;
+                    RenderDataSM.esm.view = &view;
+                    RenderDataSM.esm.projection = &projection;
+                    RenderDataSM.esm.lightView = &lightView;
+                    RenderDataSM.esm.lightProjection = &lightProjectionPerspective;
+                    // RenderDataSM.esm.expK = &;
+                    RenderDataSM.esm.quadVAO = &quadVAO;
+                    RenderDataSM.esm.planeVAO = &planeVAO;
+                    RenderDataSM.esm.planeModel = &planeModel;
+                    RenderDataSM.esm.modelVAO = &modelVAO;
+                    RenderDataSM.esm.modelIndexCount = &modelIndexCount;
+                    RenderDataSM.esm.modelModel =  &modelModel;
                     break;
                 }
 
@@ -880,22 +875,22 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 case SHADOW_MAP_ORTHOGONAL_VSM_LIGHT:
                 case SHADOW_MAP_ORTHOGONAL_VSM_DEBUG:
                 {
-                    RenderDataSMOVSM.depthBuffer = &depthBuffer;
-                    RenderDataSMOVSM.client_width = &client_width;
-                    RenderDataSMOVSM.client_height = &client_height;
-                    RenderDataSMOVSM.shaderDepthPass = &shader_SM_VSM_O_DP;
-                    RenderDataSMOVSM.shaderRenderPass = &shader_SM_VSM_O_RP;
-                    RenderDataSMOVSM.shaderDepthDebug = &shader_DBD;
-                    RenderDataSMOVSM.view = &view;
-                    RenderDataSMOVSM.projection = &projection;
-                    RenderDataSMOVSM.lightView = &lightView;
-                    RenderDataSMOVSM.lightProjection = &lightProjectionOrthogonal;
-                    RenderDataSMOVSM.quadVAO = &quadVAO;
-                    RenderDataSMOVSM.planeVAO = &planeVAO;
-                    RenderDataSMOVSM.planeModel = &planeModel;
-                    RenderDataSMOVSM.modelVAO = &modelVAO;
-                    RenderDataSMOVSM.modelIndexCount = &modelIndexCount;
-                    RenderDataSMOVSM.modelModel =  &modelModel;
+                    RenderDataSM.vsm.depthBuffer = &depthBuffer;
+                    RenderDataSM.vsm.client_width = &client_width;
+                    RenderDataSM.vsm.client_height = &client_height;
+                    RenderDataSM.vsm.shaderDepthPass = &shader_SM_VSM_O_DP;
+                    RenderDataSM.vsm.shaderRenderPass = &shader_SM_VSM_O_RP;
+                    RenderDataSM.vsm.shaderDepthDebug = &shader_DBD;
+                    RenderDataSM.vsm.view = &view;
+                    RenderDataSM.vsm.projection = &projection;
+                    RenderDataSM.vsm.lightView = &lightView;
+                    RenderDataSM.vsm.lightProjection = &lightProjectionOrthogonal;
+                    RenderDataSM.vsm.quadVAO = &quadVAO;
+                    RenderDataSM.vsm.planeVAO = &planeVAO;
+                    RenderDataSM.vsm.planeModel = &planeModel;
+                    RenderDataSM.vsm.modelVAO = &modelVAO;
+                    RenderDataSM.vsm.modelIndexCount = &modelIndexCount;
+                    RenderDataSM.vsm.modelModel =  &modelModel;
                     break;
                 }
 
@@ -903,22 +898,22 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 case SHADOW_MAP_PERSPECTIVE_VSM_LIGHT:
                 case SHADOW_MAP_PERSPECTIVE_VSM_DEBUG:
                 {
-                    RenderDataSMPVSM.depthBuffer = &depthBuffer;
-                    RenderDataSMPVSM.client_width = &client_width;
-                    RenderDataSMPVSM.client_height = &client_height;
-                    RenderDataSMPVSM.shaderDepthPass = &shader_SM_VSM_P_DP;
-                    RenderDataSMPVSM.shaderRenderPass = &shader_SM_VSM_P_RP;
-                    RenderDataSMPVSM.shaderDepthDebug = &shader_DBD;
-                    RenderDataSMPVSM.view = &view;
-                    RenderDataSMPVSM.projection = &projection;
-                    RenderDataSMPVSM.lightView = &lightView;
-                    RenderDataSMPVSM.lightProjection = &lightProjectionPerspective;
-                    RenderDataSMPVSM.quadVAO = &quadVAO;
-                    RenderDataSMPVSM.planeVAO = &planeVAO;
-                    RenderDataSMPVSM.planeModel = &planeModel;
-                    RenderDataSMPVSM.modelVAO = &modelVAO;
-                    RenderDataSMPVSM.modelIndexCount = &modelIndexCount;
-                    RenderDataSMPVSM.modelModel =  &modelModel;
+                    RenderDataSM.vsm.depthBuffer = &depthBuffer;
+                    RenderDataSM.vsm.client_width = &client_width;
+                    RenderDataSM.vsm.client_height = &client_height;
+                    RenderDataSM.vsm.shaderDepthPass = &shader_SM_VSM_P_DP;
+                    RenderDataSM.vsm.shaderRenderPass = &shader_SM_VSM_P_RP;
+                    RenderDataSM.vsm.shaderDepthDebug = &shader_DBD;
+                    RenderDataSM.vsm.view = &view;
+                    RenderDataSM.vsm.projection = &projection;
+                    RenderDataSM.vsm.lightView = &lightView;
+                    RenderDataSM.vsm.lightProjection = &lightProjectionPerspective;
+                    RenderDataSM.vsm.quadVAO = &quadVAO;
+                    RenderDataSM.vsm.planeVAO = &planeVAO;
+                    RenderDataSM.vsm.planeModel = &planeModel;
+                    RenderDataSM.vsm.modelVAO = &modelVAO;
+                    RenderDataSM.vsm.modelIndexCount = &modelIndexCount;
+                    RenderDataSM.vsm.modelModel =  &modelModel;
                     break;
                 }
 
@@ -1005,7 +1000,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
                 case SHADOW_MAP_ORTHOGONAL:
                 {
-                    ShadowMapOrthogonal(RenderDataSMO);
+                    ShadowMap(RenderDataSM.main);
                     break;
                 }
 
@@ -1016,13 +1011,13 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
                 case SHADOW_MAP_ORTHOGONAL_DEBUG:
                 {
-                    ShadowMapOrthogonalDebug(RenderDataSMO);
+                    ShadowMapDebug(RenderDataSM.main);
                     break;
                 }
 
                 case SHADOW_MAP_PERSPECTIVE:
                 {
-                    ShadowMapPerspective(RenderDataSMP);
+                    ShadowMap(RenderDataSM.main);
                     break;
                 }
 
@@ -1033,13 +1028,13 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
                 case SHADOW_MAP_PERSPECTIVE_DEBUG:
                 {
-                    ShadowMapPerspectiveDebug(RenderDataSMP);
+                    ShadowMapDebug(RenderDataSM.main);
                     break;
                 }
 
                 case SHADOW_MAP_ORTHOGONAL_PCF:
                 {
-                    ShadowMapPcfOrthogonal(RenderDataSMOPCF);
+                    ShadowMapPcf(RenderDataSM.pcf);
                     break;
                 }
 
@@ -1050,13 +1045,13 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
                 case SHADOW_MAP_ORTHOGONAL_PCF_DEBUG:
                 {
-                    ShadowMapPcfOrthogonalDebug(RenderDataSMOPCF);
+                    ShadowMapPcfDebug(RenderDataSM.pcf);
                     break;
                 }
 
                 case SHADOW_MAP_PERSPECTIVE_PCF:
                 {
-                    ShadowMapPcfPerspective(RenderDataSMPPCF);
+                    ShadowMapPcf(RenderDataSM.pcf);
                     break;
                 }
 
@@ -1067,13 +1062,13 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
                 case SHADOW_MAP_PERSPECTIVE_PCF_DEBUG:
                 {
-                    ShadowMapPcfPerspectiveDebug(RenderDataSMPPCF);
+                    ShadowMapPcfDebug(RenderDataSM.pcf);
                     break;
                 }
 
                 case SHADOW_MAP_ORTHOGONAL_ESM:
                 {
-                    ShadowMapEsmOrthogonal(RenderDataSMOESM);
+                    ShadowMapEsm(RenderDataSM.esm);
                     break;
                 }
 
@@ -1084,13 +1079,13 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
                 case SHADOW_MAP_ORTHOGONAL_ESM_DEBUG:
                 {
-                    ShadowMapEsmOrthogonalDebug(RenderDataSMOESM);
+                    ShadowMapEsmDebug(RenderDataSM.esm);
                     break;
                 }
                 
                 case SHADOW_MAP_PERSPECTIVE_ESM:
                 {
-                    ShadowMapEsmPerspective(RenderDataSMPESM);
+                    ShadowMapEsm(RenderDataSM.esm);
                     break;
                 }
 
@@ -1101,13 +1096,13 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
                 case SHADOW_MAP_PERSPECTIVE_ESM_DEBUG:
                 {
-                    ShadowMapEsmPerspectiveDebug(RenderDataSMPESM);
+                    ShadowMapEsmDebug(RenderDataSM.esm);
                     break;
                 }
 
                 case SHADOW_MAP_ORTHOGONAL_VSM:
                 {
-                    ShadowMapVsmOrthogonal(RenderDataSMOVSM);
+                    ShadowMapVsm(RenderDataSM.vsm);
                     break;
                 }
 
@@ -1118,13 +1113,13 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
                 case SHADOW_MAP_ORTHOGONAL_VSM_DEBUG:
                 {
-                    ShadowMapVsmOrthogonalDebug(RenderDataSMOVSM);
+                    ShadowMapVsmDebug(RenderDataSM.vsm);
                     break;
                 }
 
                 case SHADOW_MAP_PERSPECTIVE_VSM:
                 {
-                    ShadowMapVsmPerspective(RenderDataSMPVSM);
+                    ShadowMapVsm(RenderDataSM.vsm);
                     break;
                 }
 
@@ -1135,7 +1130,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
                 case SHADOW_MAP_PERSPECTIVE_VSM_DEBUG:
                 {
-                    ShadowMapVsmPerspectiveDebug(RenderDataSMPVSM);
+                    ShadowMapVsmDebug(RenderDataSM.vsm);
                     break;
                 }
 

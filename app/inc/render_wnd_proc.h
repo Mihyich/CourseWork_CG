@@ -40,21 +40,15 @@
 
 #include "ShadowAlgEnum.h"
 
-#include "ShadowMapOrthogonal.h"
-#include "ShadowMapPerspective.h"
 
-#include "ShadowMapPcfOrthogonal.h"
-#include "ShadowMapPcfPerspective.h"
-
-#include "ShadowMapEsmOrthogonal.h"
-#include "ShadowMapEsmPerspective.h"
-
-#include "ShadowMapVsmOrthogonal.h"
-#include "ShadowMapVsmPerspective.h"
+#include "ShadowMapRenderData.h"
+#include "ShadowMap.h"
+#include "ShadowMapPcf.h"
+#include "ShadowMapEsm.h"
+#include "ShadowMapVsm.h"
 
 
 #include "RayTracingRenderData.h"
-
 #include "RayTracingDebug.h"
 #include "RayTracingHard.h"
 #include "RayTracingSoft.h"
