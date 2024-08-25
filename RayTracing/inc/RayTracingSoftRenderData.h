@@ -25,6 +25,8 @@ struct RayTracingSoftRenderData
     Shader* shaderRayTracing;
     Shader* shaderImageOut;
 
+    GLint curFrameIndex;
+    GLint shadowRayCount;
     vec3* viewPos;
     mat4* view;
     mat4* projection;

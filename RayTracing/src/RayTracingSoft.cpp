@@ -4,6 +4,8 @@ void TracingPath(RayTracingSoftRenderData& data)
 {
     data.shaderRayTracing->use();
 
+    glUniform1i(data.shaderRayTracing->get_uniform_location("curFrameIndex"), data.curFrameIndex);
+    glUniform1i(data.shaderRayTracing->get_uniform_location("shadowRayCount"), data.shadowRayCount);
     uniform_vec3f(data.shaderRayTracing->get_uniform_location("viewPos"), data.viewPos);
     uniform_matrix4f(data.shaderRayTracing->get_uniform_location("view"), data.view);
     uniform_matrix4f(data.shaderRayTracing->get_uniform_location("projection"), data.projection);
@@ -12,7 +14,7 @@ void TracingPath(RayTracingSoftRenderData& data)
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, *data.VertexSSBO);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, *data.MatrixSSBO);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, *data.BvhSSBO);
-    glBindImageTexture(4, *data.rayTracedTexture, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
+    glBindImageTexture(4, *data.rayTracedTexture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
 
     GLuint workGroupSizeX = (*data.texture_width + 15) / 16;
     GLuint workGroupSizeY = (*data.texture_height + 15) / 16;
@@ -32,7 +34,7 @@ void OutputPath(RayTracingSoftRenderData& data)
     glViewport(0, 0, *data.client_width, *data.client_height);
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_DEPTH_BUFFER_BIT);
 
     data.shaderImageOut->use();
     uniform_matrix4f(data.shaderImageOut->get_uniform_location("model"), &quadModel);
@@ -48,6 +50,11 @@ void OutputPath(RayTracingSoftRenderData& data)
 
 void RayTracingSoft(RayTracingSoftRenderData& data)
 {
-    TracingPath(data);
+    if (data.curFrameIndex < data.shadowRayCount)
+    {
+        TracingPath(data);
+        ++data.curFrameIndex;
+    }
+    
     OutputPath(data);
 }
