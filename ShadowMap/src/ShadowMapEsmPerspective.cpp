@@ -1,6 +1,6 @@
 #include "ShadowMapEsmPerspective.h"
 
-void DepthPass(ShadowMapEsmPerspectiveRenderData& data)
+void DepthPass(ShadowMapEsmRenderData& data)
 {
     glViewport(0, 0, data.depthBuffer->width, data.depthBuffer->height);
 
@@ -17,7 +17,7 @@ void DepthPass(ShadowMapEsmPerspectiveRenderData& data)
     glBindVertexArray(0);
 }
 
-void RenderPass(ShadowMapEsmPerspectiveRenderData& data)
+void RenderPass(ShadowMapEsmRenderData& data)
 {
     glViewport(0, 0, *data.client_width, *data.client_height);
 
@@ -44,7 +44,7 @@ void RenderPass(ShadowMapEsmPerspectiveRenderData& data)
     glBindVertexArray(0);
 }
 
-void DebugPass(ShadowMapEsmPerspectiveRenderData& data)
+void DebugPass(ShadowMapEsmRenderData& data)
 {
     mat4 quadModel; mat4_set_ordinary(&quadModel);
 
@@ -65,13 +65,13 @@ void DebugPass(ShadowMapEsmPerspectiveRenderData& data)
     glBindVertexArray(0);
 }
 
-void ShadowMapEsmPerspective(ShadowMapEsmPerspectiveRenderData& data)
+void ShadowMapEsmPerspective(ShadowMapEsmRenderData& data)
 {
     DepthPass(data);
     RenderPass(data);
 }
 
-void ShadowMapEsmPerspectiveDebug(ShadowMapEsmPerspectiveRenderData& data)
+void ShadowMapEsmPerspectiveDebug(ShadowMapEsmRenderData& data)
 {
     DepthPass(data);
     DebugPass(data);

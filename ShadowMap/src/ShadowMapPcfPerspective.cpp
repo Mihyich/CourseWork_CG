@@ -1,6 +1,6 @@
 #include "ShadowMapPcfPerspective.h"
 
-void DepthPass(ShadowMapPcfPerspectiveRenderData& data)
+void DepthPass(ShadowMapPcfRenderData& data)
 {
     glViewport(0, 0, data.depthBuffer->width, data.depthBuffer->height);
 
@@ -17,7 +17,7 @@ void DepthPass(ShadowMapPcfPerspectiveRenderData& data)
     glBindVertexArray(0);
 }
 
-void RenderPass(ShadowMapPcfPerspectiveRenderData& data)
+void RenderPass(ShadowMapPcfRenderData& data)
 {
     glViewport(0, 0, *data.client_width, *data.client_height);
 
@@ -44,7 +44,7 @@ void RenderPass(ShadowMapPcfPerspectiveRenderData& data)
     glBindVertexArray(0);
 }
 
-void DebugPass(ShadowMapPcfPerspectiveRenderData& data)
+void DebugPass(ShadowMapPcfRenderData& data)
 {
     mat4 quadModel; mat4_set_ordinary(&quadModel);
 
@@ -65,13 +65,13 @@ void DebugPass(ShadowMapPcfPerspectiveRenderData& data)
     glBindVertexArray(0);
 }
 
-void ShadowMapPcfPerspective(ShadowMapPcfPerspectiveRenderData& data)
+void ShadowMapPcfPerspective(ShadowMapPcfRenderData& data)
 {
     DepthPass(data);
     RenderPass(data);
 }
 
-void ShadowMapPcfPerspectiveDebug(ShadowMapPcfPerspectiveRenderData& data)
+void ShadowMapPcfPerspectiveDebug(ShadowMapPcfRenderData& data)
 {
     DepthPass(data);
     DebugPass(data);

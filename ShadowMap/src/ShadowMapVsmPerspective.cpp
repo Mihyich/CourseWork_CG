@@ -1,6 +1,6 @@
 #include "ShadowMapVsmPerspective.h"
 
-void DepthPass(ShadowMapVsmPerspectiveRenderData& data)
+void DepthPass(ShadowMapVsmRenderData& data)
 {
     glViewport(0, 0, data.depthBuffer->width, data.depthBuffer->height);
 
@@ -17,7 +17,7 @@ void DepthPass(ShadowMapVsmPerspectiveRenderData& data)
     glBindVertexArray(0);
 }
 
-void RenderPass(ShadowMapVsmPerspectiveRenderData& data)
+void RenderPass(ShadowMapVsmRenderData& data)
 {
     glViewport(0, 0, *data.client_width, *data.client_height);
 
@@ -44,7 +44,7 @@ void RenderPass(ShadowMapVsmPerspectiveRenderData& data)
     glBindVertexArray(0);
 }
 
-void DebugPass(ShadowMapVsmPerspectiveRenderData& data)
+void DebugPass(ShadowMapVsmRenderData& data)
 {
     mat4 quadModel; mat4_set_ordinary(&quadModel);
 
@@ -65,13 +65,13 @@ void DebugPass(ShadowMapVsmPerspectiveRenderData& data)
     glBindVertexArray(0);
 }
 
-void ShadowMapVsmPerspective(ShadowMapVsmPerspectiveRenderData& data)
+void ShadowMapVsmPerspective(ShadowMapVsmRenderData& data)
 {
     DepthPass(data);
     RenderPass(data);
 }
 
-void ShadowMapVsmPerspectiveDebug(ShadowMapVsmPerspectiveRenderData& data)
+void ShadowMapVsmPerspectiveDebug(ShadowMapVsmRenderData& data)
 {
     DepthPass(data);
     DebugPass(data);
