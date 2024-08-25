@@ -182,6 +182,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static RayTracingRenderData RenderDataRT;
 
     static CameraMode camera_mode = ORBITTING;
+    static bool camera_moved = false;
     static float orbitting_x_rot = 0.0f;
     static float orbitting_y_rot = 0.0f;
     static float orbitting_radius = 5.0f;
@@ -230,7 +231,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         degrees_to_radians(30), // Угол (в радианах) внутреннего конуса (4 байта)
         degrees_to_radians(45), // Угол (в радианах) внешнего конуса (4 байта)
         // Кратность 16 =========================================================================
-        1,                 // Тип источника света: 0 - PointLight; 1 - SpotLight (4 байта)
+        0,                 // Тип источника света: 0 - PointLight; 1 - SpotLight (4 байта)
         0.f,               // Дополнительные паддинги,
         0.f,               // чтобы сделать размер структуры
         0.f                // кратным 16 (3 * 4 = 12 байт)
@@ -582,9 +583,6 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_IO.use();
         glUniform1i(shader_IO.get_uniform_location("colorImage"), 0);
 
-        shader_RT_P_SOFT.use();
-        glUniform1i(shader_RT_P_SOFT.get_uniform_location("shadowRayCount"), shadowRayCount);
-
         // Подключить UBO буфер ко всем шейдером его поддерживающих
         glBindBufferRange(GL_UNIFORM_BUFFER, 0, lightUBO, 0, sizeof(Light));
 
@@ -638,6 +636,10 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_LBUTTONUP:
     {
         mouse.l_button_up();
+
+        if (camera_mode == ORBITTING)
+            camera_moved = false;
+
         return EXIT_SUCCESS;
     }
 
@@ -645,11 +647,11 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         mouse.move();
 
-        if (mouse.l_tracking)
-        {
-            mouse_delta.x = (float)mouse.l_delta_pos.x;
-            mouse_delta.y = (float)mouse.l_delta_pos.y;
+        mouse_delta.x = (float)mouse.l_delta_pos.x;
+        mouse_delta.y = (float)mouse.l_delta_pos.y;
 
+        if (mouse.l_tracking && (mouse_delta.x != 0 || mouse_delta.y != 0))
+        {
             if (camera_mode == ORBITTING)
             {
                 vec3 pos = {0.f, 3.f, -orbitting_radius};
@@ -672,6 +674,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             {
 
             }
+
+            camera_moved = true;
 
             shader.use();
             mat4_set_look_at(&view, &viewPos, &viewDst, &viewUp);
@@ -961,6 +965,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     RenderDataRT.soft.client_height = &client_height;
                     RenderDataRT.soft.shaderRayTracing = &shader_RT_P_SOFT;
                     RenderDataRT.soft.shaderImageOut = &shader_IO;
+                    RenderDataRT.soft.curFrameIndex = 0;
+                    RenderDataRT.soft.shadowRayCount = shadowRayCount;
                     RenderDataRT.soft.viewPos = &viewPos;
                     RenderDataRT.soft.view = &view;
                     RenderDataRT.soft.projection = &projection;
@@ -1147,6 +1153,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
                 case RAY_TRACING_SOFT_PERSPECTIVE:
                 {
+                    if (camera_moved) RenderDataRT.soft.curFrameIndex = 0;
                     RayTracingSoft(RenderDataRT.soft);
                     break;
                 }
