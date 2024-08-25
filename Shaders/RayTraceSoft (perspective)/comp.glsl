@@ -610,15 +610,16 @@ vec4 traceRayBVH(Ray ray)
             // Мягкая семплированная тень в нескольких этапах
 
             // Случайная позиция на сфере
-            vec3 spherePos = randPointOnSphere(light.position, 0.05, vec2(gl_GlobalInvocationID.xy));
+            vec3 spherePos = randPointOnSphere(light.position, 0.05, vec2(gl_GlobalInvocationID.xy) * curFrameIndex);
 
             // Алгортим Hard тени
             float shadow = traceRayShadow(FragPos, spherePos);
 
             // Расчет приращения к имеющемуся значению освещения
-            int prevFrameIndex = curFrameIndex - 1;
+            int curAverCount = curFrameIndex + 1;
+            int prevAverCount = curFrameIndex;
             vec3 prevLight = imageLoad(colorImage, ivec2(gl_GlobalInvocationID.xy)).xyz;
-            vec3 dX = (prevFrameIndex * diffuse * shadow - prevLight) / (curFrameIndex * prevFrameIndex);
+            vec3 dX = (prevAverCount * diffuse * shadow - prevLight * prevAverCount) / (curAverCount * prevAverCount);
 
             color = vec4(prevLight + dX, 1.0);
         }
