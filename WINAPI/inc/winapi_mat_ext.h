@@ -3,7 +3,6 @@
 
 #include <windows.h>
 #include <math.h>
-#include "LA_sup.h"
 
 #define WA_LCLAMP(v, l) (((v) < (l)) ? (l) : (v))
 
