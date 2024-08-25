@@ -694,7 +694,11 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         rs = rs && RebuildBVHTree(BVH, path, CCW, modelModel, modelName, VertexSSBO, MatrixSSBO, BvhSSBO);
 
         // Обновить этот важный параметр (очень-очень)
-        RenderDataRT.debug.nodeCount = (int)BVH.getBvh().size();
+        if (shadowAlg == RAY_TRACING_DEBUG) RenderDataRT.debug.nodeCount = (int)BVH.getBvh().size();
+
+        // Пока что грубый способ
+        glFlush();
+        glFinish();
         
         IsmodelLoading = false;
         return rs;
