@@ -620,7 +620,7 @@ vec4 traceRayBVH(Ray ray)
             vec3 prevLight = imageLoad(colorImage, ivec2(gl_GlobalInvocationID.xy)).xyz;
             vec3 dX = (prevFrameIndex * diffuse * shadow - prevLight) / (curFrameIndex * prevFrameIndex);
 
-            color = (prevLight + dx, 1.0);
+            color = vec4(prevLight + dX, 1.0);
         }
         else
         {
