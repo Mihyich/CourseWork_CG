@@ -13,7 +13,7 @@
 
 struct ShadowMapEsmRenderData
 {
-    DepthBuffer* depthBuffer; 
+    DepthBufferExp* depthBuffer; 
     GLsizei* client_width;
     GLsizei* client_height;
 

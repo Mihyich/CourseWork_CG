@@ -27,8 +27,6 @@ struct ShadowMapVsmRenderData
     mat4* lightView;
     mat4* lightProjection;
 
-    GLfloat* expK;
-
     GLuint* quadVAO;
 
     GLuint* planeVAO;
