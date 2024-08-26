@@ -7,7 +7,7 @@
 #include "shader.h"
 #include "shader_extensions.h"
 
-#include "DepthBufferStruct.h"
+#include "DepthBufferExpStruct.h"
 
 #include "winapi_GLextensions.h"
 
