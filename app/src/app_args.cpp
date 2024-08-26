@@ -12,6 +12,8 @@ namespace app
     LONG ToolbarMinWidth = 100;
     LONG ToolbarWidth = 200;
 
+    WinApiWindow LightingWnd;
+
     WinApiGLWindow RenderWnd;
 
     WinApiFont Fonts;
