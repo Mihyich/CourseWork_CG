@@ -10,6 +10,8 @@
 #include "winapi_font_common.h"
 #include "winapi_mat_ext.h"
 
+#include "lighting_wnd_proc.h"
+
 #include "app_args.h"
 
 #define IDB_SURFACE_FUNC 1
