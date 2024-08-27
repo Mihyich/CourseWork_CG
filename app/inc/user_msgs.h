@@ -37,27 +37,27 @@
 #define WM_SET_LIGHT_COLOR (WM_USER + 7)
 
 // Receiver: RenderWnd
-// Wparam: float*
+// Wparam: const float*
 // Lparam: none
 #define WM_SET_LIGHT_RADIUS (WM_USER + 8)
 
 // Receiver: RenderWnd
-// Wparam: float*
+// Wparam: const float*
 // Lparam: none
 #define WM_SET_LIGHT_INTENSITY (WM_USER + 9)
 
 // Receiver: RenderWnd
-// Wparam: float*
+// Wparam: const float*
 // Lparam: none
 #define WM_SET_LIGHT_INNER_CUTOFF (WM_USER + 10)
 
 // Receiver: RenderWnd
-// Wparam: float*
+// Wparam: const float*
 // Lparam: none
 #define WM_SET_LIGHT_OUTER_CUTOFF (WM_USER + 11)
 
 // Receiver: RenderWnd
-// Wparam: LightType
+// Wparam: const int*
 // Lparam: none
 #define WM_SET_LIGHT_TYPE (WM_USER + 12)
 
