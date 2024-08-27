@@ -3,6 +3,12 @@
 
 #include "Vector3D.h"
 
+enum LightType
+{
+    LIGHT_POINT = 0,
+    LIGHT_SPOT
+};
+
 // Универсальный источник света
 struct Light
 {
