@@ -68,15 +68,12 @@ LRESULT CALLBACK LightingWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
     static LightType lightType = LIGHT_POINT;
 
     static RECT lightColorRect = {0, 0, 0, 0};
-    static COLORREF lightColor = RGB(0, 0, 0);
+    static COLORREF lightColor = RGB(255, 255, 255);
 
     switch(uMsg)
     {
         case WM_CREATE:
         {
-            HDC hDc;
-            HFONT hFont;
-
             StaticLightTypeHwnd = CreateWindow(
                 L"STATIC", L"Источник:", 
                 WS_VISIBLE | WS_CHILD | SS_CENTERIMAGE,
