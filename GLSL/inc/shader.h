@@ -54,6 +54,7 @@ private:
     std::string name = "noname_shader"; // Название шейдера, для более удобной отладки
 
     shader_linker uniforms; // словарь униформ
+    shader_linker blocks; // словарь униформных блоков
     shader_linker attribs;  // словарь атрибутов
 
     std::map<std::string, GLint> unifs;
@@ -92,21 +93,29 @@ public:
 
     GLvoid init_uniforms(void);
 
+    GLvoid init_blocks(void);
+
     GLvoid init_attribs(void);
 
-    GLvoid init_uniforms_and_attribs(void);
+    GLvoid init_uniforms_blocks_attribs(void);
 
     GLvoid print_uniforms(bool extra_info = false) const;
 
+    GLvoid print_blocks(bool extra_info = false) const;
+
     GLvoid print_attribs(bool extra_info = false) const;
 
-    GLvoid print_uniforms_and_attribs(bool uniform_extra_info = false, bool attribs_extra_info = false) const;
+    GLvoid print_uniforms_blocks_attribs(bool uniform_extra_info = false, bool block_extra_info = false, bool attribs_extra_info = false) const;
 
     GLint find_uniform_location(const GLchar *name) const;
+
+    GLint find_block_location(const GLchar *name) const;
 
     GLint find_attrib_location(const GLchar *name) const;
 
     GLint get_uniform_location(const GLchar *name) const;
+
+    GLint get_block_location(const GLchar *name) const;
 
     GLint get_attrib_location(const GLchar *name) const;
 

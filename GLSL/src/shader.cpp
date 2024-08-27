@@ -426,11 +426,53 @@ GLvoid Shader::init_uniforms(void)
         glGetProgramResourceName(program_id, GL_UNIFORM, i, uniform_max_length, nullptr, uniform_name);
         location = glGetUniformLocation(program_id, uniform_name);
         // printf("Uniform #%d: Name: %s, Location: %d\n", i, uniform_name, location);
-        uniforms[uniform_name] = location;
+        if (location > -1)
+            uniforms[uniform_name] = location;
     }
 
     glUseProgram(0);
     delete[] uniform_name;
+}
+
+GLvoid Shader::init_blocks(void)
+{       
+    GLint block_count; // Количество униформ
+    GLint block_max_length; // Максимальная длина имени униформного блока
+    GLchar *block_name; // Имя униформного блока
+    GLint location; // Расположение униформного блока
+
+    glUseProgram(program_id);
+
+    glGetProgramiv(program_id, GL_ACTIVE_UNIFORMS, &block_count);
+    if (!block_count) return;
+
+    glGetProgramiv(program_id, GL_ACTIVE_UNIFORM_MAX_LENGTH, &block_max_length);
+    if (!block_max_length) return;
+
+    GLenum props[1] = 
+    {
+        GL_BLOCK_INDEX,
+    };
+
+    GLint params[1];
+
+    block_name = new GLchar[block_max_length];
+    blocks.clear();
+
+    for (GLint i = 0; i < block_count; ++i)
+    {
+        glGetProgramResourceiv(program_id, GL_UNIFORM, i, 1, props, 1, nullptr, params);
+        location = params[0];
+
+        if (location > -1)
+        {
+            glGetProgramResourceName(program_id, GL_UNIFORM, i, block_max_length, nullptr, block_name);
+            blocks[block_name] = location;
+        }
+    }
+
+    glUseProgram(0);
+    delete[] block_name;
 }
 
 GLvoid Shader::init_attribs(void)
@@ -465,9 +507,10 @@ GLvoid Shader::init_attribs(void)
     delete[] attrib_name;
 }
 
-GLvoid Shader::init_uniforms_and_attribs(void)
+GLvoid Shader::init_uniforms_blocks_attribs(void)
 {
     init_uniforms();
+    init_blocks();
     init_attribs();
 }
 
@@ -525,6 +568,60 @@ GLvoid Shader::print_uniforms(bool extra_info) const
     std::cout << '\n';
 }
 
+GLvoid Shader::print_blocks(bool extra_info) const
+{
+    int index = 0;
+    shader_linker::const_iterator it = blocks.begin();
+
+    printf("%s - uniform blocks, count = %zu:\n", &name[0], blocks.size());
+
+    if (extra_info)
+    {
+        glUseProgram(program_id);
+
+        GLenum props[13] = 
+        {
+            GL_NAME_LENGTH, GL_TYPE, GL_ARRAY_SIZE, GL_LOCATION,
+            GL_BLOCK_INDEX, GL_IS_ROW_MAJOR, GL_ATOMIC_COUNTER_BUFFER_INDEX,
+            GL_REFERENCED_BY_VERTEX_SHADER, GL_REFERENCED_BY_TESS_CONTROL_SHADER,
+            GL_REFERENCED_BY_TESS_EVALUATION_SHADER, GL_REFERENCED_BY_GEOMETRY_SHADER,
+            GL_REFERENCED_BY_FRAGMENT_SHADER, GL_REFERENCED_BY_COMPUTE_SHADER
+        };
+
+        GLint params[13];
+        
+        for (; it != blocks.end(); ++it)
+        {
+            glGetProgramResourceiv(program_id, GL_UNIFORM, index, 13, props, 13, nullptr, params);
+
+            printf("\n\t#%d: uniform from \"%s\"\n", index++, &name[0]);
+            printf("\t{\n");
+            printf("\t\tGL_NAME:        \"%s\"\n", &it->first[0]);
+            printf("\t\tGL_NAME_LENGTH: %d\n", params[0]);
+            printf("\t\tGL_TYPE:        0x%x\n", params[1]);
+            printf("\t\tGL_ARRAY_SIZE:  %d\n", params[2]);
+            printf("\t\tGL_LOCATION:    %d\n", params[3]);
+            printf("\t\tGL_BLOCK_INDEX: %d\n", params[4]);
+            printf("\t\tGL_IS_ROW_MAJOR: %d\n", params[5]);
+            printf("\t\tGL_ATOMIC_COUNTER_BUFFER_INDEX: %d\n", params[6]);
+            printf("\t\tGL_REFERENCED_BY_VERTEX_SHADER:          %d\n", params[7]);
+            printf("\t\tGL_REFERENCED_BY_TESS_CONTROL_SHADER:    %d\n", params[8]);
+            printf("\t\tGL_REFERENCED_BY_TESS_EVALUATION_SHADER: %d\n", params[9]);
+            printf("\t\tGL_REFERENCED_BY_GEOMETRY_SHADER:        %d\n", params[10]);
+            printf("\t\tGL_REFERENCED_BY_FRAGMENT_SHADER:        %d\n", params[11]);
+            printf("\t\tGL_REFERENCED_BY_COMPUTE_SHADER:         %d\n", params[12]);
+            printf("\t}\n");
+        }
+
+        glUseProgram(0);
+    }
+    else
+        for (; it != blocks.end(); ++it)
+            printf("\t#%d: Name: \"%s\", Location: %d\n", index++, &it->first[0], it->second);
+
+    std::cout << '\n';
+}
+
 GLvoid Shader::print_attribs(bool extra_info) const
 {
     size_t index = 0;
@@ -571,9 +668,10 @@ GLvoid Shader::print_attribs(bool extra_info) const
     std::cout << '\n';
 }
 
-GLvoid Shader::print_uniforms_and_attribs(bool uniform_extra_info, bool attribs_extra_info) const
+GLvoid Shader::print_uniforms_blocks_attribs(bool uniform_extra_info, bool block_extra_info, bool attribs_extra_info) const
 {
     print_uniforms(uniform_extra_info);
+    print_blocks(block_extra_info);
     print_attribs(attribs_extra_info);
 }
 
