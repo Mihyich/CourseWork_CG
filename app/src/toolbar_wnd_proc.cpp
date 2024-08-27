@@ -82,7 +82,7 @@ LRESULT CALLBACK ToolbarWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
                 0, 0,
                 CS_HREDRAW | CS_VREDRAW,
                 WS_CHILD | WS_VISIBLE | WS_BORDER | WS_CLIPCHILDREN,
-                0,
+                WS_EX_COMPOSITED,
                 hWnd
             );
 
