@@ -618,6 +618,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         blockIndex = glGetUniformBlockIndex(ProgrammId, "Lighting");
         glUniformBlockBinding(ProgrammId, blockIndex, 0);
 
+        glBindBufferBase(GL_UNIFORM_BUFFER, 0, lightUBO);
         glBindBufferRange(GL_UNIFORM_BUFFER, 0, lightUBO, 0, sizeof(Light));
 
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE, (LPARAM)0);
