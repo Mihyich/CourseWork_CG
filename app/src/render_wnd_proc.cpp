@@ -1027,6 +1027,62 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         return EXIT_SUCCESS;
     }
 
+    case WM_SET_LIGHT_POSITION:
+    {
+        cpvec3 pos = reinterpret_cast<cpvec3>(wParam);
+        setLightUBO_position(lightUBO, *pos);
+        return EXIT_SUCCESS;
+    }
+
+    case WM_SET_LIGHT_DIRECTION:
+    {
+        cpvec3 dir = reinterpret_cast<cpvec3>(wParam);
+        setLightUBO_direction(lightUBO, *dir);
+        return EXIT_SUCCESS;
+    }
+
+    case WM_SET_LIGHT_COLOR:
+    {
+        cpvec3 col = reinterpret_cast<cpvec3>(wParam);
+        setLightUBO_color(lightUBO, *col);
+        return EXIT_SUCCESS;
+    }
+
+    case WM_SET_LIGHT_RADIUS:
+    {
+        const float* radius = reinterpret_cast<const float*>(wParam);
+        setLightUBO_radius(lightUBO, *radius);
+        return EXIT_SUCCESS;
+    }
+
+    case WM_SET_LIGHT_INTENSITY:
+    {
+        const float* intensity = reinterpret_cast<const float*>(wParam);
+        setLightUBO_intensity(lightUBO, *intensity);
+        return EXIT_SUCCESS;
+    }
+
+    case WM_SET_LIGHT_INNER_CUTOFF:
+    {
+        const float* innerCutoff = reinterpret_cast<const float*>(wParam);
+        setLightUBO_innerCutoff(lightUBO, *innerCutoff);
+        return EXIT_SUCCESS;
+    }
+
+    case WM_SET_LIGHT_OUTER_CUTOFF:
+    {
+        const float* outerCutoff = reinterpret_cast<const float*>(wParam);
+        setLightUBO_outerCutoff(lightUBO, *outerCutoff);
+        return EXIT_SUCCESS;
+    }
+
+    case WM_SET_LIGHT_TYPE:
+    {
+        const int* type = reinterpret_cast<const int*>(wParam);
+        setLightUBO_type(lightUBO, *type);
+        return EXIT_SUCCESS;
+    }
+
     case WM_PAINT:
     {
         PAINTSTRUCT ps;
