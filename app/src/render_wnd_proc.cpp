@@ -325,8 +325,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader.create_from_file("Shaders/vertex.glsl", GL_VERTEX_SHADER);
         shader.create_from_file("Shaders/fragment.glsl", GL_FRAGMENT_SHADER);
         shader.link_program();
-        shader.init_uniforms_and_attribs();
-        shader.print_uniforms_and_attribs();
+        shader.init_uniforms_blocks_attribs();
+        shader.print_uniforms_blocks_attribs();
         shader.report(REPORT_VS | REPORT_FS | REPORT_PROG);
         shader.delete_shader(GL_VERTEX_SHADER);
         shader.delete_shader(GL_FRAGMENT_SHADER);
@@ -335,8 +335,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_DBD.create_from_file("Shaders/DepthBufferDebug/vert.glsl", GL_VERTEX_SHADER);
         shader_DBD.create_from_file("Shaders/DepthBufferDebug/frag.glsl", GL_FRAGMENT_SHADER);
         shader_DBD.link_program();
-        shader_DBD.init_uniforms_and_attribs();
-        shader_DBD.print_uniforms_and_attribs();
+        shader_DBD.init_uniforms_blocks_attribs();
+        shader_DBD.print_uniforms_blocks_attribs();
         shader_DBD.report(REPORT_VS | REPORT_FS | REPORT_PROG);
         shader_DBD.delete_shader(GL_VERTEX_SHADER);
         shader_DBD.delete_shader(GL_FRAGMENT_SHADER);
@@ -345,8 +345,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_O_DP.create_from_file("Shaders/ShadowMap (orthogonal)/DepthPass/vert.glsl", GL_VERTEX_SHADER);
         shader_SM_O_DP.create_from_file("Shaders/ShadowMap (orthogonal)/DepthPass/frag.glsl", GL_FRAGMENT_SHADER);
         shader_SM_O_DP.link_program();
-        shader_SM_O_DP.init_uniforms_and_attribs();
-        shader_SM_O_DP.print_uniforms_and_attribs();
+        shader_SM_O_DP.init_uniforms_blocks_attribs();
+        shader_SM_O_DP.print_uniforms_blocks_attribs();
         shader_SM_O_DP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
         shader_SM_O_DP.delete_shader(GL_VERTEX_SHADER);
         shader_SM_O_DP.delete_shader(GL_FRAGMENT_SHADER);
@@ -355,8 +355,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_O_RP.create_from_file("Shaders/ShadowMap (orthogonal)/RenderPass/vert.glsl", GL_VERTEX_SHADER);
         shader_SM_O_RP.create_from_file("Shaders/ShadowMap (orthogonal)/RenderPass/frag.glsl", GL_FRAGMENT_SHADER);
         shader_SM_O_RP.link_program();
-        shader_SM_O_RP.init_uniforms_and_attribs();
-        shader_SM_O_RP.print_uniforms_and_attribs();
+        shader_SM_O_RP.init_uniforms_blocks_attribs();
+        shader_SM_O_RP.print_uniforms_blocks_attribs();
         shader_SM_O_RP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
         shader_SM_O_RP.delete_shader(GL_VERTEX_SHADER);
         shader_SM_O_RP.delete_shader(GL_FRAGMENT_SHADER);
@@ -365,8 +365,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_P_DP.create_from_file("Shaders/ShadowMap (perspective)/DepthPass/vert.glsl", GL_VERTEX_SHADER);
         shader_SM_P_DP.create_from_file("Shaders/ShadowMap (perspective)/DepthPass/frag.glsl", GL_FRAGMENT_SHADER);
         shader_SM_P_DP.link_program();
-        shader_SM_P_DP.init_uniforms_and_attribs();
-        shader_SM_P_DP.print_uniforms_and_attribs();
+        shader_SM_P_DP.init_uniforms_blocks_attribs();
+        shader_SM_P_DP.print_uniforms_blocks_attribs();
         shader_SM_P_DP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
         shader_SM_P_DP.delete_shader(GL_VERTEX_SHADER);
         shader_SM_P_DP.delete_shader(GL_FRAGMENT_SHADER);
@@ -375,8 +375,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_P_RP.create_from_file("Shaders/ShadowMap (perspective)/RenderPass/vert.glsl", GL_VERTEX_SHADER);
         shader_SM_P_RP.create_from_file("Shaders/ShadowMap (perspective)/RenderPass/frag.glsl", GL_FRAGMENT_SHADER);
         shader_SM_P_RP.link_program();
-        shader_SM_P_RP.init_uniforms_and_attribs();
-        shader_SM_P_RP.print_uniforms_and_attribs();
+        shader_SM_P_RP.init_uniforms_blocks_attribs();
+        shader_SM_P_RP.print_uniforms_blocks_attribs();
         shader_SM_P_RP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
         shader_SM_P_RP.delete_shader(GL_VERTEX_SHADER);
         shader_SM_P_RP.delete_shader(GL_FRAGMENT_SHADER);
@@ -385,8 +385,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_PCF_O_DP.create_from_file("Shaders/ShadowMapPCF (orthogonal)/DepthPass/vert.glsl", GL_VERTEX_SHADER);
         shader_SM_PCF_O_DP.create_from_file("Shaders/ShadowMapPCF (orthogonal)/DepthPass/frag.glsl", GL_FRAGMENT_SHADER);
         shader_SM_PCF_O_DP.link_program();
-        shader_SM_PCF_O_DP.init_uniforms_and_attribs();
-        shader_SM_PCF_O_DP.print_uniforms_and_attribs();
+        shader_SM_PCF_O_DP.init_uniforms_blocks_attribs();
+        shader_SM_PCF_O_DP.print_uniforms_blocks_attribs();
         shader_SM_PCF_O_DP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
         shader_SM_PCF_O_DP.delete_shader(GL_VERTEX_SHADER);
         shader_SM_PCF_O_DP.delete_shader(GL_FRAGMENT_SHADER);
@@ -395,8 +395,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_PCF_O_RP.create_from_file("Shaders/ShadowMapPCF (orthogonal)/RenderPass/vert.glsl", GL_VERTEX_SHADER);
         shader_SM_PCF_O_RP.create_from_file("Shaders/ShadowMapPCF (orthogonal)/RenderPass/frag.glsl", GL_FRAGMENT_SHADER);
         shader_SM_PCF_O_RP.link_program();
-        shader_SM_PCF_O_RP.init_uniforms_and_attribs();
-        shader_SM_PCF_O_RP.print_uniforms_and_attribs();
+        shader_SM_PCF_O_RP.init_uniforms_blocks_attribs();
+        shader_SM_PCF_O_RP.print_uniforms_blocks_attribs();
         shader_SM_PCF_O_RP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
         shader_SM_PCF_O_RP.delete_shader(GL_VERTEX_SHADER);
         shader_SM_PCF_O_RP.delete_shader(GL_FRAGMENT_SHADER);
@@ -405,8 +405,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_PCF_P_DP.create_from_file("Shaders/ShadowMapPCF (perspective)/DepthPass/vert.glsl", GL_VERTEX_SHADER);
         shader_SM_PCF_P_DP.create_from_file("Shaders/ShadowMapPCF (perspective)/DepthPass/frag.glsl", GL_FRAGMENT_SHADER);
         shader_SM_PCF_P_DP.link_program();
-        shader_SM_PCF_P_DP.init_uniforms_and_attribs();
-        shader_SM_PCF_P_DP.print_uniforms_and_attribs();
+        shader_SM_PCF_P_DP.init_uniforms_blocks_attribs();
+        shader_SM_PCF_P_DP.print_uniforms_blocks_attribs();
         shader_SM_PCF_P_DP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
         shader_SM_PCF_P_DP.delete_shader(GL_VERTEX_SHADER);
         shader_SM_PCF_P_DP.delete_shader(GL_FRAGMENT_SHADER);
@@ -415,8 +415,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_PCF_P_RP.create_from_file("Shaders/ShadowMapPCF (perspective)/RenderPass/vert.glsl", GL_VERTEX_SHADER);
         shader_SM_PCF_P_RP.create_from_file("Shaders/ShadowMapPCF (perspective)/RenderPass/frag.glsl", GL_FRAGMENT_SHADER);
         shader_SM_PCF_P_RP.link_program();
-        shader_SM_PCF_P_RP.init_uniforms_and_attribs();
-        shader_SM_PCF_P_RP.print_uniforms_and_attribs();
+        shader_SM_PCF_P_RP.init_uniforms_blocks_attribs();
+        shader_SM_PCF_P_RP.print_uniforms_blocks_attribs();
         shader_SM_PCF_P_RP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
         shader_SM_PCF_P_RP.delete_shader(GL_VERTEX_SHADER);
         shader_SM_PCF_P_RP.delete_shader(GL_FRAGMENT_SHADER);
@@ -425,8 +425,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_ESM_O_DP.create_from_file("Shaders/ShadowMapESM (orthogonal)/DepthPass/vert.glsl", GL_VERTEX_SHADER);
         shader_SM_ESM_O_DP.create_from_file("Shaders/ShadowMapESM (orthogonal)/DepthPass/frag.glsl", GL_FRAGMENT_SHADER);
         shader_SM_ESM_O_DP.link_program();
-        shader_SM_ESM_O_DP.init_uniforms_and_attribs();
-        shader_SM_ESM_O_DP.print_uniforms_and_attribs();
+        shader_SM_ESM_O_DP.init_uniforms_blocks_attribs();
+        shader_SM_ESM_O_DP.print_uniforms_blocks_attribs();
         shader_SM_ESM_O_DP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
         shader_SM_ESM_O_DP.delete_shader(GL_VERTEX_SHADER);
         shader_SM_ESM_O_DP.delete_shader(GL_FRAGMENT_SHADER);
@@ -435,8 +435,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_ESM_O_RP.create_from_file("Shaders/ShadowMapESM (orthogonal)/RenderPass/vert.glsl", GL_VERTEX_SHADER);
         shader_SM_ESM_O_RP.create_from_file("Shaders/ShadowMapESM (orthogonal)/RenderPass/frag.glsl", GL_FRAGMENT_SHADER);
         shader_SM_ESM_O_RP.link_program();
-        shader_SM_ESM_O_RP.init_uniforms_and_attribs();
-        shader_SM_ESM_O_RP.print_uniforms_and_attribs();
+        shader_SM_ESM_O_RP.init_uniforms_blocks_attribs();
+        shader_SM_ESM_O_RP.print_uniforms_blocks_attribs();
         shader_SM_ESM_O_RP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
         shader_SM_ESM_O_RP.delete_shader(GL_VERTEX_SHADER);
         shader_SM_ESM_O_RP.delete_shader(GL_FRAGMENT_SHADER);
@@ -445,8 +445,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_ESM_P_DP.create_from_file("Shaders/ShadowMapESM (perspective)/DepthPass/vert.glsl", GL_VERTEX_SHADER);
         shader_SM_ESM_P_DP.create_from_file("Shaders/ShadowMapESM (perspective)/DepthPass/frag.glsl", GL_FRAGMENT_SHADER);
         shader_SM_ESM_P_DP.link_program();
-        shader_SM_ESM_P_DP.init_uniforms_and_attribs();
-        shader_SM_ESM_P_DP.print_uniforms_and_attribs();
+        shader_SM_ESM_P_DP.init_uniforms_blocks_attribs();
+        shader_SM_ESM_P_DP.print_uniforms_blocks_attribs();
         shader_SM_ESM_P_DP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
         shader_SM_ESM_P_DP.delete_shader(GL_VERTEX_SHADER);
         shader_SM_ESM_P_DP.delete_shader(GL_FRAGMENT_SHADER);
@@ -455,8 +455,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_ESM_P_RP.create_from_file("Shaders/ShadowMapESM (perspective)/RenderPass/vert.glsl", GL_VERTEX_SHADER);
         shader_SM_ESM_P_RP.create_from_file("Shaders/ShadowMapESM (perspective)/RenderPass/frag.glsl", GL_FRAGMENT_SHADER);
         shader_SM_ESM_P_RP.link_program();
-        shader_SM_ESM_P_RP.init_uniforms_and_attribs();
-        shader_SM_ESM_P_RP.print_uniforms_and_attribs();
+        shader_SM_ESM_P_RP.init_uniforms_blocks_attribs();
+        shader_SM_ESM_P_RP.print_uniforms_blocks_attribs();
         shader_SM_ESM_P_RP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
         shader_SM_ESM_P_RP.delete_shader(GL_VERTEX_SHADER);
         shader_SM_ESM_P_RP.delete_shader(GL_FRAGMENT_SHADER);
@@ -465,8 +465,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_VSM_O_DP.create_from_file("Shaders/ShadowMapVSM (orthogonal)/DepthPass/vert.glsl", GL_VERTEX_SHADER);
         shader_SM_VSM_O_DP.create_from_file("Shaders/ShadowMapVSM (orthogonal)/DepthPass/frag.glsl", GL_FRAGMENT_SHADER);
         shader_SM_VSM_O_DP.link_program();
-        shader_SM_VSM_O_DP.init_uniforms_and_attribs();
-        shader_SM_VSM_O_DP.print_uniforms_and_attribs();
+        shader_SM_VSM_O_DP.init_uniforms_blocks_attribs();
+        shader_SM_VSM_O_DP.print_uniforms_blocks_attribs();
         shader_SM_VSM_O_DP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
         shader_SM_VSM_O_DP.delete_shader(GL_VERTEX_SHADER);
         shader_SM_VSM_O_DP.delete_shader(GL_FRAGMENT_SHADER);
@@ -475,8 +475,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_VSM_O_RP.create_from_file("Shaders/ShadowMapVSM (orthogonal)/RenderPass/vert.glsl", GL_VERTEX_SHADER);
         shader_SM_VSM_O_RP.create_from_file("Shaders/ShadowMapVSM (orthogonal)/RenderPass/frag.glsl", GL_FRAGMENT_SHADER);
         shader_SM_VSM_O_RP.link_program();
-        shader_SM_VSM_O_RP.init_uniforms_and_attribs();
-        shader_SM_VSM_O_RP.print_uniforms_and_attribs();
+        shader_SM_VSM_O_RP.init_uniforms_blocks_attribs();
+        shader_SM_VSM_O_RP.print_uniforms_blocks_attribs();
         shader_SM_VSM_O_RP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
         shader_SM_VSM_O_RP.delete_shader(GL_VERTEX_SHADER);
         shader_SM_VSM_O_RP.delete_shader(GL_FRAGMENT_SHADER);
@@ -485,8 +485,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_VSM_P_DP.create_from_file("Shaders/ShadowMapVSM (perspective)/DepthPass/vert.glsl", GL_VERTEX_SHADER);
         shader_SM_VSM_P_DP.create_from_file("Shaders/ShadowMapVSM (perspective)/DepthPass/frag.glsl", GL_FRAGMENT_SHADER);
         shader_SM_VSM_P_DP.link_program();
-        shader_SM_VSM_P_DP.init_uniforms_and_attribs();
-        shader_SM_VSM_P_DP.print_uniforms_and_attribs();
+        shader_SM_VSM_P_DP.init_uniforms_blocks_attribs();
+        shader_SM_VSM_P_DP.print_uniforms_blocks_attribs();
         shader_SM_VSM_P_DP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
         shader_SM_VSM_P_DP.delete_shader(GL_VERTEX_SHADER);
         shader_SM_VSM_P_DP.delete_shader(GL_FRAGMENT_SHADER);
@@ -495,8 +495,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_VSM_P_RP.create_from_file("Shaders/ShadowMapVSM (perspective)/RenderPass/vert.glsl", GL_VERTEX_SHADER);
         shader_SM_VSM_P_RP.create_from_file("Shaders/ShadowMapVSM (perspective)/RenderPass/frag.glsl", GL_FRAGMENT_SHADER);
         shader_SM_VSM_P_RP.link_program();
-        shader_SM_VSM_P_RP.init_uniforms_and_attribs();
-        shader_SM_VSM_P_RP.print_uniforms_and_attribs();
+        shader_SM_VSM_P_RP.init_uniforms_blocks_attribs();
+        shader_SM_VSM_P_RP.print_uniforms_blocks_attribs();
         shader_SM_VSM_P_RP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
         shader_SM_VSM_P_RP.delete_shader(GL_VERTEX_SHADER);
         shader_SM_VSM_P_RP.delete_shader(GL_FRAGMENT_SHADER);
@@ -506,8 +506,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_RT_BVH.create_from_file("Shaders/RayTraceBvhDebug/geom.glsl", GL_GEOMETRY_SHADER);
         shader_RT_BVH.create_from_file("Shaders/RayTraceBvhDebug/frag.glsl", GL_FRAGMENT_SHADER);
         shader_RT_BVH.link_program();
-        shader_RT_BVH.init_uniforms_and_attribs();
-        shader_RT_BVH.print_uniforms_and_attribs();
+        shader_RT_BVH.init_uniforms_blocks_attribs();
+        shader_RT_BVH.print_uniforms_blocks_attribs();
         shader_RT_BVH.report(REPORT_VS | REPORT_GS | REPORT_FS | REPORT_PROG);
         shader_RT_BVH.delete_shader(GL_VERTEX_SHADER);
         shader_RT_BVH.delete_shader(GL_GEOMETRY_SHADER);
@@ -517,8 +517,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_IO.create_from_file("Shaders/ImageOut/vert.glsl", GL_VERTEX_SHADER);
         shader_IO.create_from_file("Shaders/ImageOut/frag.glsl", GL_FRAGMENT_SHADER);
         shader_IO.link_program();
-        shader_IO.init_uniforms_and_attribs();
-        shader_IO.print_uniforms_and_attribs();
+        shader_IO.init_uniforms_blocks_attribs();
+        shader_IO.print_uniforms_blocks_attribs();
         shader_IO.report(REPORT_VS | REPORT_FS | REPORT_PROG);
         shader_IO.delete_shader(GL_VERTEX_SHADER);
         shader_IO.delete_shader(GL_FRAGMENT_SHADER);
@@ -526,16 +526,16 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_RT_HARD.set_shader_name("Shaders/RayTraceHard (perspective)");
         shader_RT_HARD.create_from_file("Shaders/RayTraceHard (perspective)/comp.glsl", GL_COMPUTE_SHADER);
         shader_RT_HARD.link_program();
-        shader_RT_HARD.init_uniforms_and_attribs();
-        shader_RT_HARD.print_uniforms_and_attribs();
+        shader_RT_HARD.init_uniforms_blocks_attribs();
+        shader_RT_HARD.print_uniforms_blocks_attribs();
         shader_RT_HARD.report(REPORT_CS | REPORT_PROG);
         shader_RT_HARD.delete_shader(GL_COMPUTE_SHADER);
 
         shader_RT_P_SOFT.set_shader_name("Shaders/RayTraceSoft (perspective)");
         shader_RT_P_SOFT.create_from_file("Shaders/RayTraceSoft (perspective)/TracingPath/comp.glsl", GL_COMPUTE_SHADER);
         shader_RT_P_SOFT.link_program();
-        shader_RT_P_SOFT.init_uniforms_and_attribs();
-        shader_RT_P_SOFT.print_uniforms_and_attribs();
+        shader_RT_P_SOFT.init_uniforms_blocks_attribs();
+        shader_RT_P_SOFT.print_uniforms_blocks_attribs();
         shader_RT_P_SOFT.report(REPORT_CS | REPORT_PROG);
         shader_RT_P_SOFT.delete_shader(GL_COMPUTE_SHADER);
 
@@ -579,7 +579,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL, (LPARAM)0);
-        // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE_PCF, (LPARAM)0);
+        SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE_PCF, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL_PCF, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE_ESM, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_ORTHOGONAL_ESM, (LPARAM)0);
@@ -588,7 +588,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)RAY_TRACING_DEBUG, (LPARAM)0);
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)RAY_TRACING_HARD_PERSPECTIVE, (LPARAM)0);
-        SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)RAY_TRACING_SOFT_PERSPECTIVE, (LPARAM)0);
+        // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)RAY_TRACING_SOFT_PERSPECTIVE, (LPARAM)0);
 
         std::cout << sizeof(Light) << std::endl;
         std::cout << alignof(Light) << std::endl;
