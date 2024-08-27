@@ -13,7 +13,9 @@
 #include "winapi_choose_color_dialog.h"
 #include "winapi_mat_ext.h"
 
+#include "formater.h"
 #include "app_args.h"
+#include "user_msgs.h"
 
 LRESULT CALLBACK LightingWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 

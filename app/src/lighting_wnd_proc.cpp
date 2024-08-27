@@ -6,12 +6,16 @@
 #define IDB_EDIT_POS_Y 3
 #define IDB_EDIT_POS_Z 4
 
-#define IDB_BTN_CHOOSE_COLOR 5
+#define IDB_EDIT_DIR_X 5
+#define IDB_EDIT_DIR_Y 6
+#define IDB_EDIT_DIR_Z 7
 
-#define IDB_EDIT_RADIUS 6
-#define IDB_EDIT_INTENSITY 7
-#define IDB_EDIT_INNER_CUTOFF 8
-#define IDB_EDIT_OUTER_CUTOFF 9
+#define IDB_BTN_CHOOSE_COLOR 8
+
+#define IDB_EDIT_RADIUS 9
+#define IDB_EDIT_INTENSITY 10
+#define IDB_EDIT_INNER_CUTOFF 11
+#define IDB_EDIT_OUTER_CUTOFF 12
 
 LRESULT CALLBACK LightingWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -53,7 +57,7 @@ LRESULT CALLBACK LightingWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
     static HWND StaticIntensityValHwnd = NULL;
     static HWND EditIntensityValHwnd = NULL;
 
-    static HWND StaticCuttofHwnd = NULL;
+    static HWND StaticCutoffHwnd = NULL;
 
     static HWND StaticInnerCutoffHwnd = NULL;
     static HWND StaticInnerCutoffValHwnd = NULL;
@@ -66,6 +70,8 @@ LRESULT CALLBACK LightingWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
     static WCHAR tmpText[MAX_PATH];
 
     static LightType lightType = LIGHT_POINT;
+    static vec3 msgVec;
+    static float msgFloat;
 
     static RECT lightColorRect = {0, 0, 0, 0};
     static COLORREF lightColor = RGB(255, 255, 255);
@@ -155,7 +161,7 @@ LRESULT CALLBACK LightingWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
                 L"EDIT", L"0",
                 WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_CENTER | WS_BORDER,
                 0, 0, 100, 30,
-                hWnd, (HMENU)IDB_EDIT_POS_X, app::hInst, nullptr
+                hWnd, (HMENU)IDB_EDIT_DIR_X, app::hInst, nullptr
             );
 
             StaticDirYHwnd = CreateWindow(
@@ -169,7 +175,7 @@ LRESULT CALLBACK LightingWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
                 L"EDIT", L"0",
                 WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_CENTER | WS_BORDER,
                 0, 0, 0, 0,
-                hWnd, (HMENU)IDB_EDIT_POS_Y, app::hInst, nullptr
+                hWnd, (HMENU)IDB_EDIT_DIR_Y, app::hInst, nullptr
             );
 
             StaticDirZHwnd = CreateWindow(
@@ -183,7 +189,7 @@ LRESULT CALLBACK LightingWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
                 L"EDIT", L"0",
                 WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_CENTER | WS_BORDER,
                 0, 0, 0, 0,
-                hWnd, (HMENU)IDB_EDIT_POS_Z, app::hInst, nullptr
+                hWnd, (HMENU)IDB_EDIT_DIR_Z, app::hInst, nullptr
             );
 
             StaticColorHwnd = CreateWindow(
@@ -242,7 +248,7 @@ LRESULT CALLBACK LightingWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
                 hWnd, (HMENU)IDB_EDIT_INTENSITY, app::hInst, nullptr
             );
 
-            StaticCuttofHwnd = CreateWindow(
+            StaticCutoffHwnd = CreateWindow(
                 L"STATIC", L"Угол раствора в градусах", 
                 WS_VISIBLE | WS_CHILD | SS_CENTERIMAGE | ES_CENTER,
                 0, 0, 0, 0,
@@ -293,7 +299,8 @@ LRESULT CALLBACK LightingWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 
             SendMessage(ComboBoxLightHwnd, CB_ADDSTRING, (WPARAM)0, (LPARAM)L"Точечный");
             SendMessage(ComboBoxLightHwnd, CB_ADDSTRING, (WPARAM)0, (LPARAM)L"Прожекторный");
-            SendMessage(ComboBoxLightHwnd, CB_SETCURSEL, (WPARAM)lightType, 0);
+            SendMessage(ComboBoxLightHwnd, CB_SETCURSEL, (WPARAM)0, 0);
+            SendMessage(hWnd, WM_COMMAND, MAKEWPARAM(CBN_SELCHANGE, IDB_COMBOBOX_LIGHT), (LPARAM)ComboBoxLightHwnd);
 
             fp.cWidth = 0;
             fp.cEscapement = 0;
@@ -554,7 +561,7 @@ LRESULT CALLBACK LightingWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
             w = get_rect_width(rect);
 
             MoveWindow(
-                StaticCuttofHwnd,
+                StaticCutoffHwnd,
                 posX, posY, w, h,
                 TRUE
             );
@@ -687,8 +694,8 @@ LRESULT CALLBACK LightingWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
                 SendMessage(EditOuterCutoffValHwnd, WM_SETFONT, (WPARAM)VectorHfont, FALSE);
             }
 
-            GetWindowRect(StaticCuttofHwnd, &tmp_rect);
-            GetWindowText(StaticCuttofHwnd, tmpText, MAX_PATH);
+            GetWindowRect(StaticCutoffHwnd, &tmp_rect);
+            GetWindowText(StaticCutoffHwnd, tmpText, MAX_PATH);
             tmpFp = fp;
             tmpFp.cHeight = 30;
             tmpFp.pszFaceName = L"Times New Roman";
@@ -699,7 +706,7 @@ LRESULT CALLBACK LightingWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
                 if (HeaderHfont) DeleteObject((HFONT)SelectObject(hDc, (HFONT)HeaderHfont));
                 HeaderHfont = hFont;
 
-                SendMessage(StaticCuttofHwnd, WM_SETFONT, (WPARAM)HeaderHfont, FALSE);
+                SendMessage(StaticCutoffHwnd, WM_SETFONT, (WPARAM)HeaderHfont, FALSE);
             }
 
             ReleaseDC(hWnd, hDc);
@@ -718,8 +725,26 @@ LRESULT CALLBACK LightingWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
                     {
                         case CBN_SELCHANGE:
                         {
-                            lightType = (LightType)SendMessage((HWND)lParam, CB_GETCURSEL, 0, 0);
                             SetFocus(hWnd);
+                            lightType = (LightType)SendMessage((HWND)lParam, CB_GETCURSEL, 0, 0);
+                            WINBOOL enable = lightType == LIGHT_SPOT;
+
+                            EnableWindow(StaticDirectionHwnd, enable);
+                            EnableWindow(StaticDirXHwnd, enable);
+                            EnableWindow(StaticDirYHwnd, enable);
+                            EnableWindow(StaticDirZHwnd, enable);
+                            EnableWindow(EditDirXHwnd, enable);
+                            EnableWindow(EditDirYHwnd, enable);
+                            EnableWindow(EditDirZHwnd, enable);
+                            EnableWindow(StaticCutoffHwnd, enable);
+                            EnableWindow(StaticInnerCutoffHwnd, enable);
+                            EnableWindow(StaticInnerCutoffValHwnd, enable);
+                            EnableWindow(StaticOuterCutoffHwnd, enable);
+                            EnableWindow(StaticOuterCutoffValHwnd, enable);
+                            EnableWindow(EditInnerCutoffValHwnd, enable);
+                            EnableWindow(EditOuterCutoffValHwnd, enable);
+
+                            SendMessage(app::RenderWnd.getHwnd(), WM_SET_LIGHT_TYPE, (WPARAM)&lightType, (LPARAM)0);
                             return EXIT_SUCCESS;
                         }
 
@@ -734,17 +759,166 @@ LRESULT CALLBACK LightingWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
                     }
                 }
 
+                case IDB_EDIT_POS_X:
+                case IDB_EDIT_POS_Y:
+                case IDB_EDIT_POS_Z:
+                {
+                    switch (HIWORD(wParam))
+                    {
+                        case EN_CHANGE:
+                        {
+                            GetWindowText(EditPosXHwnd, tmpText, MAX_PATH);
+                            if (convert_str_to_float(tmpText, &msgVec.x))
+                            {
+                                GetWindowText(EditPosYHwnd, tmpText, MAX_PATH);
+                                if (convert_str_to_float(tmpText, &msgVec.y))
+                                {
+                                    GetWindowText(EditPosZHwnd, tmpText, MAX_PATH);
+                                    if (convert_str_to_float(tmpText, &msgVec.z))
+                                    {
+                                        SendMessage(app::RenderWnd.getHwnd(), WM_SET_LIGHT_POSITION, (WPARAM)&msgVec, (LPARAM)0);
+                                    }
+                                }
+                            }
+
+
+                            return EXIT_SUCCESS;
+                        }
+
+                        default:
+                            return DefWindowProc(hWnd, uMsg, wParam, lParam);
+                    }
+                }
+
+                case IDB_EDIT_DIR_X:
+                case IDB_EDIT_DIR_Y:
+                case IDB_EDIT_DIR_Z:
+                {
+                    switch (HIWORD(wParam))
+                    {
+                        case EN_CHANGE:
+                        {
+                            GetWindowText(EditDirXHwnd, tmpText, MAX_PATH);
+                            if (convert_str_to_float(tmpText, &msgVec.x))
+                            {
+                                GetWindowText(EditDirYHwnd, tmpText, MAX_PATH);
+                                if (convert_str_to_float(tmpText, &msgVec.y))
+                                {
+                                    GetWindowText(EditDirZHwnd, tmpText, MAX_PATH);
+                                    if (convert_str_to_float(tmpText, &msgVec.z))
+                                    {
+                                        SendMessage(app::RenderWnd.getHwnd(), WM_SET_LIGHT_DIRECTION, (WPARAM)&msgVec, (LPARAM)0);
+                                    }
+                                }
+                            }
+
+
+                            return EXIT_SUCCESS;
+                        }
+
+                        default:
+                            return DefWindowProc(hWnd, uMsg, wParam, lParam);
+                    }
+                }
+
                 case IDB_BTN_CHOOSE_COLOR:
                 {
                     SetFocus(hWnd);
 
                     if (choose_color_dialog(hWnd, &lightColor))
                     {
+                        vec3_set(&msgVec, GetRValue(lightColor), GetGValue(lightColor), GetBValue(lightColor));
+                        vec3_divide(&msgVec, 255.f);
+
+                        SendMessage(app::RenderWnd.getHwnd(), WM_SET_LIGHT_COLOR, (WPARAM)&msgVec, (LPARAM)0);
+
                         InvalidateRect(hWnd, NULL, TRUE);
                         UpdateWindow(hWnd);
                     }
  
                     return EXIT_SUCCESS;
+                }
+
+                case IDB_EDIT_RADIUS:
+                {
+                    switch (HIWORD(wParam))
+                    {
+                        case EN_CHANGE:
+                        {
+                            GetWindowText(EditRadiusValHwnd, tmpText, MAX_PATH);
+                            if (convert_str_to_float(tmpText, &msgFloat))
+                            {
+                                SendMessage(app::RenderWnd.getHwnd(), WM_SET_LIGHT_RADIUS, (WPARAM)&msgFloat, (LPARAM)0);
+                            }
+
+                            return EXIT_SUCCESS;
+                        }
+
+                        default:
+                            return DefWindowProc(hWnd, uMsg, wParam, lParam);
+                    }
+                }
+
+                case IDB_EDIT_INTENSITY:
+                {
+                    switch (HIWORD(wParam))
+                    {
+                        case EN_CHANGE:
+                        {
+                            GetWindowText(EditIntensityValHwnd, tmpText, MAX_PATH);
+                            if (convert_str_to_float(tmpText, &msgFloat))
+                            {
+                                SendMessage(app::RenderWnd.getHwnd(), WM_SET_LIGHT_INTENSITY, (WPARAM)&msgFloat, (LPARAM)0);
+                            }
+
+                            return EXIT_SUCCESS;
+                        }
+
+                        default:
+                            return DefWindowProc(hWnd, uMsg, wParam, lParam);
+                    }
+                }
+
+                case IDB_EDIT_INNER_CUTOFF:
+                {
+                    switch (HIWORD(wParam))
+                    {
+                        case EN_CHANGE:
+                        {
+                            GetWindowText(EditInnerCutoffValHwnd, tmpText, MAX_PATH);
+                            if (convert_str_to_float(tmpText, &msgFloat))
+                            {
+                                msgFloat = degrees_to_radians(msgFloat);
+                                SendMessage(app::RenderWnd.getHwnd(), WM_SET_LIGHT_INNER_CUTOFF, (WPARAM)&msgFloat, (LPARAM)0);
+                            }
+
+                            return EXIT_SUCCESS;
+                        }
+
+                        default:
+                            return DefWindowProc(hWnd, uMsg, wParam, lParam);
+                    }
+                }
+
+                case IDB_EDIT_OUTER_CUTOFF:
+                {
+                    switch (HIWORD(wParam))
+                    {
+                        case EN_CHANGE:
+                        {
+                            GetWindowText(EditOuterCutoffValHwnd, tmpText, MAX_PATH);
+                            if (convert_str_to_float(tmpText, &msgFloat))
+                            {
+                                msgFloat = degrees_to_radians(msgFloat);
+                                SendMessage(app::RenderWnd.getHwnd(), WM_SET_LIGHT_OUTER_CUTOFF, (WPARAM)&msgFloat, (LPARAM)0);
+                            }
+
+                            return EXIT_SUCCESS;
+                        }
+
+                        default:
+                            return DefWindowProc(hWnd, uMsg, wParam, lParam);
+                    }
                 }
 
                 default:
