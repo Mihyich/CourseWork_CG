@@ -168,6 +168,10 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static ShadowAlg shadowAlg = NO_SHADOW_LIGHT;
 
     static ShadowMapRenderData RenderDataSM;
+    static GLfloat shadowBias = 0.005f;
+    static GLfloat pcfRadius = 1.5f;
+    static GLfloat expK = 1.f;
+
     static RayTracingRenderData RenderDataRT;
 
     static CameraMode camera_mode = ORBITTING;
@@ -739,7 +743,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     RenderDataSM.main.projection = &projection;
                     RenderDataSM.main.lightView = &lightView;
                     RenderDataSM.main.lightProjection = &lightProjectionOrthogonal;
-                    // RenderDataSM.main.shadowBias = &;
+                    RenderDataSM.main.shadowBias = &shadowBias;
                     RenderDataSM.main.quadVAO = &quadVAO;
                     RenderDataSM.main.planeVAO = &planeVAO;
                     RenderDataSM.main.planeModel = &planeModel;
@@ -763,7 +767,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     RenderDataSM.main.projection = &projection;
                     RenderDataSM.main.lightView = &lightView;
                     RenderDataSM.main.lightProjection = &lightProjectionPerspective;
-                    // RenderDataSM.main.shadowBias = &;
+                    RenderDataSM.main.shadowBias = &shadowBias;
                     RenderDataSM.main.quadVAO = &quadVAO;
                     RenderDataSM.main.planeVAO = &planeVAO;
                     RenderDataSM.main.planeModel = &planeModel;
@@ -787,8 +791,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     RenderDataSM.pcf.projection = &projection;
                     RenderDataSM.pcf.lightView = &lightView;
                     RenderDataSM.pcf.lightProjection = &lightProjectionOrthogonal;
-                    // RenderDataSM.pcf.shadowBias = &;
-                    // RenderDataSM.pcf.pcfRadius = &;
+                    RenderDataSM.pcf.shadowBias = &shadowBias;
+                    RenderDataSM.pcf.pcfRadius = &pcfRadius;
                     RenderDataSM.pcf.quadVAO = &quadVAO;
                     RenderDataSM.pcf.planeVAO = &planeVAO;
                     RenderDataSM.pcf.planeModel = &planeModel;
@@ -812,8 +816,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     RenderDataSM.pcf.projection = &projection;
                     RenderDataSM.pcf.lightView = &lightView;
                     RenderDataSM.pcf.lightProjection = &lightProjectionPerspective;
-                    // RenderDataSM.pcf.shadowBias = &;
-                    // RenderDataSM.pcf.pcfRadius = &;
+                    RenderDataSM.pcf.shadowBias = &shadowBias;
+                    RenderDataSM.pcf.pcfRadius = &pcfRadius;
                     RenderDataSM.pcf.quadVAO = &quadVAO;
                     RenderDataSM.pcf.planeVAO = &planeVAO;
                     RenderDataSM.pcf.planeModel = &planeModel;
@@ -837,7 +841,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     RenderDataSM.esm.projection = &projection;
                     RenderDataSM.esm.lightView = &lightView;
                     RenderDataSM.esm.lightProjection = &lightProjectionOrthogonal;
-                    // RenderDataSM.esm.expK = &;
+                    RenderDataSM.esm.expK = &expK;
                     RenderDataSM.esm.quadVAO = &quadVAO;
                     RenderDataSM.esm.planeVAO = &planeVAO;
                     RenderDataSM.esm.planeModel = &planeModel;
@@ -861,7 +865,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     RenderDataSM.esm.projection = &projection;
                     RenderDataSM.esm.lightView = &lightView;
                     RenderDataSM.esm.lightProjection = &lightProjectionPerspective;
-                    // RenderDataSM.esm.expK = &;
+                    RenderDataSM.esm.expK = &expK;
                     RenderDataSM.esm.quadVAO = &quadVAO;
                     RenderDataSM.esm.planeVAO = &planeVAO;
                     RenderDataSM.esm.planeModel = &planeModel;
