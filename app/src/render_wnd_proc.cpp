@@ -575,6 +575,49 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         glUniform1i(shader_IO.get_uniform_location("colorImage"), 0);
 
         // Подключить UBO буфер ко всем шейдером его поддерживающих
+        GLuint blockIndex;
+        GLuint ProgrammId;
+
+        ProgrammId = shader_SM_O_RP.getProgramId();
+        blockIndex = glGetUniformBlockIndex(ProgrammId, "Lighting");
+        glUniformBlockBinding(ProgrammId, blockIndex, 0);
+
+        ProgrammId = shader_SM_P_RP.getProgramId();
+        blockIndex = glGetUniformBlockIndex(ProgrammId, "Lighting");
+        glUniformBlockBinding(ProgrammId, blockIndex, 0);
+
+        ProgrammId = shader_SM_PCF_O_RP.getProgramId();
+        blockIndex = glGetUniformBlockIndex(ProgrammId, "Lighting");
+        glUniformBlockBinding(ProgrammId, blockIndex, 0);
+
+        ProgrammId = shader_SM_PCF_P_RP.getProgramId();
+        blockIndex = glGetUniformBlockIndex(ProgrammId, "Lighting");
+        glUniformBlockBinding(ProgrammId, blockIndex, 0);
+
+        ProgrammId = shader_SM_ESM_O_RP.getProgramId();
+        blockIndex = glGetUniformBlockIndex(ProgrammId, "Lighting");
+        glUniformBlockBinding(ProgrammId, blockIndex, 0);
+
+        ProgrammId = shader_SM_ESM_P_RP.getProgramId();
+        blockIndex = glGetUniformBlockIndex(ProgrammId, "Lighting");
+        glUniformBlockBinding(ProgrammId, blockIndex, 0);
+
+        ProgrammId = shader_SM_VSM_O_RP.getProgramId();
+        blockIndex = glGetUniformBlockIndex(ProgrammId, "Lighting");
+        glUniformBlockBinding(ProgrammId, blockIndex, 0);
+
+        ProgrammId = shader_SM_VSM_P_RP.getProgramId();
+        blockIndex = glGetUniformBlockIndex(ProgrammId, "Lighting");
+        glUniformBlockBinding(ProgrammId, blockIndex, 0);
+
+        ProgrammId = shader_RT_HARD.getProgramId();
+        blockIndex = glGetUniformBlockIndex(ProgrammId, "Lighting");
+        glUniformBlockBinding(ProgrammId, blockIndex, 0);
+
+        ProgrammId = shader_RT_P_SOFT.getProgramId();
+        blockIndex = glGetUniformBlockIndex(ProgrammId, "Lighting");
+        glUniformBlockBinding(ProgrammId, blockIndex, 0);
+
         glBindBufferRange(GL_UNIFORM_BUFFER, 0, lightUBO, 0, sizeof(Light));
 
         // SendMessage(hWnd, WM_SET_SHADOW_ALG, (WPARAM)SHADOW_MAP_PERSPECTIVE, (LPARAM)0);
