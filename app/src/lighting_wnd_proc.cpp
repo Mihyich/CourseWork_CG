@@ -123,7 +123,7 @@ LRESULT CALLBACK LightingWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
             );
 
             EditPosYHwnd = CreateWindow(
-                L"EDIT", L"0",
+                L"EDIT", L"5",
                 WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_CENTER | WS_BORDER,
                 0, 0, 0, 0,
                 hWnd, (HMENU)IDB_EDIT_POS_Y, app::hInst, nullptr
@@ -137,7 +137,7 @@ LRESULT CALLBACK LightingWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
             );
 
             EditPosZHwnd = CreateWindow(
-                L"EDIT", L"0",
+                L"EDIT", L"3",
                 WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_CENTER | WS_BORDER,
                 0, 0, 0, 0,
                 hWnd, (HMENU)IDB_EDIT_POS_Z, app::hInst, nullptr
@@ -172,7 +172,7 @@ LRESULT CALLBACK LightingWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
             );
 
             EditDirYHwnd = CreateWindow(
-                L"EDIT", L"0",
+                L"EDIT", L"-1",
                 WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_CENTER | WS_BORDER,
                 0, 0, 0, 0,
                 hWnd, (HMENU)IDB_EDIT_DIR_Y, app::hInst, nullptr
@@ -186,7 +186,7 @@ LRESULT CALLBACK LightingWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
             );
 
             EditDirZHwnd = CreateWindow(
-                L"EDIT", L"0",
+                L"EDIT", L"-1",
                 WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_CENTER | WS_BORDER,
                 0, 0, 0, 0,
                 hWnd, (HMENU)IDB_EDIT_DIR_Z, app::hInst, nullptr
@@ -221,7 +221,7 @@ LRESULT CALLBACK LightingWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
             );
 
             EditRadiusValHwnd = CreateWindow(
-                L"EDIT", L"0",
+                L"EDIT", L"20",
                 WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_CENTER | WS_BORDER,
                 0, 0, 0, 0,
                 hWnd, (HMENU)IDB_EDIT_RADIUS, app::hInst, nullptr
@@ -242,7 +242,7 @@ LRESULT CALLBACK LightingWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
             );
 
             EditIntensityValHwnd = CreateWindow(
-                L"EDIT", L"0",
+                L"EDIT", L"2",
                 WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_CENTER | WS_BORDER,
                 0, 0, 0, 0,
                 hWnd, (HMENU)IDB_EDIT_INTENSITY, app::hInst, nullptr
@@ -270,7 +270,7 @@ LRESULT CALLBACK LightingWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
             );
 
             EditInnerCutoffValHwnd = CreateWindow(
-                L"EDIT", L"0",
+                L"EDIT", L"30",
                 WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_CENTER | WS_BORDER,
                 0, 0, 0, 0,
                 hWnd, (HMENU)IDB_EDIT_INNER_CUTOFF, app::hInst, nullptr
@@ -291,7 +291,7 @@ LRESULT CALLBACK LightingWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
             );
 
             EditOuterCutoffValHwnd = CreateWindow(
-                L"EDIT", L"0",
+                L"EDIT", L"45",
                 WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_CENTER | WS_BORDER,
                 0, 0, 0, 0,
                 hWnd, (HMENU)IDB_EDIT_OUTER_CUTOFF, app::hInst, nullptr
