@@ -1031,6 +1031,20 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         cpvec3 pos = reinterpret_cast<cpvec3>(wParam);
         setLightUBO_position(lightUBO, *pos);
+
+        vec3_set(&light.position, pos->x, pos->y, pos->z);
+
+        if (light.type == LIGHT_POINT)
+        {
+            vec3 tmpPos = {0, 0, 0};
+            mat4_transform_vec3(&modelModel, &tmpPos);
+            mat4_set_look_at(&lightView, &light.position, &tmpPos, &viewUp);
+        }
+        else if (light.type == LIGHT_SPOT)
+        {
+            mat4_set_look_to(&lightView, &light.position, &light.direction, &viewUp);
+        }
+
         return EXIT_SUCCESS;
     }
 
@@ -1038,6 +1052,14 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         cpvec3 dir = reinterpret_cast<cpvec3>(wParam);
         setLightUBO_direction(lightUBO, *dir);
+
+        vec3_set(&light.direction, dir->x, dir->y, dir->z);
+
+        if (light.type == LIGHT_SPOT)
+        {
+            mat4_set_look_to(&lightView, &light.position, &light.direction, &viewUp);
+        }
+
         return EXIT_SUCCESS;
     }
 
@@ -1045,6 +1067,9 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         cpvec3 col = reinterpret_cast<cpvec3>(wParam);
         setLightUBO_color(lightUBO, *col);
+
+        vec3_set(&light.color, col->x, col->y, col->z);
+
         return EXIT_SUCCESS;
     }
 
@@ -1052,6 +1077,9 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         const float* radius = reinterpret_cast<const float*>(wParam);
         setLightUBO_radius(lightUBO, *radius);
+
+        light.radius = *radius;
+
         return EXIT_SUCCESS;
     }
 
@@ -1059,6 +1087,9 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         const float* intensity = reinterpret_cast<const float*>(wParam);
         setLightUBO_intensity(lightUBO, *intensity);
+
+        light.intensity = *intensity;
+
         return EXIT_SUCCESS;
     }
 
@@ -1066,6 +1097,9 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         const float* innerCutoff = reinterpret_cast<const float*>(wParam);
         setLightUBO_innerCutoff(lightUBO, *innerCutoff);
+
+        light.innerCutoff = *innerCutoff;
+
         return EXIT_SUCCESS;
     }
 
@@ -1073,6 +1107,9 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         const float* outerCutoff = reinterpret_cast<const float*>(wParam);
         setLightUBO_outerCutoff(lightUBO, *outerCutoff);
+        
+        light.outerCutoff = *outerCutoff;
+
         return EXIT_SUCCESS;
     }
 
@@ -1080,6 +1117,9 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         const int* type = reinterpret_cast<const int*>(wParam);
         setLightUBO_type(lightUBO, *type);
+
+        light.type = (float)*type;
+
         return EXIT_SUCCESS;
     }
 
