@@ -16,6 +16,8 @@ namespace app
 
     WinApiWindow LightingWnd;
 
+    WinApiWindow ModelWnd;
+
     WinApiGLWindow RenderWnd;
 
     WinApiFont Fonts;
