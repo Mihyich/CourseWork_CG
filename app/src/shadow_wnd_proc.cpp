@@ -38,6 +38,42 @@ LRESULT CALLBACK ShadowWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
                 hWnd, (HMENU)IDB_TAB_PATH_TRACING_OPTION, app::hInst, NULL
             );
 
+            // Создать окно настройки ShadowMap
+            app::ShadowWnd.Create(
+                nullptr, app::hInst, SW_SHOWNORMAL,
+                ShadowMapWndProc, L"ShadowMaping", nullptr,
+                0, 0,
+                CS_HREDRAW | CS_VREDRAW,
+                WS_CHILD | WS_VISIBLE | WS_BORDER | WS_CLIPCHILDREN,
+                WS_EX_COMPOSITED,
+                hWnd
+            );
+
+            // Создать окно настройки RayTracing
+            app::LightingWnd.Create(
+                nullptr, app::hInst, SW_HIDE,
+                RayTracingWndProc, L"RayTracing", nullptr,
+                0, 0,
+                CS_HREDRAW | CS_VREDRAW,
+                WS_CHILD | WS_VISIBLE | WS_BORDER | WS_CLIPCHILDREN,
+                WS_EX_COMPOSITED,
+                hWnd
+            );
+
+            // Создать окно настройки PathTracing
+            app::ModelWnd.Create(
+                nullptr, app::hInst, SW_HIDE,
+                PathTracingWndProc, L"PathTracing", nullptr,
+                0, 0,
+                CS_HREDRAW | CS_VREDRAW,
+                WS_CHILD | WS_VISIBLE | WS_BORDER | WS_CLIPCHILDREN,
+                WS_EX_COMPOSITED,
+                hWnd
+            );
+
+            // По умолчанию вкладка - ShadowMap
+            SendMessage(hWnd, WM_COMMAND, MAKEWPARAM(IDB_TAB_SHADOW_MAP_OPTION, 0), 0);
+
             fp.cWidth = 0;
             fp.cHeight = 24;
             fp.cEscapement = 0;
