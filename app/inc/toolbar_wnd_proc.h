@@ -10,6 +10,7 @@
 #include "winapi_font_common.h"
 #include "winapi_mat_ext.h"
 
+#include "shadow_wnd_proc.h"
 #include "lighting_wnd_proc.h"
 
 #include "app_args.h"

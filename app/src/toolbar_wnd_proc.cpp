@@ -23,6 +23,13 @@ void repos_toolbar_child_wnds()
         tmp_height = height - 30 - HIT_BORDER_SIZE;
 
         MoveWindow(
+            app::ShadowWnd.getHwnd(),
+            posX, posY,
+            tmp_width, tmp_height,
+            TRUE
+        );
+
+        MoveWindow(
             app::LightingWnd.getHwnd(),
             posX, posY,
             tmp_width, tmp_height,
@@ -75,9 +82,20 @@ LRESULT CALLBACK ToolbarWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
                 hWnd, (HMENU)IDB_TAB_MODEL_OPTION, app::hInst, NULL
             );
 
+            // Создать окно настройки теней
+            app::ShadowWnd.Create(
+                nullptr, app::hInst, SW_SHOWNORMAL,
+                ShadowWndProc, L"Shadowing", nullptr,
+                0, 0,
+                CS_HREDRAW | CS_VREDRAW,
+                WS_CHILD | WS_VISIBLE | WS_BORDER | WS_CLIPCHILDREN,
+                WS_EX_COMPOSITED,
+                hWnd
+            );
+
             // Создать окно настройки освещения
             app::LightingWnd.Create(
-                nullptr, app::hInst, SW_SHOWNORMAL,
+                nullptr, app::hInst, SW_HIDE,
                 LightingWndProc, L"Lighting", nullptr,
                 0, 0,
                 CS_HREDRAW | CS_VREDRAW,
