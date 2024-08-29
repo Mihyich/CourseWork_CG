@@ -62,11 +62,12 @@ LRESULT CALLBACK ShadowWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
             HFONT hFont;
             RECT tmp_rect;
             FontParam tmpFp;
-            int mainH = fp.cHeight;
+
+            GetClientRect(hWnd, &tmp_rect);
 
             int posX = 0;
             int posY = 0;
-            int w = app::ToolbarWidth / 3;
+            int w = get_rect_width(tmp_rect) / 3;
             int h = 20;
 
             MoveWindow(
