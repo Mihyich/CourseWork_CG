@@ -1,5 +1,50 @@
 #include "shadow_wnd_proc.h"
 
+void repos_shadow_child_wnds()
+{
+    if (!app::ShadowWnd.getHwnd())
+        return;
+
+    RECT rect;
+    LONG width;
+    LONG height;
+    LONG posX = 0;
+    LONG posY = 30;
+    LONG tmp_width = 0;
+    LONG tmp_height = 0;
+
+    GetClientRect(app::ShadowWnd.getHwnd(), &rect);
+    width = get_rect_width(rect);
+    height = get_rect_height(rect);
+
+    if (app::LightingWnd.getHwnd())
+    {
+        tmp_width = width;
+        tmp_height = height;
+
+        MoveWindow(
+            app::ShadowMapWnd.getHwnd(),
+            posX, posY,
+            tmp_width, tmp_height,
+            TRUE
+        );
+
+        MoveWindow(
+            app::RayTracingWnd.getHwnd(),
+            posX, posY,
+            tmp_width, tmp_height,
+            TRUE
+        );
+
+        MoveWindow(
+            app::PathTracingWnd.getHwnd(),
+            posX, posY,
+            tmp_width, tmp_height,
+            TRUE
+        );
+    }
+}
+
 #define IDB_TAB_SHADOW_MAP_OPTION 1
 #define IDB_TAB_RAY_TRACING_OPTION 2
 #define IDB_TAB_PATH_TRACING_OPTION 3
@@ -142,6 +187,7 @@ LRESULT CALLBACK ShadowWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
             }
 
             ReleaseDC(hWnd, hDc);
+            repos_shadow_child_wnds();
             return EXIT_SUCCESS;
         }
 
@@ -157,6 +203,10 @@ LRESULT CALLBACK ShadowWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
                     SendMessage(TabRayTracingOptionHwnd, BM_SETCHECK, BST_UNCHECKED, 0);
                     SendMessage(TabPathTracingOptionHwnd, BM_SETCHECK, BST_UNCHECKED, 0);
 
+                    ShowWindow(app::ShadowMapWnd.getHwnd(), SW_SHOW);
+                    ShowWindow(app::RayTracingWnd.getHwnd(), SW_HIDE);
+                    ShowWindow(app::PathTracingWnd.getHwnd(), SW_HIDE);
+
                     return EXIT_SUCCESS;
                 }
 
@@ -168,6 +218,10 @@ LRESULT CALLBACK ShadowWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
                     SendMessage(TabRayTracingOptionHwnd, BM_SETCHECK, BST_CHECKED, 0);
                     SendMessage(TabPathTracingOptionHwnd, BM_SETCHECK, BST_UNCHECKED, 0);
 
+                    ShowWindow(app::ShadowMapWnd.getHwnd(), SW_HIDE);
+                    ShowWindow(app::RayTracingWnd.getHwnd(), SW_SHOW);
+                    ShowWindow(app::PathTracingWnd.getHwnd(), SW_HIDE);
+
                     return EXIT_SUCCESS;
                 }
 
@@ -178,6 +232,10 @@ LRESULT CALLBACK ShadowWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
                     SendMessage(TabShadowMapOptionHwnd, BM_SETCHECK, BST_UNCHECKED, 0);
                     SendMessage(TabRayTracingOptionHwnd, BM_SETCHECK, BST_UNCHECKED, 0);
                     SendMessage(TabPathTracingOptionHwnd, BM_SETCHECK, BST_CHECKED, 0);
+
+                    ShowWindow(app::ShadowMapWnd.getHwnd(), SW_HIDE);
+                    ShowWindow(app::RayTracingWnd.getHwnd(), SW_HIDE);
+                    ShowWindow(app::PathTracingWnd.getHwnd(), SW_SHOW);
 
                     return EXIT_SUCCESS;
                 }
