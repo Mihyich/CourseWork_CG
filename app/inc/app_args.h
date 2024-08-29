@@ -37,6 +37,9 @@ namespace app
     extern LONG ToolbarMinWidth;
     extern LONG ToolbarWidth; // Ширина окна toolbar
 
+    // Окно найстроки теней
+    extern WinApiWindow ShadowWnd;
+
     // Окно настройки освещения
     extern WinApiWindow LightingWnd;
 

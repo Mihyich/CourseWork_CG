@@ -12,6 +12,8 @@ namespace app
     LONG ToolbarMinWidth = 100;
     LONG ToolbarWidth = 200;
 
+    WinApiWindow ShadowWnd;
+
     WinApiWindow LightingWnd;
 
     WinApiGLWindow RenderWnd;
