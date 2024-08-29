@@ -119,6 +119,9 @@ LRESULT CALLBACK ToolbarWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
                 hWnd
             );
 
+            // Выбрать начальную вкладку вручную - освещение
+            SendMessage(hWnd, WM_COMMAND, MAKEWPARAM(IDB_TAB_LIGHTING_OPTION, 0), 0);
+
             fp.cWidth = 0;
             fp.cHeight = 24;
             fp.cEscapement = 0;
