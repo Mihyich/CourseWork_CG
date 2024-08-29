@@ -276,6 +276,9 @@ LRESULT CALLBACK ToolbarWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
                     SendMessage(TabLightingOptionHwnd, BM_SETCHECK, BST_UNCHECKED, 0);
                     SendMessage(TabModelOptionHwnd, BM_SETCHECK, BST_UNCHECKED, 0);
 
+                    ShowWindow(app::ShadowWnd.getHwnd(), SW_SHOW);
+                    ShowWindow(app::LightingWnd.getHwnd(), SW_HIDE);
+
                     return EXIT_SUCCESS;
                 }
 
@@ -287,6 +290,9 @@ LRESULT CALLBACK ToolbarWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
                     SendMessage(TabLightingOptionHwnd, BM_SETCHECK, BST_CHECKED, 0);
                     SendMessage(TabModelOptionHwnd, BM_SETCHECK, BST_UNCHECKED, 0);
 
+                    ShowWindow(app::ShadowWnd.getHwnd(), SW_HIDE);
+                    ShowWindow(app::LightingWnd.getHwnd(), SW_SHOW);
+
                     return EXIT_SUCCESS;
                 }
 
@@ -297,6 +303,9 @@ LRESULT CALLBACK ToolbarWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
                     SendMessage(TabShadowOptionHwnd, BM_SETCHECK, BST_UNCHECKED, 0);
                     SendMessage(TabLightingOptionHwnd, BM_SETCHECK, BST_UNCHECKED, 0);
                     SendMessage(TabModelOptionHwnd, BM_SETCHECK, BST_CHECKED, 0);
+
+                    ShowWindow(app::ShadowWnd.getHwnd(), SW_HIDE);
+                    ShowWindow(app::LightingWnd.getHwnd(), SW_HIDE);
 
                     return EXIT_SUCCESS;
                 }
