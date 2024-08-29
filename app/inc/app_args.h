@@ -39,6 +39,9 @@ namespace app
 
     // Окно найстроки теней
     extern WinApiWindow ShadowWnd;
+    extern WinApiWindow ShadowMapWnd;   // =============
+    extern WinApiWindow RayTracingWnd;  // дочерние окна
+    extern WinApiWindow PathTracingWnd; // =============
 
     // Окно настройки освещения
     extern WinApiWindow LightingWnd;

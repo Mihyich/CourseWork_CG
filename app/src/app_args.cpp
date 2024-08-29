@@ -13,6 +13,9 @@ namespace app
     LONG ToolbarWidth = 200;
 
     WinApiWindow ShadowWnd;
+    WinApiWindow ShadowMapWnd;
+    WinApiWindow RayTracingWnd;
+    WinApiWindow PathTracingWnd;
 
     WinApiWindow LightingWnd;
 
