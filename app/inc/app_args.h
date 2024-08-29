@@ -43,6 +43,9 @@ namespace app
     // Окно настройки освещения
     extern WinApiWindow LightingWnd;
 
+    // Окно настройки модели
+    extern WinApiWindow ModelWnd;
+
     // Рендер окно
     extern WinApiGLWindow RenderWnd;
 
