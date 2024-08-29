@@ -65,9 +65,6 @@ LRESULT CALLBACK ToolbarWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
     {
         case WM_CREATE:
         {
-            HDC hDc;
-            HFONT hFont;
-
             TabShadowOptionHwnd = CreateWindow(
                 L"BUTTON", L"Тень", 
                 WS_VISIBLE | WS_CHILD | BS_PUSHLIKE | BS_CHECKBOX,
@@ -134,20 +131,8 @@ LRESULT CALLBACK ToolbarWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
             fp.iOutPrecision = OUT_OUTLINE_PRECIS,
             fp.iClipPrecision = CLIP_DEFAULT_PRECIS,
             fp.iQuality = CLEARTYPE_QUALITY,
-            fp.iPitchAndFamily = VARIABLE_PITCH,
+            fp.iPitchAndFamily = FIXED_PITCH,
             fp.pszFaceName = L"Arial";
-
-            hFont = WinApiFont::create_font(&fp);
-
-            if (hFont)
-            {
-                SendMessage(TabShadowOptionHwnd, WM_SETFONT, (WPARAM)hFont, TRUE);
-                SendMessage(TabModelOptionHwnd, WM_SETFONT, (WPARAM)hFont, TRUE);
-
-                hDc = GetDC(hWnd);
-                DeleteObject((HFONT)SelectObject(hDc, (HFONT)hFont));
-                ReleaseDC(hWnd, hDc);
-            }
 
             return EXIT_SUCCESS;
         }
