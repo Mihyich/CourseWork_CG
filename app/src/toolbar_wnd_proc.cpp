@@ -72,7 +72,7 @@ LRESULT CALLBACK ToolbarWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
                 L"BUTTON", L"Модель", 
                 WS_VISIBLE | WS_CHILD | BS_PUSHLIKE | BS_CHECKBOX,
                 0, 0, 0, 0,
-                hWnd, (HMENU)IDB_TAB_SHADOW_OPTION, app::hInst, NULL
+                hWnd, (HMENU)IDB_TAB_MODEL_OPTION, app::hInst, NULL
             );
 
             // Создать окно настройки освещения
@@ -250,6 +250,39 @@ LRESULT CALLBACK ToolbarWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         {                
             switch (LOWORD(wParam))
             {
+                case IDB_TAB_SHADOW_OPTION:
+                {
+                    SetFocus(hWnd);
+
+                    SendMessage(TabShadowOptionHwnd, BM_SETCHECK, BST_CHECKED, 0);
+                    SendMessage(TabLightingOptionHwnd, BM_SETCHECK, BST_UNCHECKED, 0);
+                    SendMessage(TabModelOptionHwnd, BM_SETCHECK, BST_UNCHECKED, 0);
+
+                    return EXIT_SUCCESS;
+                }
+
+                case IDB_TAB_LIGHTING_OPTION:
+                {
+                    SetFocus(hWnd);
+
+                    SendMessage(TabShadowOptionHwnd, BM_SETCHECK, BST_UNCHECKED, 0);
+                    SendMessage(TabLightingOptionHwnd, BM_SETCHECK, BST_CHECKED, 0);
+                    SendMessage(TabModelOptionHwnd, BM_SETCHECK, BST_UNCHECKED, 0);
+
+                    return EXIT_SUCCESS;
+                }
+
+                case IDB_TAB_MODEL_OPTION:
+                {
+                    SetFocus(hWnd);
+
+                    SendMessage(TabShadowOptionHwnd, BM_SETCHECK, BST_UNCHECKED, 0);
+                    SendMessage(TabLightingOptionHwnd, BM_SETCHECK, BST_UNCHECKED, 0);
+                    SendMessage(TabModelOptionHwnd, BM_SETCHECK, BST_CHECKED, 0);
+
+                    return EXIT_SUCCESS;
+                }
+
                 default:
                     return EXIT_SUCCESS;
             }
