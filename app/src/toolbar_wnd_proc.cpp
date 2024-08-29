@@ -35,6 +35,13 @@ void repos_toolbar_child_wnds()
             tmp_width, tmp_height,
             TRUE
         );
+
+        MoveWindow(
+            app::ModelWnd.getHwnd(),
+            posX, posY,
+            tmp_width, tmp_height,
+            TRUE
+        );
     }
 }
 
@@ -97,6 +104,17 @@ LRESULT CALLBACK ToolbarWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
             app::LightingWnd.Create(
                 nullptr, app::hInst, SW_HIDE,
                 LightingWndProc, L"Lighting", nullptr,
+                0, 0,
+                CS_HREDRAW | CS_VREDRAW,
+                WS_CHILD | WS_VISIBLE | WS_BORDER | WS_CLIPCHILDREN,
+                WS_EX_COMPOSITED,
+                hWnd
+            );
+
+            // Создать окно настройки модели
+            app::ModelWnd.Create(
+                nullptr, app::hInst, SW_HIDE,
+                ModelWndProc, L"Modeling", nullptr,
                 0, 0,
                 CS_HREDRAW | CS_VREDRAW,
                 WS_CHILD | WS_VISIBLE | WS_BORDER | WS_CLIPCHILDREN,
@@ -278,6 +296,7 @@ LRESULT CALLBACK ToolbarWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 
                     ShowWindow(app::ShadowWnd.getHwnd(), SW_SHOW);
                     ShowWindow(app::LightingWnd.getHwnd(), SW_HIDE);
+                    ShowWindow(app::ModelWnd.getHwnd(), SW_HIDE);
 
                     return EXIT_SUCCESS;
                 }
@@ -292,6 +311,7 @@ LRESULT CALLBACK ToolbarWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 
                     ShowWindow(app::ShadowWnd.getHwnd(), SW_HIDE);
                     ShowWindow(app::LightingWnd.getHwnd(), SW_SHOW);
+                    ShowWindow(app::ModelWnd.getHwnd(), SW_HIDE);
 
                     return EXIT_SUCCESS;
                 }
@@ -306,6 +326,7 @@ LRESULT CALLBACK ToolbarWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 
                     ShowWindow(app::ShadowWnd.getHwnd(), SW_HIDE);
                     ShowWindow(app::LightingWnd.getHwnd(), SW_HIDE);
+                    ShowWindow(app::ModelWnd.getHwnd(), SW_SHOW);
 
                     return EXIT_SUCCESS;
                 }

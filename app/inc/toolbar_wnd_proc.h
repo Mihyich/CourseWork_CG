@@ -12,6 +12,7 @@
 
 #include "shadow_wnd_proc.h"
 #include "lighting_wnd_proc.h"
+#include "model_wnd_proc.h"
 
 #include "app_args.h"
 
