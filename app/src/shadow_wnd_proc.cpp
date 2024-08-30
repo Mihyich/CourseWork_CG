@@ -13,31 +13,35 @@ void repos_shadow_child_wnds()
     LONG tmp_width = 0;
     LONG tmp_height = 0;
 
+    HWND hwnd1 = app::ShadowMapWnd.getHwnd();
+    HWND hwnd2 = app::RayTracingWnd.getHwnd();
+    HWND hwnd3 = app::PathTracingWnd.getHwnd();
+
     GetClientRect(app::ShadowWnd.getHwnd(), &rect);
     width = get_rect_width(rect);
     height = get_rect_height(rect);
 
-    if (app::LightingWnd.getHwnd())
+    if (hwnd1 && hwnd2 && hwnd3)
     {
         tmp_width = width;
         tmp_height = height;
 
         MoveWindow(
-            app::ShadowMapWnd.getHwnd(),
+            hwnd1,
             posX, posY,
             tmp_width, tmp_height,
             TRUE
         );
 
         MoveWindow(
-            app::RayTracingWnd.getHwnd(),
+            hwnd2,
             posX, posY,
             tmp_width, tmp_height,
             TRUE
         );
 
         MoveWindow(
-            app::PathTracingWnd.getHwnd(),
+            hwnd3,
             posX, posY,
             tmp_width, tmp_height,
             TRUE
@@ -84,7 +88,7 @@ LRESULT CALLBACK ShadowWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
             );
 
             // Создать окно настройки ShadowMap
-            app::ShadowWnd.Create(
+            app::ShadowMapWnd.Create(
                 nullptr, app::hInst, SW_SHOWNORMAL,
                 ShadowMapWndProc, L"ShadowMaping", nullptr,
                 0, 0,
@@ -95,7 +99,7 @@ LRESULT CALLBACK ShadowWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
             );
 
             // Создать окно настройки RayTracing
-            app::LightingWnd.Create(
+            app::RayTracingWnd.Create(
                 nullptr, app::hInst, SW_HIDE,
                 RayTracingWndProc, L"RayTracing", nullptr,
                 0, 0,
@@ -106,7 +110,7 @@ LRESULT CALLBACK ShadowWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
             );
 
             // Создать окно настройки PathTracing
-            app::ModelWnd.Create(
+            app::PathTracingWnd.Create(
                 nullptr, app::hInst, SW_HIDE,
                 PathTracingWndProc, L"PathTracing", nullptr,
                 0, 0,
