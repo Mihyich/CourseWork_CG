@@ -501,6 +501,12 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
                     }
                 }
 
+                case IDB_BUTTON_RES:
+                {
+                    SetFocus(hWnd);
+                    return EXIT_SUCCESS;
+                }
+
                 case IDB_TAB_RENDER_DEBUG:
                 {
                     SetFocus(hWnd);
