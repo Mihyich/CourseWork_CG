@@ -226,7 +226,7 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
             SendMessage(ComboBoxAlgoritnHwnd, CB_ADDSTRING, (WPARAM)0, (LPARAM)L"ShadowMap ESM");
             SendMessage(ComboBoxAlgoritnHwnd, CB_ADDSTRING, (WPARAM)0, (LPARAM)L"ShadowMap VSM");
             SendMessage(ComboBoxAlgoritnHwnd, CB_SETCURSEL, (WPARAM)ALG_SM_PCF, 0);
-            // SendMessage(hWnd, WM_COMMAND, MAKEWPARAM(CBN_SELCHANGE, IDB_COMBOBOX_ALGORITM), (LPARAM)ComboBoxAlgoritnHwnd);
+            SendMessage(hWnd, WM_COMMAND, MAKEWPARAM(CBN_SELCHANGE, ALG_SM_PCF), (LPARAM)ComboBoxAlgoritnHwnd);
 
             fp.cWidth = 0;
             fp.cEscapement = 0;
@@ -467,8 +467,23 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
                         {
                             SetFocus(hWnd);
 
-                            SendMessage(hWnd, WM_SIZE, 0, 0);
+                            const int alg = SendMessage((HWND)lParam, CB_GETCURSEL, 0, 0);
+                            const WINBOOL bias = (alg == ALG_SM) || (alg == ALG_SM_PCF);
+                            const WINBOOL pcf = (alg == ALG_SM_PCF);
+                            const WINBOOL expK = (alg == ALG_SM_ESM);
+
+                            EnableWindow(StaticBiasHwnd, bias);
+                            EnableWindow(StaticBiasValHwnd, bias);
+                            EnableWindow(EditBiasValHwnd, bias);
+
+                            EnableWindow(StaticPcfRadiusHwnd, pcf);
+                            EnableWindow(StaticPcfRadiusValHwnd, pcf);
+                            EnableWindow(EditPcfRadiusValHwnd, pcf);
                             
+                            EnableWindow(StaticExpKHwnd, expK);
+                            EnableWindow(StaticExpKValHwnd, expK);
+                            EnableWindow(EditExpKValHwnd, expK);
+
                             return EXIT_SUCCESS;
                         }
 
