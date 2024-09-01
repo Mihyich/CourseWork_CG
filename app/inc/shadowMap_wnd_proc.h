@@ -10,6 +10,8 @@
 #include "winapi_font_common.h"
 #include "winapi_mat_ext.h"
 
+#include "general_shadow_options_wnd_proc.h"
+
 #include "app_args.h"
 
 LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);

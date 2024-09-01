@@ -206,6 +206,17 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
                 hWnd, (HMENU)IDB_TAB_RENDER_RELEASE, app::hInst, NULL
             );
 
+            // Окно общих настроек
+            app::GeneralShadowOptionsWnd.Create(
+                nullptr, app::hInst, SW_SHOWNORMAL,
+                GeneralShadowOptionsWndProc, L"GeneralShadowOption", nullptr,
+                0, 0,
+                CS_HREDRAW | CS_VREDRAW,
+                WS_CHILD | WS_VISIBLE | WS_BORDER | WS_CLIPCHILDREN,
+                WS_EX_COMPOSITED,
+                hWnd
+            );
+
             SendMessage(ComboBoxAlgoritnHwnd, CB_ADDSTRING, (WPARAM)0, (LPARAM)L"ShadowMap");
             SendMessage(ComboBoxAlgoritnHwnd, CB_ADDSTRING, (WPARAM)0, (LPARAM)L"ShadowMap PCF");
             SendMessage(ComboBoxAlgoritnHwnd, CB_ADDSTRING, (WPARAM)0, (LPARAM)L"ShadowMap ESM");
@@ -421,6 +432,17 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 
             MoveWindow(
                 TabRenderReleaseHwnd,
+                posX, posY, w, h,
+                TRUE
+            );
+
+            posX = 0;
+            posY += h + hgap;
+            w = get_rect_width(rect);
+            h = get_rect_height(rect) - posY;
+
+            MoveWindow(
+                app::GeneralShadowOptionsWnd.getHwnd(),
                 posX, posY, w, h,
                 TRUE
             );
