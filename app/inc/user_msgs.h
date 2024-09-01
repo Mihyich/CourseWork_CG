@@ -61,5 +61,38 @@
 // Lparam: none
 #define WM_SET_LIGHT_TYPE (WM_USER + 12)
 
+// Настроки ShadowMap ===================================================================
+
+// Receiver: RenderWnd
+// Wparam: const int*
+// Lparam: const int*
+#define WM_SET_SHADOWMAP_ALGORITM (WM_USER + 13)
+
+// Receiver: RenderWnd
+// Wparam: const int*
+// Lparam: const int*
+#define WM_SET_SHADOWMAP_RESOLUTION (WM_USER + 14)
+
+// Receiver: RenderWnd
+// Wparam: const float*
+// Lparam: none
+#define WM_SET_SHADOWMAP_BIAS (WM_USER + 15)
+
+// Receiver: RenderWnd
+// Wparam: const float*
+// Lparam: none
+#define WM_SET_SHADOWMAP_PCF_RADIUS (WM_USER + 16)
+
+// Receiver: RenderWnd
+// Wparam: const float*
+// Lparam: none
+#define WM_SET_SHADOWMAP_EXP_K (WM_USER + 17)
+
+// Receiver: RenderWnd
+// Wparam: const int*
+// Lparam: none
+#define WM_SET_SHADOWMAP_RENDER_MODE (WM_USER + 18)
+
+// Общие настройки теней ================================================================
 
 #endif // USER_MASGS_H
