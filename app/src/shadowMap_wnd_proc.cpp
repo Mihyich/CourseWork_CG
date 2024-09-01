@@ -254,7 +254,7 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
             int posX = 0;
             int posY = 0;
             int w = get_rect_width(rect) / 4;
-            int h = std::min(30, ((int)get_rect_height(rect) - 7 * hgap - 5) / 9);
+            int h = std::min(30, std::max(((int)get_rect_height(rect) - 9 * hgap - 5 - 5 - 30) / 10, 20));
 
             MoveWindow(
                 StaticAlgoritmHwnd,
