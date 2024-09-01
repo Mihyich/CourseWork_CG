@@ -43,6 +43,9 @@ namespace app
     extern WinApiWindow RayTracingWnd;  // дочерние окна
     extern WinApiWindow PathTracingWnd; // =============
 
+    // Общее окно настроек теней (для всех алгоритмов)
+    extern WinApiWindow GeneralShadowOptionsWnd;
+
     // Окно настройки освещения
     extern WinApiWindow LightingWnd;
 

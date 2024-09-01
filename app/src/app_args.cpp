@@ -17,6 +17,8 @@ namespace app
     WinApiWindow RayTracingWnd;
     WinApiWindow PathTracingWnd;
 
+    WinApiWindow GeneralShadowOptionsWnd;
+
     WinApiWindow LightingWnd;
 
     WinApiWindow ModelWnd;
