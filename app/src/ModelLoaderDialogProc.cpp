@@ -144,8 +144,10 @@ LRESULT CALLBACK ModelLoaderDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPAR
 
             ReleaseDC(hDlg, hDc);
 
-            SetFocus(hDlg);
+            // Прокрутка до начала строки
+            SendMessage(EditMLPathHwnd, EM_SETSEL, 0, 0);
 
+            SetFocus(hDlg);
             return TRUE;
         }
 
