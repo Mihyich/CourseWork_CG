@@ -1,6 +1,10 @@
 #include "shadowMap_wnd_proc.h"
 
 #define IDB_COMBOBOX_ALGORITM 1
+#define ALG_SM 0
+#define ALG_SM_PCF 1
+#define ALG_SM_ESM 2
+#define ALG_SM_VSM 3
 
 #define IDB_EDIT_RES_X 2
 #define IDB_EDIT_RES_Y 3
@@ -221,7 +225,7 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
             SendMessage(ComboBoxAlgoritnHwnd, CB_ADDSTRING, (WPARAM)0, (LPARAM)L"ShadowMap PCF");
             SendMessage(ComboBoxAlgoritnHwnd, CB_ADDSTRING, (WPARAM)0, (LPARAM)L"ShadowMap ESM");
             SendMessage(ComboBoxAlgoritnHwnd, CB_ADDSTRING, (WPARAM)0, (LPARAM)L"ShadowMap VSM");
-            SendMessage(ComboBoxAlgoritnHwnd, CB_SETCURSEL, (WPARAM)0, 0);
+            SendMessage(ComboBoxAlgoritnHwnd, CB_SETCURSEL, (WPARAM)ALG_SM_PCF, 0);
             // SendMessage(hWnd, WM_COMMAND, MAKEWPARAM(CBN_SELCHANGE, IDB_COMBOBOX_ALGORITM), (LPARAM)ComboBoxAlgoritnHwnd);
 
             fp.cWidth = 0;
@@ -449,6 +453,41 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 
             ReleaseDC(hWnd, hDc);
             return EXIT_SUCCESS;
+        }
+
+        case WM_COMMAND:
+        {
+            switch (LOWORD(wParam))
+            {
+                case IDB_COMBOBOX_ALGORITM:
+                {
+                    switch (HIWORD(wParam))
+                    {
+                        case CBN_SELCHANGE:
+                        {
+                            SetFocus(hWnd);
+
+                            SendMessage(hWnd, WM_SIZE, 0, 0);
+                            
+                            return EXIT_SUCCESS;
+                        }
+
+                        case CBN_CLOSEUP:
+                        {
+                            SetFocus(hWnd);
+                            return EXIT_SUCCESS;
+                        }
+
+                        default:
+                            return EXIT_SUCCESS;
+                    }
+                }
+
+                default:
+                {
+                    return EXIT_SUCCESS;
+                }
+            }
         }
 
         default:
