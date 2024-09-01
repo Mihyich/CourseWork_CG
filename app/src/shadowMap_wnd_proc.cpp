@@ -228,6 +228,9 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
             SendMessage(ComboBoxAlgoritnHwnd, CB_SETCURSEL, (WPARAM)ALG_SM_PCF, 0);
             SendMessage(hWnd, WM_COMMAND, MAKEWPARAM(CBN_SELCHANGE, ALG_SM_PCF), (LPARAM)ComboBoxAlgoritnHwnd);
 
+            // По умолчанию режим - Release
+            SendMessage(hWnd, WM_COMMAND, MAKEWPARAM(IDB_TAB_RENDER_RELEASE, 0), 0);
+
             fp.cWidth = 0;
             fp.cEscapement = 0;
             fp.cOrientation = 0;
@@ -496,6 +499,22 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
                         default:
                             return EXIT_SUCCESS;
                     }
+                }
+
+                case IDB_TAB_RENDER_DEBUG:
+                {
+                    SetFocus(hWnd);
+                    SendMessage(TabRenderDebugHwnd, BM_SETCHECK, BST_CHECKED, 0);
+                    SendMessage(TabRenderReleaseHwnd, BM_SETCHECK, BST_UNCHECKED, 0);
+                    return EXIT_SUCCESS;
+                }
+
+                case IDB_TAB_RENDER_RELEASE:
+                {
+                    SetFocus(hWnd);
+                    SendMessage(TabRenderDebugHwnd, BM_SETCHECK, BST_UNCHECKED, 0);
+                    SendMessage(TabRenderReleaseHwnd, BM_SETCHECK, BST_CHECKED, 0);
+                    return EXIT_SUCCESS;
                 }
 
                 default:
