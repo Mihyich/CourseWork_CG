@@ -7,10 +7,11 @@
 #define IDB_BUTTON_RES 4
 
 #define IDB_EDIT_BIAS 5
-
 #define IDB_EDIT_PCF_RADIUS 6
-
 #define IDB_EDIT_EXP_K 7
+
+#define IDB_TAB_RENDER_DEBUG 8
+#define IDB_TAB_RENDER_RELEASE 9
 
 LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -42,6 +43,10 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 
     static HWND StaticProjectionHwnd = NULL;
     static HWND ComboBoxProjectionHwnd = NULL;
+
+    static HWND StaticRenderHwnd = NULL;
+    static HWND TabRenderDebugHwnd = NULL;
+    static HWND TabRenderReleaseHwnd = NULL;
 
     switch(uMsg)
     {
@@ -178,6 +183,27 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
                 WS_CHILD | WS_VISIBLE | CBS_DROPDOWNLIST | CBS_HASSTRINGS,
                 0, 0, 0, 0,
                 hWnd, (HMENU)IDB_COMBOBOX_ALGORITM, app::hInst, nullptr
+            );
+
+            StaticRenderHwnd = CreateWindow(
+                L"STATIC", L"Рендер:", 
+                WS_VISIBLE | WS_CHILD | SS_CENTERIMAGE,
+                0, 0, 0, 0,
+                hWnd, (HMENU)NULL, app::hInst, NULL
+            );
+
+            TabRenderDebugHwnd = CreateWindow(
+                L"BUTTON", L"Отладка", 
+                WS_VISIBLE | WS_CHILD | BS_PUSHLIKE | BS_CHECKBOX,
+                0, 0, 0, 0,
+                hWnd, (HMENU)IDB_TAB_RENDER_DEBUG, app::hInst, NULL
+            );
+
+            TabRenderReleaseHwnd = CreateWindow(
+                L"BUTTON", L"Релиз", 
+                WS_VISIBLE | WS_CHILD | BS_PUSHLIKE | BS_CHECKBOX,
+                0, 0, 0, 0,
+                hWnd, (HMENU)IDB_TAB_RENDER_RELEASE, app::hInst, NULL
             );
 
             SendMessage(ComboBoxAlgoritnHwnd, CB_ADDSTRING, (WPARAM)0, (LPARAM)L"ShadowMap");
@@ -368,6 +394,33 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 
             MoveWindow(
                 EditExpKValHwnd,
+                posX, posY, w, h,
+                TRUE
+            );
+
+            posX = 0;
+            posY += h + hgap;
+            w = get_rect_width(rect) / 4;
+
+            MoveWindow(
+                StaticRenderHwnd,
+                posX, posY, w, h,
+                TRUE
+            );
+
+            posX += w;
+            w = get_rect_width(rect) * 3 / 8;
+
+            MoveWindow(
+                TabRenderDebugHwnd,
+                posX, posY, w, h,
+                TRUE
+            );
+
+            posX += w;
+
+            MoveWindow(
+                TabRenderReleaseHwnd,
                 posX, posY, w, h,
                 TRUE
             );
