@@ -65,7 +65,7 @@
 
 // Receiver: RenderWnd
 // Wparam: const int*
-// Lparam: const int*
+// Lparam: none
 #define WM_SET_SHADOWMAP_ALGORITM (WM_USER + 13)
 
 // Receiver: RenderWnd
