@@ -13,6 +13,8 @@
 #include "general_shadow_options_wnd_proc.h"
 
 #include "app_args.h"
+#include "ShadowAlgEnum.h"
+#include "user_msgs.h"
 
 LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
