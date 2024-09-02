@@ -15,6 +15,18 @@ LRESULT CALLBACK GeneralShadowOptionsWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
 {
     static RECT rect;
 
+    static WCHAR tmpText[MAX_PATH];
+
+    // Переменные, которыми владеет окно
+    static ProjecitonType projection;
+    static float sideLeft = -10.f;
+    static float sideRight = 10.f;
+    static float sideBottom = -10.f;
+    static float sideTop = 10.f;
+    static float sideNear = 0.1f;
+    static float sideFar = 30.f;
+    static float Fov = 60.f;
+
     static HWND StaticProjectionHwnd = NULL;
     static HWND ComboBoxProjectionHwnd = NULL;
 
@@ -85,7 +97,7 @@ LRESULT CALLBACK GeneralShadowOptionsWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
             );
 
             EditSideLeftHwnd = CreateWindow(
-                L"EDIT", L"-10",
+                L"EDIT", std::to_wstring(sideLeft).c_str(),
                 WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_CENTER | WS_BORDER,
                 0, 0, 0, 0,
                 hWnd, (HMENU)IDB_EDIT_PROJ_ORTHO_LEFT, app::hInst, nullptr
@@ -99,7 +111,7 @@ LRESULT CALLBACK GeneralShadowOptionsWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
             );
 
             EditSideRightHwnd = CreateWindow(
-                L"EDIT", L"10",
+                L"EDIT", std::to_wstring(sideRight).c_str(),
                 WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_CENTER | WS_BORDER,
                 0, 0, 0, 0,
                 hWnd, (HMENU)IDB_EDIT_PROJ_ORTHO_RIGHT, app::hInst, nullptr
@@ -121,7 +133,7 @@ LRESULT CALLBACK GeneralShadowOptionsWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
             );
 
             EditSideBottomHwnd = CreateWindow(
-                L"EDIT", L"-10",
+                L"EDIT", std::to_wstring(sideBottom).c_str(),
                 WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_CENTER | WS_BORDER,
                 0, 0, 0, 0,
                 hWnd, (HMENU)IDB_EDIT_PROJ_ORTHO_BOTTOM, app::hInst, nullptr
@@ -135,7 +147,7 @@ LRESULT CALLBACK GeneralShadowOptionsWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
             );
 
             EditSideTopHwnd = CreateWindow(
-                L"EDIT", L"10",
+                L"EDIT", std::to_wstring(sideTop).c_str(),
                 WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_CENTER | WS_BORDER,
                 0, 0, 0, 0,
                 hWnd, (HMENU)IDB_EDIT_PROJ_ORTHO_TOP, app::hInst, nullptr
@@ -159,7 +171,7 @@ LRESULT CALLBACK GeneralShadowOptionsWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
             );
 
             EditSideNearHwnd = CreateWindow(
-                L"EDIT", L"-10",
+                L"EDIT", std::to_wstring(sideNear).c_str(),
                 WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_CENTER | WS_BORDER,
                 0, 0, 0, 0,
                 hWnd, (HMENU)IDB_EDIT_PROJ_NEAR, app::hInst, nullptr
@@ -173,7 +185,7 @@ LRESULT CALLBACK GeneralShadowOptionsWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
             );
 
             EditSideFarHwnd = CreateWindow(
-                L"EDIT", L"10",
+                L"EDIT", std::to_wstring(sideFar).c_str(),
                 WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_CENTER | WS_BORDER,
                 0, 0, 0, 0,
                 hWnd, (HMENU)IDB_EDIT_PROJ_FAR, app::hInst, nullptr
@@ -197,7 +209,7 @@ LRESULT CALLBACK GeneralShadowOptionsWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
             );
 
             EditFovValHwnd = CreateWindow(
-                L"EDIT", L"60",
+                L"EDIT", std::to_wstring(Fov).c_str(),
                 WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_CENTER | WS_BORDER,
                 0, 0, 0, 0,
                 hWnd, (HMENU)IDB_EDIT_FOV, app::hInst, nullptr
@@ -428,6 +440,8 @@ LRESULT CALLBACK GeneralShadowOptionsWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
                             // Ortho
                             if (SendMessage((HWND)lParam, CB_GETCURSEL, 0, 0) == 0)
                             {
+                                projection = PROJ_ORTHO;
+
                                 set_wnd_showmode(
                                     SW_HIDE, 3,
                                     StaticFovHwnd,
@@ -454,6 +468,8 @@ LRESULT CALLBACK GeneralShadowOptionsWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
                             // Perspective
                             else
                             {
+                                projection = PROJ_ORTHO;
+
                                 set_wnd_showmode(
                                     SW_SHOW, 3,
                                     StaticFovHwnd,
@@ -486,6 +502,139 @@ LRESULT CALLBACK GeneralShadowOptionsWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
                         case CBN_CLOSEUP:
                         {
                             SetFocus(hWnd);
+                            return EXIT_SUCCESS;
+                        }
+
+                        default:
+                            return EXIT_SUCCESS;
+                    }
+                }
+
+                case IDB_EDIT_PROJ_ORTHO_LEFT:
+                {
+                    switch(HIWORD(wParam))
+                    {
+                        case EN_CHANGE:
+                        {
+                            if (EditSideLeftHwnd)
+                            {
+                                GetWindowText(EditSideLeftHwnd, tmpText, MAX_PATH);
+                                convert_str_to_float(tmpText, &sideLeft);
+                            }
+                            return EXIT_SUCCESS;
+                        }
+
+                        default:
+                            return EXIT_SUCCESS;
+                    }
+                }
+
+                case IDB_EDIT_PROJ_ORTHO_RIGHT:
+                {
+                    switch(HIWORD(wParam))
+                    {
+                        case EN_CHANGE:
+                        {
+                            if (EditSideRightHwnd)
+                            {
+                                GetWindowText(EditSideRightHwnd, tmpText, MAX_PATH);
+                                convert_str_to_float(tmpText, &sideRight);
+                            }
+                            return EXIT_SUCCESS;
+                        }
+
+                        default:
+                            return EXIT_SUCCESS;
+                    }
+                }
+
+                case IDB_EDIT_PROJ_ORTHO_BOTTOM:
+                {
+                    switch(HIWORD(wParam))
+                    {
+                        case EN_CHANGE:
+                        {
+                            if (EditSideBottomHwnd)
+                            {
+                                GetWindowText(EditSideBottomHwnd, tmpText, MAX_PATH);
+                                convert_str_to_float(tmpText, &sideBottom);
+                            }
+                            return EXIT_SUCCESS;
+                        }
+
+                        default:
+                            return EXIT_SUCCESS;
+                    }
+                }
+
+                case IDB_EDIT_PROJ_ORTHO_TOP:
+                {
+                    switch(HIWORD(wParam))
+                    {
+                        case EN_CHANGE:
+                        {
+                            if (EditSideTopHwnd)
+                            {
+                                GetWindowText(EditSideTopHwnd, tmpText, MAX_PATH);
+                                convert_str_to_float(tmpText, &sideTop);
+                            }
+                            return EXIT_SUCCESS;
+                        }
+
+                        default:
+                            return EXIT_SUCCESS;
+                    }
+                }
+
+                case IDB_EDIT_PROJ_NEAR:
+                {
+                    switch(HIWORD(wParam))
+                    {
+                        case EN_CHANGE:
+                        {
+                            if (EditSideNearHwnd)
+                            {
+                                GetWindowText(EditSideNearHwnd, tmpText, MAX_PATH);
+                                convert_str_to_float(tmpText, &sideNear);
+                            }
+                            return EXIT_SUCCESS;
+                        }
+
+                        default:
+                            return EXIT_SUCCESS;
+                    }
+                }
+
+                case IDB_EDIT_PROJ_FAR:
+                {
+                    switch(HIWORD(wParam))
+                    {
+                        case EN_CHANGE:
+                        {
+                            if (EditSideFarHwnd)
+                            {
+                                GetWindowText(EditSideFarHwnd, tmpText, MAX_PATH);
+                                convert_str_to_float(tmpText, &sideFar);
+                            }
+                            return EXIT_SUCCESS;
+                        }
+
+                        default:
+                            return EXIT_SUCCESS;
+                    }
+                }
+
+                case IDB_EDIT_FOV:
+                {
+                    switch(HIWORD(wParam))
+                    {
+                        case EN_CHANGE:
+                        {
+                            if (EditFovValHwnd)
+                            {
+                                GetWindowText(EditFovValHwnd, tmpText, MAX_PATH);
+                                convert_str_to_float(tmpText, &Fov);
+                            }
                             return EXIT_SUCCESS;
                         }
 
