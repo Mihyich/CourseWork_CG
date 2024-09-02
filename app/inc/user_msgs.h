@@ -95,4 +95,53 @@
 
 // Общие настройки теней ================================================================
 
+// Receiver: GeneralShadowOptionsWnd
+// Wparam: none
+// Lparam: none
+// Return: ProjectionType*
+#define WM_GET_PROJ_TYPE (WM_USER + 19)
+
+// Receiver: GeneralShadowOptionsWnd
+// Wparam: none
+// Lparam: none
+// Return: float*
+#define WM_GET_SIDE_LEFT (WM_USER + 20)
+
+// Receiver: GeneralShadowOptionsWnd
+// Wparam: none
+// Lparam: none
+// Return: float*
+#define WM_GET_SIDE_RIGHT (WM_USER + 21)
+
+// Receiver: GeneralShadowOptionsWnd
+// Wparam: none
+// Lparam: none
+// Return: float*
+#define WM_GET_SIDE_BOTTOM (WM_USER + 22)
+
+// Receiver: GeneralShadowOptionsWnd
+// Wparam: none
+// Lparam: none
+// Return: float*
+#define WM_GET_SIDE_TOP (WM_USER + 23)
+
+// Receiver: GeneralShadowOptionsWnd
+// Wparam: none
+// Lparam: none
+// Return: float*
+#define WM_GET_SIDE_NEAR (WM_USER + 24)
+
+// Receiver: GeneralShadowOptionsWnd
+// Wparam: none
+// Lparam: none
+// Return: float*
+#define WM_GET_SIDE_FAR (WM_USER + 25)
+
+// Receiver: GeneralShadowOptionsWnd
+// Wparam: none
+// Lparam: none
+// Return: float*
+#define WM_GET_SIDE_FOV (WM_USER + 26)
+
+
 #endif // USER_MASGS_H
