@@ -767,20 +767,22 @@ LRESULT CALLBACK LightingWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
                     {
                         case EN_CHANGE:
                         {
-                            GetWindowText(EditPosXHwnd, tmpText, MAX_PATH);
-                            if (convert_str_to_float(tmpText, &msgVec.x))
+                            if (EditPosXHwnd && EditPosYHwnd && EditPosZHwnd)
                             {
-                                GetWindowText(EditPosYHwnd, tmpText, MAX_PATH);
-                                if (convert_str_to_float(tmpText, &msgVec.y))
+                                GetWindowText(EditPosXHwnd, tmpText, MAX_PATH);
+                                if (convert_str_to_float(tmpText, &msgVec.x))
                                 {
-                                    GetWindowText(EditPosZHwnd, tmpText, MAX_PATH);
-                                    if (convert_str_to_float(tmpText, &msgVec.z))
+                                    GetWindowText(EditPosYHwnd, tmpText, MAX_PATH);
+                                    if (convert_str_to_float(tmpText, &msgVec.y))
                                     {
-                                        SendMessage(app::RenderWnd.getHwnd(), WM_SET_LIGHT_POSITION, (WPARAM)&msgVec, (LPARAM)0);
+                                        GetWindowText(EditPosZHwnd, tmpText, MAX_PATH);
+                                        if (convert_str_to_float(tmpText, &msgVec.z))
+                                        {
+                                            SendMessage(app::RenderWnd.getHwnd(), WM_SET_LIGHT_POSITION, (WPARAM)&msgVec, (LPARAM)0);
+                                        }
                                     }
                                 }
                             }
-
 
                             return EXIT_SUCCESS;
                         }
@@ -798,20 +800,22 @@ LRESULT CALLBACK LightingWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
                     {
                         case EN_CHANGE:
                         {
-                            GetWindowText(EditDirXHwnd, tmpText, MAX_PATH);
-                            if (convert_str_to_float(tmpText, &msgVec.x))
+                            if (EditDirXHwnd && EditDirYHwnd && EditDirZHwnd)
                             {
-                                GetWindowText(EditDirYHwnd, tmpText, MAX_PATH);
-                                if (convert_str_to_float(tmpText, &msgVec.y))
+                                GetWindowText(EditDirXHwnd, tmpText, MAX_PATH);
+                                if (convert_str_to_float(tmpText, &msgVec.x))
                                 {
-                                    GetWindowText(EditDirZHwnd, tmpText, MAX_PATH);
-                                    if (convert_str_to_float(tmpText, &msgVec.z))
+                                    GetWindowText(EditDirYHwnd, tmpText, MAX_PATH);
+                                    if (convert_str_to_float(tmpText, &msgVec.y))
                                     {
-                                        SendMessage(app::RenderWnd.getHwnd(), WM_SET_LIGHT_DIRECTION, (WPARAM)&msgVec, (LPARAM)0);
+                                        GetWindowText(EditDirZHwnd, tmpText, MAX_PATH);
+                                        if (convert_str_to_float(tmpText, &msgVec.z))
+                                        {
+                                            SendMessage(app::RenderWnd.getHwnd(), WM_SET_LIGHT_DIRECTION, (WPARAM)&msgVec, (LPARAM)0);
+                                        }
                                     }
                                 }
                             }
-
 
                             return EXIT_SUCCESS;
                         }
@@ -845,10 +849,13 @@ LRESULT CALLBACK LightingWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
                     {
                         case EN_CHANGE:
                         {
-                            GetWindowText(EditRadiusValHwnd, tmpText, MAX_PATH);
-                            if (convert_str_to_float(tmpText, &msgFloat))
+                            if (EditRadiusValHwnd)
                             {
-                                SendMessage(app::RenderWnd.getHwnd(), WM_SET_LIGHT_RADIUS, (WPARAM)&msgFloat, (LPARAM)0);
+                                GetWindowText(EditRadiusValHwnd, tmpText, MAX_PATH);
+                                if (convert_str_to_float(tmpText, &msgFloat))
+                                {
+                                    SendMessage(app::RenderWnd.getHwnd(), WM_SET_LIGHT_RADIUS, (WPARAM)&msgFloat, (LPARAM)0);
+                                }
                             }
 
                             return EXIT_SUCCESS;
@@ -865,10 +872,13 @@ LRESULT CALLBACK LightingWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
                     {
                         case EN_CHANGE:
                         {
-                            GetWindowText(EditIntensityValHwnd, tmpText, MAX_PATH);
-                            if (convert_str_to_float(tmpText, &msgFloat))
+                            if (EditIntensityValHwnd)
                             {
-                                SendMessage(app::RenderWnd.getHwnd(), WM_SET_LIGHT_INTENSITY, (WPARAM)&msgFloat, (LPARAM)0);
+                                GetWindowText(EditIntensityValHwnd, tmpText, MAX_PATH);
+                                if (convert_str_to_float(tmpText, &msgFloat))
+                                {
+                                    SendMessage(app::RenderWnd.getHwnd(), WM_SET_LIGHT_INTENSITY, (WPARAM)&msgFloat, (LPARAM)0);
+                                }
                             }
 
                             return EXIT_SUCCESS;
@@ -885,11 +895,14 @@ LRESULT CALLBACK LightingWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
                     {
                         case EN_CHANGE:
                         {
-                            GetWindowText(EditInnerCutoffValHwnd, tmpText, MAX_PATH);
-                            if (convert_str_to_float(tmpText, &msgFloat))
+                            if (EditInnerCutoffValHwnd)
                             {
-                                msgFloat = degrees_to_radians(msgFloat);
-                                SendMessage(app::RenderWnd.getHwnd(), WM_SET_LIGHT_INNER_CUTOFF, (WPARAM)&msgFloat, (LPARAM)0);
+                                GetWindowText(EditInnerCutoffValHwnd, tmpText, MAX_PATH);
+                                if (convert_str_to_float(tmpText, &msgFloat))
+                                {
+                                    msgFloat = degrees_to_radians(msgFloat);
+                                    SendMessage(app::RenderWnd.getHwnd(), WM_SET_LIGHT_INNER_CUTOFF, (WPARAM)&msgFloat, (LPARAM)0);
+                                }
                             }
 
                             return EXIT_SUCCESS;
@@ -906,11 +919,14 @@ LRESULT CALLBACK LightingWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
                     {
                         case EN_CHANGE:
                         {
-                            GetWindowText(EditOuterCutoffValHwnd, tmpText, MAX_PATH);
-                            if (convert_str_to_float(tmpText, &msgFloat))
+                            if (EditOuterCutoffValHwnd)
                             {
-                                msgFloat = degrees_to_radians(msgFloat);
-                                SendMessage(app::RenderWnd.getHwnd(), WM_SET_LIGHT_OUTER_CUTOFF, (WPARAM)&msgFloat, (LPARAM)0);
+                                GetWindowText(EditOuterCutoffValHwnd, tmpText, MAX_PATH);
+                                if (convert_str_to_float(tmpText, &msgFloat))
+                                {
+                                    msgFloat = degrees_to_radians(msgFloat);
+                                    SendMessage(app::RenderWnd.getHwnd(), WM_SET_LIGHT_OUTER_CUTOFF, (WPARAM)&msgFloat, (LPARAM)0);
+                                }
                             }
 
                             return EXIT_SUCCESS;
