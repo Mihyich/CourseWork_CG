@@ -91,7 +91,7 @@ LRESULT CALLBACK ShadowWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
             app::ShadowMapWnd.Create(
                 nullptr, app::hInst, SW_SHOWNORMAL,
                 ShadowMapWndProc, L"ShadowMaping", nullptr,
-                0, 0,
+                800, 600,
                 CS_HREDRAW | CS_VREDRAW,
                 WS_CHILD | WS_VISIBLE | WS_BORDER | WS_CLIPCHILDREN,
                 WS_EX_COMPOSITED,
@@ -102,7 +102,7 @@ LRESULT CALLBACK ShadowWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
             app::RayTracingWnd.Create(
                 nullptr, app::hInst, SW_HIDE,
                 RayTracingWndProc, L"RayTracing", nullptr,
-                0, 0,
+                800, 600,
                 CS_HREDRAW | CS_VREDRAW,
                 WS_CHILD | WS_VISIBLE | WS_BORDER | WS_CLIPCHILDREN,
                 WS_EX_COMPOSITED,
@@ -113,7 +113,7 @@ LRESULT CALLBACK ShadowWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
             app::PathTracingWnd.Create(
                 nullptr, app::hInst, SW_HIDE,
                 PathTracingWndProc, L"PathTracing", nullptr,
-                0, 0,
+                800, 600,
                 CS_HREDRAW | CS_VREDRAW,
                 WS_CHILD | WS_VISIBLE | WS_BORDER | WS_CLIPCHILDREN,
                 WS_EX_COMPOSITED,
