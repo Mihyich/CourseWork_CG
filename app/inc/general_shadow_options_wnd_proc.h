@@ -11,6 +11,9 @@
 #include "winapi_mat_ext.h"
 
 #include "app_args.h"
+#include "ProjectionEnum.h"
+#include "formater.h"
+#include "user_msgs.h"
 
 LRESULT CALLBACK GeneralShadowOptionsWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
