@@ -650,6 +650,46 @@ LRESULT CALLBACK GeneralShadowOptionsWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
             }
         }
 
+        case WM_GET_PROJ_TYPE:
+        {
+            return reinterpret_cast<LRESULT>(&projection);
+        }
+
+        case WM_GET_SIDE_LEFT:
+        {
+            return reinterpret_cast<LRESULT>(&sideLeft);
+        }
+
+        case WM_GET_SIDE_RIGHT:
+        {
+            return reinterpret_cast<LRESULT>(&sideRight);
+        }
+
+        case WM_GET_SIDE_BOTTOM:
+        {
+            return reinterpret_cast<LRESULT>(&sideBottom);
+        }
+
+        case WM_GET_SIDE_TOP:
+        {
+            return reinterpret_cast<LRESULT>(&sideTop);
+        }
+
+        case WM_GET_SIDE_NEAR:
+        {
+            return reinterpret_cast<LRESULT>(&sideNear);
+        }
+
+        case WM_GET_SIDE_FAR:
+        {
+            return reinterpret_cast<LRESULT>(&sideFar);
+        }
+
+        case WM_GET_SIDE_FOV:
+        {
+            return reinterpret_cast<LRESULT>(&Fov);
+        }
+
         default:
             return DefWindowProc(hWnd, uMsg, wParam, lParam);
     }
