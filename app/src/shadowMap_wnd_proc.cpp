@@ -24,7 +24,7 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
     static FontParam fp;
 
     static HWND StaticAlgoritmHwnd = NULL;
-    static HWND ComboBoxAlgoritnHwnd = NULL;
+    static HWND ComboBoxAlgoritmHwnd = NULL;
 
     static HWND StaticResolutionHwnd = NULL;
     static HWND StaticResolutionXHwnd = NULL;
@@ -63,7 +63,7 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
                 hWnd, (HMENU)NULL, app::hInst, NULL
             );
 
-            ComboBoxAlgoritnHwnd = CreateWindow(
+            ComboBoxAlgoritmHwnd = CreateWindow(
                 L"COMBOBOX", L"",
                 WS_CHILD | WS_VISIBLE | CBS_DROPDOWNLIST | CBS_HASSTRINGS,
                 0, 0, 0, 0,
@@ -214,19 +214,19 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
             app::GeneralShadowOptionsWnd.Create(
                 nullptr, app::hInst, SW_SHOWNORMAL,
                 GeneralShadowOptionsWndProc, L"GeneralShadowOption", nullptr,
-                0, 0,
+                800, 600,
                 CS_HREDRAW | CS_VREDRAW,
                 WS_CHILD | WS_VISIBLE | WS_BORDER | WS_CLIPCHILDREN,
                 WS_EX_COMPOSITED,
                 hWnd
             );
 
-            SendMessage(ComboBoxAlgoritnHwnd, CB_ADDSTRING, (WPARAM)0, (LPARAM)L"ShadowMap");
-            SendMessage(ComboBoxAlgoritnHwnd, CB_ADDSTRING, (WPARAM)0, (LPARAM)L"ShadowMap PCF");
-            SendMessage(ComboBoxAlgoritnHwnd, CB_ADDSTRING, (WPARAM)0, (LPARAM)L"ShadowMap ESM");
-            SendMessage(ComboBoxAlgoritnHwnd, CB_ADDSTRING, (WPARAM)0, (LPARAM)L"ShadowMap VSM");
-            SendMessage(ComboBoxAlgoritnHwnd, CB_SETCURSEL, (WPARAM)ALG_SM_PCF, 0);
-            SendMessage(hWnd, WM_COMMAND, MAKEWPARAM(CBN_SELCHANGE, ALG_SM_PCF), (LPARAM)ComboBoxAlgoritnHwnd);
+            SendMessage(ComboBoxAlgoritmHwnd, CB_ADDSTRING, (WPARAM)0, (LPARAM)L"ShadowMap");
+            SendMessage(ComboBoxAlgoritmHwnd, CB_ADDSTRING, (WPARAM)0, (LPARAM)L"ShadowMap PCF");
+            SendMessage(ComboBoxAlgoritmHwnd, CB_ADDSTRING, (WPARAM)0, (LPARAM)L"ShadowMap ESM");
+            SendMessage(ComboBoxAlgoritmHwnd, CB_ADDSTRING, (WPARAM)0, (LPARAM)L"ShadowMap VSM");
+            SendMessage(ComboBoxAlgoritmHwnd, CB_SETCURSEL, (WPARAM)ALG_SM_PCF, 0);
+            SendMessage(hWnd, WM_COMMAND, MAKEWPARAM(CBN_SELCHANGE, ALG_SM_PCF), (LPARAM)ComboBoxAlgoritmHwnd);
 
             // По умолчанию режим - Release
             SendMessage(hWnd, WM_COMMAND, MAKEWPARAM(IDB_TAB_RENDER_RELEASE, 0), 0);
@@ -273,7 +273,7 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
             w = get_rect_width(rect) - w;
 
             MoveWindow(
-                ComboBoxAlgoritnHwnd,
+                ComboBoxAlgoritmHwnd,
                 posX, posY, w, h + 200,
                 FALSE);
 
@@ -487,6 +487,136 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
                             EnableWindow(StaticExpKValHwnd, expK);
                             EnableWindow(EditExpKValHwnd, expK);
 
+                            switch (alg)
+                            {
+                                case ALG_SM:
+                                {
+                                    ProjecitonType type = *reinterpret_cast<ProjecitonType*>(SendMessage(app::GeneralShadowOptionsWnd.getHwnd(), WM_GET_PROJ_TYPE, 0, 0));
+                                    WINBOOL RenderDebug = SendMessage(TabRenderDebugHwnd, BM_GETCHECK, 0, 0) == BST_CHECKED;
+
+                                    if (type == PROJ_ORTHO)
+                                    {
+                                        if (RenderDebug)
+                                        {
+                                            SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOW_ALG, SHADOW_MAP_ORTHOGONAL_DEBUG, 0);
+                                        }
+                                        else
+                                        {
+                                            SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOW_ALG, SHADOW_MAP_ORTHOGONAL, 0);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (RenderDebug)
+                                        {
+                                            SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOW_ALG, SHADOW_MAP_PERSPECTIVE_DEBUG, 0);
+                                        }
+                                        else
+                                        {
+                                            SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOW_ALG, SHADOW_MAP_PERSPECTIVE, 0);
+                                        }
+                                    }
+
+                                    break;
+                                }
+
+                                case ALG_SM_PCF:
+                                {
+                                    ProjecitonType type = *reinterpret_cast<ProjecitonType*>(SendMessage(app::GeneralShadowOptionsWnd.getHwnd(), WM_GET_PROJ_TYPE, 0, 0));
+                                    WINBOOL RenderDebug = SendMessage(TabRenderDebugHwnd, BM_GETCHECK, 0, 0) == BST_CHECKED;
+
+                                    if (type == PROJ_ORTHO)
+                                    {
+                                        if (RenderDebug)
+                                        {
+                                            SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOW_ALG, SHADOW_MAP_ORTHOGONAL_PCF_DEBUG, 0);
+                                        }
+                                        else
+                                        {
+                                            SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOW_ALG, SHADOW_MAP_ORTHOGONAL_PCF, 0);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (RenderDebug)
+                                        {
+                                            SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOW_ALG, SHADOW_MAP_PERSPECTIVE_PCF_DEBUG, 0);
+                                        }
+                                        else
+                                        {
+                                            SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOW_ALG, SHADOW_MAP_PERSPECTIVE_PCF, 0);
+                                        }
+                                    }
+
+                                    break;
+                                }
+
+                                case ALG_SM_ESM:
+                                {
+                                    ProjecitonType type = *reinterpret_cast<ProjecitonType*>(SendMessage(app::GeneralShadowOptionsWnd.getHwnd(), WM_GET_PROJ_TYPE, 0, 0));
+                                    WINBOOL RenderDebug = SendMessage(TabRenderDebugHwnd, BM_GETCHECK, 0, 0) == BST_CHECKED;
+
+                                    if (type == PROJ_ORTHO)
+                                    {
+                                        if (RenderDebug)
+                                        {
+                                            SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOW_ALG, SHADOW_MAP_ORTHOGONAL_ESM_DEBUG, 0);
+                                        }
+                                        else
+                                        {
+                                            SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOW_ALG, SHADOW_MAP_ORTHOGONAL_ESM, 0);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (RenderDebug)
+                                        {
+                                            SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOW_ALG, SHADOW_MAP_PERSPECTIVE_ESM_DEBUG, 0);
+                                        }
+                                        else
+                                        {
+                                            SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOW_ALG, SHADOW_MAP_PERSPECTIVE_ESM, 0);
+                                        }
+                                    }
+
+                                    break;
+                                }
+
+                                case ALG_SM_VSM:
+                                {
+                                    ProjecitonType type = *reinterpret_cast<ProjecitonType*>(SendMessage(app::GeneralShadowOptionsWnd.getHwnd(), WM_GET_PROJ_TYPE, 0, 0));
+                                    WINBOOL RenderDebug = SendMessage(TabRenderDebugHwnd, BM_GETCHECK, 0, 0) == BST_CHECKED;
+
+                                    if (type == PROJ_ORTHO)
+                                    {
+                                        if (RenderDebug)
+                                        {
+                                            SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOW_ALG, SHADOW_MAP_ORTHOGONAL_VSM_DEBUG, 0);
+                                        }
+                                        else
+                                        {
+                                            SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOW_ALG, SHADOW_MAP_ORTHOGONAL_VSM, 0);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (RenderDebug)
+                                        {
+                                            SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOW_ALG, SHADOW_MAP_PERSPECTIVE_VSM_DEBUG, 0);
+                                        }
+                                        else
+                                        {
+                                            SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOW_ALG, SHADOW_MAP_PERSPECTIVE_VSM, 0);
+                                        }
+                                    }
+
+                                    break;
+                                }
+                                
+                                default:
+                                    break;
+                            }
+
                             return EXIT_SUCCESS;
                         }
 
@@ -512,6 +642,7 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
                     SetFocus(hWnd);
                     SendMessage(TabRenderDebugHwnd, BM_SETCHECK, BST_CHECKED, 0);
                     SendMessage(TabRenderReleaseHwnd, BM_SETCHECK, BST_UNCHECKED, 0);
+                    SendMessage(hWnd, WM_COMMAND, MAKEWPARAM(IDB_COMBOBOX_ALGORITM, CBN_SELCHANGE), (LPARAM)ComboBoxAlgoritmHwnd);
                     return EXIT_SUCCESS;
                 }
 
@@ -520,6 +651,7 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
                     SetFocus(hWnd);
                     SendMessage(TabRenderDebugHwnd, BM_SETCHECK, BST_UNCHECKED, 0);
                     SendMessage(TabRenderReleaseHwnd, BM_SETCHECK, BST_CHECKED, 0);
+                    SendMessage(hWnd, WM_COMMAND, MAKEWPARAM(IDB_COMBOBOX_ALGORITM, CBN_SELCHANGE), (LPARAM)ComboBoxAlgoritmHwnd);
                     return EXIT_SUCCESS;
                 }
 
@@ -528,6 +660,54 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
                     return EXIT_SUCCESS;
                 }
             }
+        }
+
+        case WM_UPDATE_PROJ_TYPE:
+        {
+            SendMessage(hWnd, WM_COMMAND, MAKEWPARAM(IDB_COMBOBOX_ALGORITM, CBN_SELCHANGE), (LPARAM)ComboBoxAlgoritmHwnd);
+            return EXIT_SUCCESS;
+        }
+
+        case WM_UPDATE_SIDE_LEFT:
+        {
+            
+            return EXIT_SUCCESS;
+        }
+
+        case WM_UPDATE_SIDE_RIGHT:
+        {
+
+            return EXIT_SUCCESS;
+        }
+
+        case WM_UPDATE_SIDE_BOTTOM:
+        {
+
+            return EXIT_SUCCESS;
+        }
+
+        case WM_UPDATE_SIDE_TOP:
+        {
+
+            return EXIT_SUCCESS;
+        }
+
+        case WM_UPDATE_SIDE_NEAR:
+        {
+
+            return EXIT_SUCCESS;
+        }
+
+        case WM_UPDATE_SIDE_FAR:
+        {
+
+            return EXIT_SUCCESS;
+        }
+
+        case WM_UPDATE_SIDE_FOV:
+        {
+
+            return EXIT_SUCCESS;
         }
 
         default:
