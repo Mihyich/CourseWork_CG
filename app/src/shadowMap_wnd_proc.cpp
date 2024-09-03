@@ -637,6 +637,46 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
                     return EXIT_SUCCESS;
                 }
 
+                case IDB_EDIT_BIAS:
+                {
+                    switch (HIWORD(wParam))
+                    {
+                    case EN_CHANGE:
+                        
+                        return EXIT_SUCCESS;
+                    
+                    default:
+                        return EXIT_SUCCESS;
+                    }
+                }   
+
+                case IDB_EDIT_PCF_RADIUS:
+                {
+                    switch (HIWORD(wParam))
+                    {
+                    case EN_CHANGE:
+                        
+                        return EXIT_SUCCESS;
+                    
+                    default:
+                        return EXIT_SUCCESS;
+                    }
+                }
+
+                case IDB_EDIT_EXP_K:
+                {
+                    switch (HIWORD(wParam))
+                    {
+                    case EN_CHANGE:
+                        
+                        return EXIT_SUCCESS;
+                    
+                    default:
+                        return EXIT_SUCCESS;
+                    }
+                }
+
+
                 case IDB_TAB_RENDER_DEBUG:
                 {
                     SetFocus(hWnd);
