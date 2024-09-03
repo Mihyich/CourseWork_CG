@@ -14,6 +14,7 @@
 
 #include "app_args.h"
 #include "ShadowAlgEnum.h"
+#include "ResolutionMapLimit.h"
 #include "user_msgs.h"
 
 LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
