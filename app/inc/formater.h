@@ -2,8 +2,10 @@
 #define FORMATER_H
 
 #include <iostream>
-#include <regex>
+#include <stdlib.h>
 
 bool convert_str_to_float(const wchar_t *str, float *value);
+
+bool convert_str_to_int(const wchar_t *str, long *value);
 
 #endif // FORMATER_H
