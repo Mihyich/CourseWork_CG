@@ -143,5 +143,46 @@
 // Return: float*
 #define WM_GET_SIDE_FOV (WM_USER + 26)
 
+// Требование обновить данные =======================================================
+
+// Receiver: ShadowMapWnd
+// Wparam: none
+// Lparam: none
+#define WM_UPDATE_PROJ_TYPE (WM_USER + 27)
+
+// Receiver: ShadowMapWnd
+// Wparam: none
+// Lparam: none
+#define WM_UPDATE_SIDE_LEFT (WM_USER + 28)
+
+// Receiver: ShadowMapWnd
+// Wparam: none
+// Lparam: none
+#define WM_UPDATE_SIDE_RIGHT (WM_USER + 29)
+
+// Receiver: ShadowMapWnd
+// Wparam: none
+// Lparam: none
+#define WM_UPDATE_SIDE_BOTTOM (WM_USER + 30)
+
+// Receiver: ShadowMapWnd
+// Wparam: none
+// Lparam: none
+#define WM_UPDATE_SIDE_TOP (WM_USER + 31)
+
+// Receiver: ShadowMapWnd
+// Wparam: none
+// Lparam: none
+#define WM_UPDATE_SIDE_NEAR (WM_USER + 32)
+
+// Receiver: ShadowMapWnd
+// Wparam: none
+// Lparam: none
+#define WM_UPDATE_SIDE_FAR (WM_USER + 33)
+
+// Receiver: ShadowMapWnd
+// Wparam: none
+// Lparam: none
+#define WM_UPDATE_SIDE_FOV (WM_USER + 34)
 
 #endif // USER_MASGS_H
