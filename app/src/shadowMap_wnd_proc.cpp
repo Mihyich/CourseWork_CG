@@ -23,6 +23,9 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 
     static FontParam fp;
 
+    static WCHAR tmpText[MAX_PATH];
+    static float tmpFloat = 0.f;
+
     static HWND StaticAlgoritmHwnd = NULL;
     static HWND ComboBoxAlgoritmHwnd = NULL;
 
@@ -151,7 +154,7 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
                 L"EDIT", L"1.5",
                 WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_CENTER | WS_BORDER,
                 0, 0, 0, 0,
-                hWnd, (HMENU)IDB_EDIT_EXP_K, app::hInst, nullptr
+                hWnd, (HMENU)IDB_EDIT_PCF_RADIUS, app::hInst, nullptr
             );
 
             StaticExpKHwnd = CreateWindow(
@@ -642,7 +645,14 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
                     switch (HIWORD(wParam))
                     {
                     case EN_CHANGE:
-                        
+                        if (EditBiasValHwnd)
+                        {
+                            GetWindowText(EditBiasValHwnd, tmpText, MAX_PATH);
+                            if (convert_str_to_float(tmpText, &tmpFloat))
+                            {
+                                SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOWMAP_BIAS, (WPARAM)&tmpFloat, 0);
+                            }
+                        }
                         return EXIT_SUCCESS;
                     
                     default:
@@ -655,7 +665,14 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
                     switch (HIWORD(wParam))
                     {
                     case EN_CHANGE:
-                        
+                        if (EditPcfRadiusValHwnd)
+                        {
+                            GetWindowText(EditPcfRadiusValHwnd, tmpText, MAX_PATH);
+                            if (convert_str_to_float(tmpText, &tmpFloat))
+                            {
+                                SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOWMAP_PCF_RADIUS, (WPARAM)&tmpFloat, 0);
+                            }
+                        }
                         return EXIT_SUCCESS;
                     
                     default:
@@ -668,7 +685,14 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
                     switch (HIWORD(wParam))
                     {
                     case EN_CHANGE:
-                        
+                        if (EditExpKValHwnd)
+                        {
+                            GetWindowText(EditExpKValHwnd, tmpText, MAX_PATH);
+                            if (convert_str_to_float(tmpText, &tmpFloat))
+                            {
+                                SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOWMAP_EXP_K, (WPARAM)&tmpFloat, 0);
+                            }
+                        }
                         return EXIT_SUCCESS;
                     
                     default:
