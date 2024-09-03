@@ -468,7 +468,7 @@ LRESULT CALLBACK GeneralShadowOptionsWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
                             // Perspective
                             else
                             {
-                                projection = PROJ_ORTHO;
+                                projection = PROJ_PERSPECTIVE;
 
                                 set_wnd_showmode(
                                     SW_SHOW, 3,
@@ -495,6 +495,7 @@ LRESULT CALLBACK GeneralShadowOptionsWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
                             }
 
                             SendMessage(hWnd, WM_SIZE, 0, 0);
+                            SendMessage(app::ShadowMapWnd.getHwnd(), WM_UPDATE_PROJ_TYPE, 0, 0);
                             
                             return EXIT_SUCCESS;
                         }
