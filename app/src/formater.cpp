@@ -30,7 +30,7 @@ bool convert_str_to_float(const wchar_t *str, float *value)
     return result;
 }
 
-bool convert_str_to_int(const wchar_t *str, long *value)
+bool convert_str_to_long(const wchar_t *str, long *value)
 {
     bool result = true;
     wchar_t* endptr;
