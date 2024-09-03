@@ -637,6 +637,21 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
                 case IDB_BUTTON_RES:
                 {
                     SetFocus(hWnd);
+                    if (EditResolutionXHwnd && EditResolutionYHwnd)
+                    {
+                        long resX;
+                        long resY;
+
+                        GetWindowText(EditResolutionXHwnd, tmpText, MAX_PATH);
+                        if (convert_str_to_long(tmpText, &resX))
+                        {
+                            GetWindowText(EditResolutionYHwnd, tmpText, MAX_PATH);
+                            if (convert_str_to_long(tmpText, &resY))
+                            {
+                                SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOWMAP_RESOLUTION, (WPARAM)&resX, (LPARAM)&resY);
+                            }
+                        }
+                    }
                     return EXIT_SUCCESS;
                 }
 
