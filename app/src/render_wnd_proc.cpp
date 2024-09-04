@@ -234,6 +234,10 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static mat4 lightView;
     static mat4 lightProjectionPerspective;
     static mat4 lightProjectionOrthogonal;
+    static float lightProjLeft = -2.f;
+    static float lightProjRight = 2.f;
+    static float lightProjBottom = -2.f;
+    static float lightProjTop = 2.f;
     static float lightProjNear = 0.1f;
     static float lightProjFar = 50.0f;
     static float lightProjFov = degrees_to_radians(60.0f);
@@ -286,7 +290,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static Shader shader_RT_HARD; // RayTracing Hard
     static Shader shader_RT_P_SOFT; // RayTracing Soft Perspective
 
-    static bool IsmodelLoading = false;
+    static bool ForbidDrawing = false;
 
     switch (message)
     {
@@ -308,7 +312,12 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         mat4_set_look_to(&lightView, &light.position, &light.direction, &viewUp);
         mat4_set_perspective_projection(&lightProjectionPerspective, 1920, 1080, lightProjNear, lightProjFar, lightProjFov);
-        mat4_set_ortho_projection_with_aspect(&lightProjectionOrthogonal, -2, 2, -2, 2, 0.1f, 50, 1920, 1080);
+        mat4_set_ortho_projection_with_aspect(
+            &lightProjectionOrthogonal, 
+            lightProjLeft, lightProjRight,
+            lightProjBottom, lightProjTop,
+            lightProjNear, lightProjFar,
+            1920, 1080);
 
         GenDepthFrameBuffer(depthBuffer, 1920, 1080);
         GenExpDepthFrameBuffer(depthBufferExp, 1920, 1080);
@@ -722,7 +731,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case WM_LOAD_MODEL:
     {
-        IsmodelLoading = true;
+        ForbidDrawing = true;
         std::string path;
         std::wstring wpath = (WCHAR*)wParam;
         bool CCW = (bool)lParam;
@@ -739,7 +748,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         glFlush();
         glFinish();
         
-        IsmodelLoading = false;
+        ForbidDrawing = false;
         return rs;
     }
 
@@ -1123,12 +1132,195 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         return EXIT_SUCCESS;
     }
 
+    case WM_SET_SHADOWMAP_ALGORITM:
+    {
+        return EXIT_SUCCESS;
+    }
+
+    case WM_SET_SHADOWMAP_RESOLUTION:
+    {
+        const int* val1 = reinterpret_cast<const int*>(wParam);
+        const int* val2 = reinterpret_cast<const int*>(lParam);
+
+        if (*val1 >= 0 && *val1 <= RESOLUTION_MAP_MAX_X &&
+            *val2 >= 0 && *val2 <= RESOLUTION_MAP_MAX_Y)
+        {
+            ForbidDrawing = true;
+            glFlush();
+            glFinish();
+
+            GenDepthFrameBuffer(depthBuffer, *val1, *val2);
+            GenExpDepthFrameBuffer(depthBufferExp, *val1, *val2);
+
+            glFlush();
+            glFinish();
+            ForbidDrawing = false;
+        }
+
+        return EXIT_SUCCESS;
+    }
+
+    case WM_SET_SHADOWMAP_BIAS:
+    {
+        const float* val = reinterpret_cast<const float*>(wParam);
+        if (*val > 0.f) shadowBias = *val;
+        return EXIT_SUCCESS;
+    }
+
+    case WM_SET_SHADOWMAP_PCF_RADIUS:
+    {
+        const float* val = reinterpret_cast<const float*>(wParam);
+        if (*val > 0.f) pcfRadius = *val;
+        return EXIT_SUCCESS;
+    }
+
+    case WM_SET_SHADOWMAP_EXP_K:
+    {
+        const float* val = reinterpret_cast<const float*>(wParam);
+        if (*val > 0.f) expK = *val;
+        return EXIT_SUCCESS;
+    }
+
+    case WM_SET_SHADOWMAP_RENDER_MODE:
+    {
+        return EXIT_SUCCESS;
+    }
+
+    case WM_SET_SHADOWMAP_SIDE_LEFT:
+    {
+        lightProjLeft = *reinterpret_cast<float*>(wParam);
+
+        mat4_set_perspective_projection(
+            &lightProjectionPerspective,
+            depthBuffer.width, depthBuffer.height,
+            lightProjNear, lightProjFar,
+            lightProjFov);
+
+        mat4_set_ortho_projection_with_aspect(
+            &lightProjectionOrthogonal, 
+            lightProjLeft, lightProjRight,
+            lightProjBottom, lightProjTop,
+            lightProjNear, lightProjFar,
+            depthBuffer.width, depthBuffer.height);
+        
+        return EXIT_SUCCESS;
+    }
+
+    case WM_SET_SHADOWMAP_SIDE_RIGHT:
+    {
+        lightProjRight = *reinterpret_cast<float*>(wParam);
+
+        mat4_set_perspective_projection(
+            &lightProjectionPerspective,
+            depthBuffer.width, depthBuffer.height,
+            lightProjNear, lightProjFar,
+            lightProjFov);
+
+        mat4_set_ortho_projection_with_aspect(
+            &lightProjectionOrthogonal, 
+            lightProjLeft, lightProjRight,
+            lightProjBottom, lightProjTop,
+            lightProjNear, lightProjFar,
+            depthBuffer.width, depthBuffer.height);
+        
+        return EXIT_SUCCESS;
+    }
+
+    case WM_SET_SHADOWMAP_SIDE_BOTTOM:
+    {
+        lightProjBottom = *reinterpret_cast<float*>(wParam);
+
+        mat4_set_perspective_projection(
+            &lightProjectionPerspective,
+            depthBuffer.width, depthBuffer.height,
+            lightProjNear, lightProjFar,
+            lightProjFov);
+
+        mat4_set_ortho_projection_with_aspect(
+            &lightProjectionOrthogonal, 
+            lightProjLeft, lightProjRight,
+            lightProjBottom, lightProjTop,
+            lightProjNear, lightProjFar,
+            depthBuffer.width, depthBuffer.height);
+        return EXIT_SUCCESS;
+    }
+
+    case WM_SET_SHADOWMAP_SIDE_TOP:
+    {
+        lightProjTop = *reinterpret_cast<float*>(wParam);
+
+        mat4_set_perspective_projection(
+            &lightProjectionPerspective,
+            depthBuffer.width, depthBuffer.height,
+            lightProjNear, lightProjFar,
+            lightProjFov);
+
+        mat4_set_ortho_projection_with_aspect(
+            &lightProjectionOrthogonal, 
+            lightProjLeft, lightProjRight,
+            lightProjBottom, lightProjTop,
+            lightProjNear, lightProjFar,
+            depthBuffer.width, depthBuffer.height);
+        return EXIT_SUCCESS;
+    }
+
+    case WM_SET_SHADOWMAP_SIDE_NEAR:
+    {
+        lightProjNear = *reinterpret_cast<float*>(wParam);
+
+        mat4_set_perspective_projection(
+            &lightProjectionPerspective,
+            depthBuffer.width, depthBuffer.height,
+            lightProjNear, lightProjFar,
+            lightProjFov);
+
+        mat4_set_ortho_projection_with_aspect(
+            &lightProjectionOrthogonal, 
+            lightProjLeft, lightProjRight,
+            lightProjBottom, lightProjTop,
+            lightProjNear, lightProjFar,
+            depthBuffer.width, depthBuffer.height);
+        return EXIT_SUCCESS;
+    }
+
+    case WM_SET_SHADOWMAP_SIDE_FAR:
+    {
+        lightProjFar = *reinterpret_cast<float*>(wParam);
+
+        mat4_set_perspective_projection(
+            &lightProjectionPerspective,
+            depthBuffer.width, depthBuffer.height,
+            lightProjNear, lightProjFar,
+            lightProjFov);
+
+        mat4_set_ortho_projection_with_aspect(
+            &lightProjectionOrthogonal, 
+            lightProjLeft, lightProjRight,
+            lightProjBottom, lightProjTop,
+            lightProjNear, lightProjFar,
+            depthBuffer.width, depthBuffer.height);
+        return EXIT_SUCCESS;
+    }
+
+    case WM_SET_SHADOWMAP_FOV:
+    {
+        lightProjFov = degrees_to_radians(*reinterpret_cast<float*>(wParam));
+
+        mat4_set_perspective_projection(
+            &lightProjectionPerspective,
+            depthBuffer.width, depthBuffer.height,
+            lightProjNear, lightProjFar,
+            lightProjFov);
+
+        return EXIT_SUCCESS;
+    }
+
     case WM_PAINT:
     {
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hWnd, &ps);
 
-        if (!IsmodelLoading)
+        if (!ForbidDrawing)
         {
             switch (shadowAlg)
             {
