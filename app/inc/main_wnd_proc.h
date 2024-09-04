@@ -11,6 +11,7 @@
 #include "render_wnd_proc.h"
 
 #include "resource.h"
+#include "user_msgs.h"
 #include "app_args.h"
 
 LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
