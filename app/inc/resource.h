@@ -21,6 +21,7 @@
 
 #define IDB_WIREFRAME_ON 1102
 #define IDB_WIREFRAME_OFF 1103
+#define IDB_FRAME_PER_SECOND 1104
 
 // Вкладка "Вид"
 #define IDB_SHOW_TOOLBAR 1201

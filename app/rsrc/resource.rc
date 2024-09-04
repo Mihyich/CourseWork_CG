@@ -36,10 +36,13 @@ BEGIN
             MENUITEM "Загрузить", IDB_LOAD_MODEL
         END
         MENUITEM SEPARATOR
-        POPUP "Wireframe"
-        BEGIN
-            MENUITEM "Включить", IDB_WIREFRAME_ON
-            MENUITEM "Выключить", IDB_WIREFRAME_OFF
+        POPUP "Отрисовка"
+            POPUP "Wireframe"
+            BEGIN
+                MENUITEM "Включить", IDB_WIREFRAME_ON
+                MENUITEM "Выключить", IDB_WIREFRAME_OFF
+            END
+            MENUITEM "Частота кадров", IDB_FRAME_PER_SECOND
         END
     END
 
