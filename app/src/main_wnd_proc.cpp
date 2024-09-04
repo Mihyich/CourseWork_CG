@@ -56,7 +56,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     MINMAXINFO* lpMinMaxInfo; // Системная структура для ограничения масштабирования род. окна
 
     static HMENU hMenu = nullptr;
-    static UINT_PTR timerId;
+    static UINT_PTR timerId = 0;
 
     switch (uMsg)
 	{
@@ -244,6 +244,20 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             default:
                 return DefWindowProc(hWnd, uMsg, wParam, lParam);
         }
+    }
+
+    case WM_SET_FRAME_PER_SECOND:
+    {
+        int fps = *reinterpret_cast<int*>(wParam);
+        if (fps > 0)
+        {
+            if (timerId) KillTimer(hWnd, timerId);
+
+            int millisecond = 1000 / fps;
+            timerId = SetTimer(hWnd, 1, millisecond, NULL);
+        }
+
+        return EXIT_SUCCESS;
     }
 
     case WM_TIMER:
