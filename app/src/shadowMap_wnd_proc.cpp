@@ -715,7 +715,6 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
                     }
                 }
 
-
                 case IDB_TAB_RENDER_DEBUG:
                 {
                     SetFocus(hWnd);
@@ -749,43 +748,50 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 
         case WM_UPDATE_SIDE_LEFT:
         {
-            
+            tmpFloat = *reinterpret_cast<float*>(SendMessage(app::GeneralShadowOptionsWnd.getHwnd(), WM_GET_SIDE_LEFT, 0, 0));
+            SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOWMAP_SIDE_LEFT, (WPARAM)&tmpFloat, 0);
             return EXIT_SUCCESS;
         }
 
         case WM_UPDATE_SIDE_RIGHT:
         {
-
+            tmpFloat = *reinterpret_cast<float*>(SendMessage(app::GeneralShadowOptionsWnd.getHwnd(), WM_GET_SIDE_RIGHT, 0, 0));
+            SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOWMAP_SIDE_RIGHT, (WPARAM)&tmpFloat, 0);
             return EXIT_SUCCESS;
         }
 
         case WM_UPDATE_SIDE_BOTTOM:
         {
-
+            tmpFloat = *reinterpret_cast<float*>(SendMessage(app::GeneralShadowOptionsWnd.getHwnd(), WM_GET_SIDE_BOTTOM, 0, 0));
+            SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOWMAP_SIDE_BOTTOM, (WPARAM)&tmpFloat, 0);
             return EXIT_SUCCESS;
         }
 
         case WM_UPDATE_SIDE_TOP:
         {
-
+            tmpFloat = *reinterpret_cast<float*>(SendMessage(app::GeneralShadowOptionsWnd.getHwnd(), WM_GET_SIDE_TOP, 0, 0));
+            SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOWMAP_SIDE_TOP, (WPARAM)&tmpFloat, 0);
             return EXIT_SUCCESS;
         }
 
         case WM_UPDATE_SIDE_NEAR:
         {
-
+            tmpFloat = *reinterpret_cast<float*>(SendMessage(app::GeneralShadowOptionsWnd.getHwnd(), WM_GET_SIDE_NEAR, 0, 0));
+            SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOWMAP_SIDE_NEAR, (WPARAM)&tmpFloat, 0);
             return EXIT_SUCCESS;
         }
 
         case WM_UPDATE_SIDE_FAR:
         {
-
+            tmpFloat = *reinterpret_cast<float*>(SendMessage(app::GeneralShadowOptionsWnd.getHwnd(), WM_GET_SIDE_FAR, 0, 0));
+            SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOWMAP_SIDE_FAR, (WPARAM)&tmpFloat, 0);
             return EXIT_SUCCESS;
         }
 
-        case WM_UPDATE_SIDE_FOV:
+        case WM_UPDATE_FOV:
         {
-
+            tmpFloat = *reinterpret_cast<float*>(SendMessage(app::GeneralShadowOptionsWnd.getHwnd(), WM_GET_FOV, 0, 0));
+            SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOWMAP_FOV, (WPARAM)&tmpFloat, 0);
             return EXIT_SUCCESS;
         }
 
