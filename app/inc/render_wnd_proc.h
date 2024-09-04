@@ -55,6 +55,7 @@
 
 
 #include "app_args.h"
+#include "ResolutionMapLimit.h"
 #include "user_msgs.h"
 
 enum CameraMode
