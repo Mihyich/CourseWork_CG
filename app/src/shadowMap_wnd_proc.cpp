@@ -130,7 +130,7 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
             );
 
             EditBiasValHwnd = CreateWindow(
-                L"EDIT", L"0.005",
+                L"EDIT", L"0.0005",
                 WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_CENTER | WS_BORDER,
                 0, 0, 0, 0,
                 hWnd, (HMENU)IDB_EDIT_BIAS, app::hInst, nullptr
