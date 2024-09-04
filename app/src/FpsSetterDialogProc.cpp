@@ -50,7 +50,7 @@ LRESULT CALLBACK FpsSetterDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM
             posX = 5;
             posY = 5;
             tmp_width = (width - 15) * 0.75f;
-            tmp_height = 24;    
+            tmp_height = 24;
 
             SetWindowPos(StaticFpsHwnd, HWND_TOP, posX, posY, tmp_width, tmp_height, SWP_SHOWWINDOW);
 
@@ -59,7 +59,7 @@ LRESULT CALLBACK FpsSetterDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM
 
             SetWindowPos(EditFpsHwnd, HWND_TOP, posX, posY, tmp_width, tmp_height, SWP_SHOWWINDOW);
 
-            tmp_width = (width - 10) / 4;
+            tmp_width = (width - 10) / 3;
             tmp_height = 24;
             posX = 5;
             posY = height - 5 - tmp_height;
@@ -69,6 +69,8 @@ LRESULT CALLBACK FpsSetterDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM
             posX = width - 5 - tmp_width;
 
             SetWindowPos(ButtonSetHwnd, HWND_TOP, posX, posY, tmp_width, tmp_height, SWP_SHOWWINDOW);
+
+            SendMessage(EditFpsHwnd, WM_SETTEXT, 0, (LPARAM)std::to_wstring(app::framePerSecond).c_str());
 
             fp.cWidth = 0;
             fp.cEscapement = 0;
@@ -131,7 +133,7 @@ LRESULT CALLBACK FpsSetterDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM
                     break;
                 }
 
-                case IDC_ML_CANCEL:
+                case IDC_FPS_CANCEL:
                 {
                     SendMessage(hDlg, WM_CLOSE, 0, 0);
                     break;
