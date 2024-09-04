@@ -115,7 +115,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
         SendMessage(app::RenderWnd.getHwnd(), WM_INIT_GL_OPTIONS, 0, 0);
 
-        timerId = SetTimer(hWnd, 1, 41, NULL);
+        timerId = SetTimer(hWnd, 1, 1000 / app::framePerSecond, NULL);
 
         return EXIT_SUCCESS;
     }
@@ -195,6 +195,12 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                 return EXIT_SUCCESS;
             }
 
+            case IDB_FRAME_PER_SECOND:
+            {
+                DialogBox(app::hInst, MAKEINTRESOURCE(IDD_FPS_SETTER), hWnd, FpsSetterDlgProc);
+                return EXIT_SUCCESS;
+            }
+
             case IDB_SHOW_TOOLBAR:
             {
                 EnableMenuItem(hMenu, IDB_SHOW_TOOLBAR, MF_DISABLED);
@@ -253,8 +259,8 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         {
             if (timerId) KillTimer(hWnd, timerId);
 
-            int millisecond = 1000 / fps;
-            timerId = SetTimer(hWnd, 1, millisecond, NULL);
+            app::framePerSecond = fps;
+            timerId = SetTimer(hWnd, 1, 1000 / app::framePerSecond, NULL);
         }
 
         return EXIT_SUCCESS;
