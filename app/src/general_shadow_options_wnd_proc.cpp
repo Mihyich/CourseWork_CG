@@ -686,7 +686,7 @@ LRESULT CALLBACK GeneralShadowOptionsWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
             return reinterpret_cast<LRESULT>(&sideFar);
         }
 
-        case WM_GET_SIDE_FOV:
+        case WM_GET_FOV:
         {
             return reinterpret_cast<LRESULT>(&Fov);
         }
