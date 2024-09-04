@@ -55,4 +55,21 @@
 // Загрузить
 #define IDC_ML_LOAD 2006
 
+
+
+// Диалог установки частоты кадров в секунду
+#define IDD_FPS_SETTER 301
+
+// Строка частоты кадров
+#define IDC_FPS_STATIC 3001
+
+// Ввод значения частоты кадров
+#define IDC_FPS_EDIT 3002
+
+// Отмена
+#define IDC_FPS_CANCEL 3003
+
+// Установить
+#define IDC_FPS_SET 3004
+
 #endif // RESOURECE_H
