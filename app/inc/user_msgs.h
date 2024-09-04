@@ -141,7 +141,7 @@
 // Wparam: none
 // Lparam: none
 // Return: float*
-#define WM_GET_SIDE_FOV (WM_USER + 26)
+#define WM_GET_FOV (WM_USER + 26)
 
 // Требование обновить данные =======================================================
 
@@ -183,6 +183,43 @@
 // Receiver: ShadowMapWnd
 // Wparam: none
 // Lparam: none
-#define WM_UPDATE_SIDE_FOV (WM_USER + 34)
+#define WM_UPDATE_FOV (WM_USER + 34)
+
+// Настройки матриц проецирования для ShadoMap =====================================
+
+// Receiver: RenderWnd
+// Wparam: const float*
+// Lparam: none
+#define WM_SET_SHADOWMAP_SIDE_LEFT (WM_USER + 35)
+
+// Receiver: RenderWnd
+// Wparam: const float*
+// Lparam: none
+#define WM_SET_SHADOWMAP_SIDE_RIGHT (WM_USER + 36)
+
+// Receiver: RenderWnd
+// Wparam: const float*
+// Lparam: none
+#define WM_SET_SHADOWMAP_SIDE_BOTTOM (WM_USER + 37)
+
+// Receiver: RenderWnd
+// Wparam: const float*
+// Lparam: none
+#define WM_SET_SHADOWMAP_SIDE_TOP (WM_USER + 38)
+
+// Receiver: RenderWnd
+// Wparam: const float*
+// Lparam: none
+#define WM_SET_SHADOWMAP_SIDE_NEAR (WM_USER + 39)
+
+// Receiver: RenderWnd
+// Wparam: const float*
+// Lparam: none
+#define WM_SET_SHADOWMAP_SIDE_FAR (WM_USER + 40)
+
+// Receiver: RenderWnd
+// Wparam: const float*
+// Lparam: none
+#define WM_SET_SHADOWMAP_FOV (WM_USER + 41)
 
 #endif // USER_MASGS_H
