@@ -217,7 +217,7 @@ LRESULT CALLBACK GeneralShadowOptionsWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
 
             SendMessage(ComboBoxProjectionHwnd, CB_ADDSTRING, (WPARAM)0, (LPARAM)L"Ортогональное");
             SendMessage(ComboBoxProjectionHwnd, CB_ADDSTRING, (WPARAM)0, (LPARAM)L"Перспективное");
-            SendMessage(ComboBoxProjectionHwnd, CB_SETCURSEL, (WPARAM)0, 0);
+            SendMessage(ComboBoxProjectionHwnd, CB_SETCURSEL, (WPARAM)1, 0);
 
             return EXIT_SUCCESS;
         }
