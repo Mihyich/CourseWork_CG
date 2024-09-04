@@ -25,5 +25,7 @@ namespace app
 
     WinApiGLWindow RenderWnd;
 
+    int framePerSecond = 21;
+
     WinApiFont Fonts;
 }

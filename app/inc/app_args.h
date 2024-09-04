@@ -55,6 +55,9 @@ namespace app
     // Рендер окно
     extern WinApiGLWindow RenderWnd;
 
+    // Частота кадров
+    extern int framePerSecond;
+
     // шрифты
     extern WinApiFont Fonts;
 }
