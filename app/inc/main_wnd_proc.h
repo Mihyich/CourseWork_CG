@@ -6,6 +6,7 @@
 #include "winapi_window.h"
 
 #include "ModelLoaderDialogProc.h"
+#include "FpsSetterDialogProc.h"
 
 #include "toolbar_wnd_proc.h"
 #include "render_wnd_proc.h"
