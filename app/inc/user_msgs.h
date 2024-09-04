@@ -222,4 +222,11 @@
 // Lparam: none
 #define WM_SET_SHADOWMAP_FOV (WM_USER + 41)
 
+// Очень общие настройки сцены ====================================================
+
+// Receiver: MainWnd
+// Wparam: const int*
+// Lparam: none
+#define WM_SET_FRAME_PER_SECOND (WM_USER + 42)
+
 #endif // USER_MASGS_H
