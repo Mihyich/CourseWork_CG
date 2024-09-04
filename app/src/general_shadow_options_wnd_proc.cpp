@@ -520,7 +520,10 @@ LRESULT CALLBACK GeneralShadowOptionsWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
                             if (EditSideLeftHwnd)
                             {
                                 GetWindowText(EditSideLeftHwnd, tmpText, MAX_PATH);
-                                convert_str_to_float(tmpText, &sideLeft);
+                                if (convert_str_to_float(tmpText, &sideLeft))
+                                {
+                                    SendMessage(app::ShadowMapWnd.getHwnd(), WM_UPDATE_SIDE_LEFT, 0, 0);
+                                }
                             }
                             return EXIT_SUCCESS;
                         }
@@ -539,7 +542,10 @@ LRESULT CALLBACK GeneralShadowOptionsWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
                             if (EditSideRightHwnd)
                             {
                                 GetWindowText(EditSideRightHwnd, tmpText, MAX_PATH);
-                                convert_str_to_float(tmpText, &sideRight);
+                                if (convert_str_to_float(tmpText, &sideRight))
+                                {
+                                    SendMessage(app::ShadowMapWnd.getHwnd(), WM_UPDATE_SIDE_RIGHT, 0, 0);
+                                }
                             }
                             return EXIT_SUCCESS;
                         }
@@ -558,7 +564,10 @@ LRESULT CALLBACK GeneralShadowOptionsWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
                             if (EditSideBottomHwnd)
                             {
                                 GetWindowText(EditSideBottomHwnd, tmpText, MAX_PATH);
-                                convert_str_to_float(tmpText, &sideBottom);
+                                if (convert_str_to_float(tmpText, &sideBottom))
+                                {
+                                    SendMessage(app::ShadowMapWnd.getHwnd(), WM_UPDATE_SIDE_BOTTOM, 0, 0);
+                                }
                             }
                             return EXIT_SUCCESS;
                         }
@@ -577,7 +586,10 @@ LRESULT CALLBACK GeneralShadowOptionsWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
                             if (EditSideTopHwnd)
                             {
                                 GetWindowText(EditSideTopHwnd, tmpText, MAX_PATH);
-                                convert_str_to_float(tmpText, &sideTop);
+                                if (convert_str_to_float(tmpText, &sideTop))
+                                {
+                                    SendMessage(app::ShadowMapWnd.getHwnd(), WM_UPDATE_SIDE_TOP, 0, 0);
+                                }
                             }
                             return EXIT_SUCCESS;
                         }
@@ -596,7 +608,10 @@ LRESULT CALLBACK GeneralShadowOptionsWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
                             if (EditSideNearHwnd)
                             {
                                 GetWindowText(EditSideNearHwnd, tmpText, MAX_PATH);
-                                convert_str_to_float(tmpText, &sideNear);
+                                if (convert_str_to_float(tmpText, &sideNear))
+                                {
+                                    SendMessage(app::ShadowMapWnd.getHwnd(), WM_UPDATE_SIDE_NEAR, 0, 0);
+                                }
                             }
                             return EXIT_SUCCESS;
                         }
@@ -615,7 +630,10 @@ LRESULT CALLBACK GeneralShadowOptionsWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
                             if (EditSideFarHwnd)
                             {
                                 GetWindowText(EditSideFarHwnd, tmpText, MAX_PATH);
-                                convert_str_to_float(tmpText, &sideFar);
+                                if (convert_str_to_float(tmpText, &sideFar))
+                                {
+                                    SendMessage(app::ShadowMapWnd.getHwnd(), WM_UPDATE_SIDE_FAR, 0, 0);
+                                }
                             }
                             return EXIT_SUCCESS;
                         }
@@ -634,7 +652,10 @@ LRESULT CALLBACK GeneralShadowOptionsWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
                             if (EditFovValHwnd)
                             {
                                 GetWindowText(EditFovValHwnd, tmpText, MAX_PATH);
-                                convert_str_to_float(tmpText, &Fov);
+                                if (convert_str_to_float(tmpText, &Fov))
+                                {
+                                    SendMessage(app::ShadowMapWnd.getHwnd(), WM_UPDATE_FOV, 0, 0);
+                                }
                             }
                             return EXIT_SUCCESS;
                         }
