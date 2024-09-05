@@ -45,7 +45,8 @@ in vec3 Normal;
 in vec4 FragPosLightSpace;
 
 uniform sampler2D shadowMap;
-uniform float expK = 0.5;
+uniform float shadowBias;
+uniform float expK;
 
 vec3 computePointLightColor(vec3 fragPos, vec3 normal, PointLight light)
 {
@@ -134,10 +135,12 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 
     // Глубина текущего фрагмента из карты теней
     float closestDepth = texture(shadowMap, projCoords.xy).r; 
-    float currentDepth = exp(expK * projCoords.z);
+    float currentDepth = exp(expK * (projCoords.z));
 
     // Проверка на тень
-    return clamp(closestDepth / currentDepth, 0.0, 1.0);
+    float shadow = 1.0 - clamp(closestDepth / currentDepth, 0.0, 1.0);
+    // return shadow > 1.0 - shadowBias ? 1.0 : 1.0 - shadow;
+    return shadow > 1.0 - shadowBias ? 1.0 : 1.0 - shadow;
 }
 
 void main()
@@ -148,7 +151,7 @@ void main()
     vec3 diffuse = computeLightColor(FragPos.xyz, Normal) * color;
 
     float shadow = ShadowCalculation(FragPosLightSpace);                      
-    vec3 lighting = (ambient + (1.0 - shadow) * diffuse);
+    vec3 lighting = (ambient + shadow * diffuse);
 
     FragColor = vec4(lighting, 1.0);
 }

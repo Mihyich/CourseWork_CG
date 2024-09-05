@@ -2,10 +2,12 @@
 
 layout(location = 0) out float FragDepth;
 
-uniform float expK = 0.5;
+uniform float expK;
+
+in vec4 coord;
 
 void main()
 {
-    float depth = gl_FragCoord.z / gl_FragCoord.w;
+    float depth = coord.z / coord.w;
     FragDepth = exp(expK * depth);
 }
