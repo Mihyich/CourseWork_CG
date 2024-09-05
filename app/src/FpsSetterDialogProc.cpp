@@ -2,6 +2,8 @@
 
 LRESULT CALLBACK FpsSetterDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    UNREFERENCED_PARAMETER(lParam);
+
     static RECT rect;
 
     static HWND StaticFpsHwnd = nullptr;

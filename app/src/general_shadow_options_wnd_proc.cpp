@@ -228,7 +228,6 @@ LRESULT CALLBACK GeneralShadowOptionsWndProc(HWND hWnd, UINT uMsg, WPARAM wParam
             HFONT hFont;
             RECT tmp_rect;
             FontParam tmpFp;
-            int mainH = 24;
 
             GetClientRect(hWnd, &rect);
 

@@ -256,7 +256,6 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
             HFONT hFont;
             RECT tmp_rect;
             FontParam tmpFp;
-            int mainH = 24;
 
             GetClientRect(hWnd, &rect);
 
