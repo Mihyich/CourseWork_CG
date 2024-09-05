@@ -894,6 +894,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     RenderDataSM.esm.projection = &projection;
                     RenderDataSM.esm.lightView = &lightView;
                     RenderDataSM.esm.lightProjection = &lightProjectionOrthogonal;
+                    RenderDataSM.esm.shadowBias = &shadowBias;
                     RenderDataSM.esm.expK = &expK;
                     RenderDataSM.esm.quadVAO = &quadVAO;
                     RenderDataSM.esm.planeVAO = &planeVAO;
@@ -918,6 +919,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     RenderDataSM.esm.projection = &projection;
                     RenderDataSM.esm.lightView = &lightView;
                     RenderDataSM.esm.lightProjection = &lightProjectionPerspective;
+                    RenderDataSM.esm.shadowBias = &shadowBias;
                     RenderDataSM.esm.expK = &expK;
                     RenderDataSM.esm.quadVAO = &quadVAO;
                     RenderDataSM.esm.planeVAO = &planeVAO;
