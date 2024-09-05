@@ -1,5 +1,9 @@
 # CourseWork_CG
 
+![alt text](https://github.com/Mihyich/CourseWork_CG/blob/develop/Presentation/Skull1.jpg)
+![alt text](https://github.com/Mihyich/CourseWork_CG/blob/develop/Presentation/Skull2.jfif)
+![alt text](https://github.com/Mihyich/CourseWork_CG/blob/develop/Presentation/Monkeys.jfif)
+
 1. Shadow Mapping (Теневые карты)
 
 + Basic Shadow Mapping: Использует глубинную карту для определения теней. На первом проходе сцена рендерится с точки зрения источника света, чтобы создать глубинную карту, на втором проходе – с точки зрения камеры.
