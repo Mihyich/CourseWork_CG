@@ -10,6 +10,7 @@ void DepthPass(ShadowMapEsmRenderData& data)
     data.shaderDepthPass->use();
     uniform_matrix4f(data.shaderDepthPass->get_uniform_location("view"), data.lightView);
     uniform_matrix4f(data.shaderDepthPass->get_uniform_location("projection"), data.lightProjection);
+    glUniform1f(data.shaderRenderPass->get_uniform_location("expK"), *data.expK);
 
     glBindVertexArray(*data.modelVAO);
     uniform_matrix4f(data.shaderDepthPass->get_uniform_location("model"), data.modelModel);
@@ -29,6 +30,7 @@ void RenderPass(ShadowMapEsmRenderData& data)
     uniform_matrix4f(data.shaderRenderPass->get_uniform_location("projection"), data.projection);
     uniform_matrix4f(data.shaderRenderPass->get_uniform_location("lightView"), data.lightView);
     uniform_matrix4f(data.shaderRenderPass->get_uniform_location("lightProjection"), data.lightProjection);
+    glUniform1f(data.shaderRenderPass->get_uniform_location("shadowBias"), *data.shadowBias);
     glUniform1f(data.shaderRenderPass->get_uniform_location("expK"), *data.expK);
 
     glActiveTexture(GL_TEXTURE0);
