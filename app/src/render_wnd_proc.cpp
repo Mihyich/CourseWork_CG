@@ -813,7 +813,6 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 }
 
                 case SHADOW_MAP_ORTHOGONAL:
-                case SHADOW_MAP_ORTHOGONAL_LIGHT:
                 case SHADOW_MAP_ORTHOGONAL_DEBUG:
                 {
                     RenderDataSM.main.depthBuffer = &depthBuffer;
@@ -837,7 +836,6 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 }
 
                 case SHADOW_MAP_PERSPECTIVE:
-                case SHADOW_MAP_PERSPECTIVE_LIGHT:
                 case SHADOW_MAP_PERSPECTIVE_DEBUG:
                 {
                     RenderDataSM.main.depthBuffer = &depthBuffer;
@@ -861,7 +859,6 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 }
 
                 case SHADOW_MAP_ORTHOGONAL_PCF:
-                case SHADOW_MAP_ORTHOGONAL_PCF_LIGHT:
                 case SHADOW_MAP_ORTHOGONAL_PCF_DEBUG:
                 {
                     RenderDataSM.pcf.depthBuffer = &depthBuffer;
@@ -886,7 +883,6 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 }
 
                 case SHADOW_MAP_PERSPECTIVE_PCF:
-                case SHADOW_MAP_PERSPECTIVE_PCF_LIGHT:
                 case SHADOW_MAP_PERSPECTIVE_PCF_DEBUG:
                 {
                     RenderDataSM.pcf.depthBuffer = &depthBuffer;
@@ -911,7 +907,6 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 }
 
                 case SHADOW_MAP_ORTHOGONAL_ESM:
-                case SHADOW_MAP_ORTHOGONAL_ESM_LIGHT:
                 case SHADOW_MAP_ORTHOGONAL_ESM_DEBUG:
                 {
                     RenderDataSM.esm.depthBuffer = &depthBufferExp;
@@ -936,7 +931,6 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 }
 
                 case SHADOW_MAP_PERSPECTIVE_ESM:
-                case SHADOW_MAP_PERSPECTIVE_ESM_LIGHT:
                 case SHADOW_MAP_PERSPECTIVE_ESM_DEBUG:
                 {
                     RenderDataSM.esm.depthBuffer = &depthBufferExp;
@@ -961,7 +955,6 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 }
 
                 case SHADOW_MAP_ORTHOGONAL_VSM:
-                case SHADOW_MAP_ORTHOGONAL_VSM_LIGHT:
                 case SHADOW_MAP_ORTHOGONAL_VSM_DEBUG:
                 {
                     RenderDataSM.vsm.depthBuffer = &depthBuffer;
@@ -984,7 +977,6 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 }
 
                 case SHADOW_MAP_PERSPECTIVE_VSM:
-                case SHADOW_MAP_PERSPECTIVE_VSM_LIGHT:
                 case SHADOW_MAP_PERSPECTIVE_VSM_DEBUG:
                 {
                     RenderDataSM.vsm.depthBuffer = &depthBuffer;
@@ -1372,11 +1364,6 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     break;
                 }
 
-                case SHADOW_MAP_ORTHOGONAL_LIGHT:
-                {
-                    break;
-                }
-
                 case SHADOW_MAP_ORTHOGONAL_DEBUG:
                 {
                     ShadowMapDebug(RenderDataSM.main);
@@ -1386,11 +1373,6 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 case SHADOW_MAP_PERSPECTIVE:
                 {
                     ShadowMap(RenderDataSM.main);
-                    break;
-                }
-
-                case SHADOW_MAP_PERSPECTIVE_LIGHT:
-                {
                     break;
                 }
 
@@ -1406,11 +1388,6 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     break;
                 }
 
-                case SHADOW_MAP_ORTHOGONAL_PCF_LIGHT:
-                {
-                    break;
-                }
-
                 case SHADOW_MAP_ORTHOGONAL_PCF_DEBUG:
                 {
                     ShadowMapPcfDebug(RenderDataSM.pcf);
@@ -1420,11 +1397,6 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 case SHADOW_MAP_PERSPECTIVE_PCF:
                 {
                     ShadowMapPcf(RenderDataSM.pcf);
-                    break;
-                }
-
-                case SHADOW_MAP_PERSPECTIVE_PCF_LIGHT:
-                {
                     break;
                 }
 
@@ -1440,11 +1412,6 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     break;
                 }
 
-                case SHADOW_MAP_ORTHOGONAL_ESM_LIGHT:
-                {
-                    break;
-                }
-
                 case SHADOW_MAP_ORTHOGONAL_ESM_DEBUG:
                 {
                     ShadowMapEsmDebug(RenderDataSM.esm);
@@ -1454,11 +1421,6 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 case SHADOW_MAP_PERSPECTIVE_ESM:
                 {
                     ShadowMapEsm(RenderDataSM.esm);
-                    break;
-                }
-
-                case SHADOW_MAP_PERSPECTIVE_ESM_LIGHT:
-                {
                     break;
                 }
 
@@ -1474,11 +1436,6 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     break;
                 }
 
-                case SHADOW_MAP_ORTHOGONAL_VSM_LIGHT:
-                {
-                    break;
-                }
-
                 case SHADOW_MAP_ORTHOGONAL_VSM_DEBUG:
                 {
                     ShadowMapVsmDebug(RenderDataSM.vsm);
@@ -1488,11 +1445,6 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 case SHADOW_MAP_PERSPECTIVE_VSM:
                 {
                     ShadowMapVsm(RenderDataSM.vsm);
-                    break;
-                }
-
-                case SHADOW_MAP_PERSPECTIVE_VSM_LIGHT:
-                {
                     break;
                 }
 
