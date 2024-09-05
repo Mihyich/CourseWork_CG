@@ -67,13 +67,13 @@ void DebugPass(ShadowMapNoiseRenderData& data)
     glBindVertexArray(0);
 }
 
-void ShadowMapPcf(ShadowMapNoiseRenderData& data)
+void ShadowMapNoise(ShadowMapNoiseRenderData& data)
 {
     DepthPass(data);
     RenderPass(data);
 }
 
-void ShadowMapPcfDebug(ShadowMapNoiseRenderData& data)
+void ShadowMapNoiseDebug(ShadowMapNoiseRenderData& data)
 {
     DepthPass(data);
     DebugPass(data);
