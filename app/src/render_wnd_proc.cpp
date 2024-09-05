@@ -283,6 +283,9 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static Shader shader_SM_VSM_P_DP; // ShadowMap (VSM) Perspective Depth Pass
     static Shader shader_SM_VSM_P_RP; // ShadowMap (VSM) Perspective Render Pass
 
+    static Shader shader_SM_NOISE_O_DP; // ShadowMap (Noise) Orthogonal Depth Pass
+    static Shader shader_SM_NOISE_O_RP; // ShadowMap (Noise) Orthogonal Render Pass
+
     static Shader shader_SM_NOISE_P_DP; // ShadowMap (Noise) Perspective Depth Pass
     static Shader shader_SM_NOISE_P_RP; // ShadowMap (Noise) Perspective Render Pass
 
@@ -513,6 +516,26 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_VSM_P_RP.delete_shader(GL_VERTEX_SHADER);
         shader_SM_VSM_P_RP.delete_shader(GL_FRAGMENT_SHADER);
 
+        shader_SM_NOISE_O_DP.set_shader_name("Shaders/ShadowMapNoise (orthogonal)/DepthPass");
+        shader_SM_NOISE_O_DP.create_from_file("Shaders/ShadowMapNoise (orthogonal)/DepthPass/vert.glsl", GL_VERTEX_SHADER);
+        shader_SM_NOISE_O_DP.create_from_file("Shaders/ShadowMapNoise (orthogonal)/DepthPass/frag.glsl", GL_FRAGMENT_SHADER);
+        shader_SM_NOISE_O_DP.link_program();
+        shader_SM_NOISE_O_DP.init_uniforms_blocks_attribs();
+        shader_SM_NOISE_O_DP.print_uniforms_blocks_attribs();
+        shader_SM_NOISE_O_DP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
+        shader_SM_NOISE_O_DP.delete_shader(GL_VERTEX_SHADER);
+        shader_SM_NOISE_O_DP.delete_shader(GL_FRAGMENT_SHADER);
+
+        shader_SM_NOISE_O_RP.set_shader_name("Shaders/ShadowMapNoise (orthogonal)/RenderPass");
+        shader_SM_NOISE_O_RP.create_from_file("Shaders/ShadowMapNoise (orthogonal)/RenderPass/vert.glsl", GL_VERTEX_SHADER);
+        shader_SM_NOISE_O_RP.create_from_file("Shaders/ShadowMapNoise (orthogonal)/RenderPass/frag.glsl", GL_FRAGMENT_SHADER);
+        shader_SM_NOISE_O_RP.link_program();
+        shader_SM_NOISE_O_RP.init_uniforms_blocks_attribs();
+        shader_SM_NOISE_O_RP.print_uniforms_blocks_attribs();
+        shader_SM_NOISE_O_RP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
+        shader_SM_NOISE_O_RP.delete_shader(GL_VERTEX_SHADER);
+        shader_SM_NOISE_O_RP.delete_shader(GL_FRAGMENT_SHADER);
+
         shader_SM_NOISE_P_DP.set_shader_name("Shaders/ShadowMapNoise (perspective)/DepthPass");
         shader_SM_NOISE_P_DP.create_from_file("Shaders/ShadowMapNoise (perspective)/DepthPass/vert.glsl", GL_VERTEX_SHADER);
         shader_SM_NOISE_P_DP.create_from_file("Shaders/ShadowMapNoise (perspective)/DepthPass/frag.glsl", GL_FRAGMENT_SHADER);
@@ -603,6 +626,9 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_VSM_P_RP.use();
         glUniform1i(shader_SM_VSM_P_RP.get_uniform_location("shadowMap"), 0);
 
+        shader_SM_NOISE_O_RP.use();
+        glUniform1i(shader_SM_NOISE_P_RP.get_uniform_location("shadowMap"), 0);
+
         shader_SM_NOISE_P_RP.use();
         glUniform1i(shader_SM_NOISE_P_RP.get_uniform_location("shadowMap"), 0);
 
@@ -642,6 +668,10 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         glUniformBlockBinding(ProgrammId, blockIndex, 0);
 
         ProgrammId = shader_SM_VSM_P_RP.getProgramId();
+        blockIndex = glGetUniformBlockIndex(ProgrammId, "Lighting");
+        glUniformBlockBinding(ProgrammId, blockIndex, 0);
+
+        ProgrammId = shader_SM_NOISE_O_RP.getProgramId();
         blockIndex = glGetUniformBlockIndex(ProgrammId, "Lighting");
         glUniformBlockBinding(ProgrammId, blockIndex, 0);
 
@@ -903,6 +933,54 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     RenderDataSM.pcf.modelVAO = &modelVAO;
                     RenderDataSM.pcf.modelIndexCount = &modelIndexCount;
                     RenderDataSM.pcf.modelModel = &modelModel;
+                    break;
+                }
+
+                case SHADOW_MAP_ORTHOGONAL_NOISE:
+                case SHADOW_MAP_ORTHOGONAL_NOISE_DEBUG:
+                {
+                    RenderDataSM.noise.depthBuffer = &depthBuffer;
+                    RenderDataSM.noise.client_width = &client_width;
+                    RenderDataSM.noise.client_height = &client_height;
+                    RenderDataSM.noise.shaderDepthPass = &shader_SM_NOISE_O_DP;
+                    RenderDataSM.noise.shaderRenderPass = &shader_SM_NOISE_O_RP;
+                    RenderDataSM.noise.shaderDepthDebug = &shader_DBD;
+                    RenderDataSM.noise.view = &view;
+                    RenderDataSM.noise.projection = &projection;
+                    RenderDataSM.noise.lightView = &lightView;
+                    RenderDataSM.noise.lightProjection = &lightProjectionOrthogonal;
+                    RenderDataSM.noise.shadowBias = &shadowBias;
+                    RenderDataSM.noise.pcfRadius = &pcfRadius;
+                    RenderDataSM.noise.quadVAO = &quadVAO;
+                    RenderDataSM.noise.planeVAO = &planeVAO;
+                    RenderDataSM.noise.planeModel = &planeModel;
+                    RenderDataSM.noise.modelVAO = &modelVAO;
+                    RenderDataSM.noise.modelIndexCount = &modelIndexCount;
+                    RenderDataSM.noise.modelModel = &modelModel;
+                    break;
+                }
+
+                case SHADOW_MAP_PERSPECTIVE_NOISE:
+                case SHADOW_MAP_PERSPECTIVE_NOISE_DEBUG:
+                {
+                    RenderDataSM.noise.depthBuffer = &depthBuffer;
+                    RenderDataSM.noise.client_width = &client_width;
+                    RenderDataSM.noise.client_height = &client_height;
+                    RenderDataSM.noise.shaderDepthPass = &shader_SM_NOISE_P_DP;
+                    RenderDataSM.noise.shaderRenderPass = &shader_SM_NOISE_P_RP;
+                    RenderDataSM.noise.shaderDepthDebug = &shader_DBD;
+                    RenderDataSM.noise.view = &view;
+                    RenderDataSM.noise.projection = &projection;
+                    RenderDataSM.noise.lightView = &lightView;
+                    RenderDataSM.noise.lightProjection = &lightProjectionPerspective;
+                    RenderDataSM.noise.shadowBias = &shadowBias;
+                    RenderDataSM.noise.pcfRadius = &pcfRadius;
+                    RenderDataSM.noise.quadVAO = &quadVAO;
+                    RenderDataSM.noise.planeVAO = &planeVAO;
+                    RenderDataSM.noise.planeModel = &planeModel;
+                    RenderDataSM.noise.modelVAO = &modelVAO;
+                    RenderDataSM.noise.modelIndexCount = &modelIndexCount;
+                    RenderDataSM.noise.modelModel = &modelModel;
                     break;
                 }
 
@@ -1406,6 +1484,30 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     break;
                 }
 
+                case SHADOW_MAP_ORTHOGONAL_NOISE:
+                {
+                    ShadowMapNoise(RenderDataSM.noise);
+                    break;
+                }
+
+                case SHADOW_MAP_ORTHOGONAL_NOISE_DEBUG:
+                {
+                    ShadowMapNoiseDebug(RenderDataSM.noise);
+                    break;
+                }
+
+                case SHADOW_MAP_PERSPECTIVE_NOISE:
+                {
+                    ShadowMapNoise(RenderDataSM.noise);
+                    break;
+                }
+
+                case SHADOW_MAP_PERSPECTIVE_NOISE_DEBUG:
+                {
+                    ShadowMapNoiseDebug(RenderDataSM.noise);
+                    break;
+                }
+
                 case SHADOW_MAP_ORTHOGONAL_ESM:
                 {
                     ShadowMapEsm(RenderDataSM.esm);
@@ -1529,6 +1631,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_VSM_O_RP.delete_program();
         shader_SM_VSM_P_DP.delete_program();
         shader_SM_VSM_P_RP.delete_program();
+        shader_SM_NOISE_O_DP.delete_program();
+        shader_SM_NOISE_O_RP.delete_program();
         shader_SM_NOISE_P_DP.delete_program();
         shader_SM_NOISE_P_RP.delete_program();
         shader_RT_BVH.delete_program();
