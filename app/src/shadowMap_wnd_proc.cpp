@@ -474,7 +474,7 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
                             SetFocus(hWnd);
 
                             const int alg = SendMessage((HWND)lParam, CB_GETCURSEL, 0, 0);
-                            const WINBOOL bias = (alg == ALG_SM) || (alg == ALG_SM_PCF);
+                            const WINBOOL bias = (alg == ALG_SM) || (alg == ALG_SM_PCF) || (alg == ALG_SM_ESM);
                             const WINBOOL pcf = (alg == ALG_SM_PCF);
                             const WINBOOL expK = (alg == ALG_SM_ESM);
 
