@@ -27,6 +27,7 @@ struct ShadowMapEsmRenderData
     mat4* lightView;
     mat4* lightProjection;
 
+    GLfloat* shadowBias;
     GLfloat* expK;
 
     GLuint* quadVAO;
