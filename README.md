@@ -3,6 +3,7 @@
 ![alt text](https://github.com/Mihyich/CourseWork_CG/blob/develop/Presentation/Skull1.jpg)
 ![alt text](https://github.com/Mihyich/CourseWork_CG/blob/develop/Presentation/Skull2.jfif)
 ![alt text](https://github.com/Mihyich/CourseWork_CG/blob/develop/Presentation/Monkeys.jfif)
+![alt text](https://github.com/Mihyich/CourseWork_CG/blob/develop/Presentation/GoldMonkey.png)
 
 1. Shadow Mapping (Теневые карты)
 
