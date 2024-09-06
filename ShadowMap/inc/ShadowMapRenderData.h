@@ -4,6 +4,7 @@
 #include "ShadowMapMainRenderData.h"
 #include "ShadowMapPcfRenderData.h"
 #include "ShadowMapNoiseRenderData.h"
+#include "ShadowMapPcssRenderData.h"
 #include "ShadowMapEsmRenderData.h"
 #include "ShadowMapVsmRenderData.h"
 
@@ -12,6 +13,7 @@ union ShadowMapRenderData
     ShadowMapMainRenderData main;
     ShadowMapPcfRenderData pcf;
     ShadowMapNoiseRenderData noise;
+    ShadowMapPcssRenderData pcss;
     ShadowMapEsmRenderData esm;
     ShadowMapVsmRenderData vsm;
 };
