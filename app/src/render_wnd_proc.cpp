@@ -1017,6 +1017,54 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     break;
                 }
 
+                case SHADOW_MAP_ORTHOGONAL_PCSS:
+                case SHADOW_MAP_ORTHOGONAL_PCSS_DEBUG:
+                {
+                    RenderDataSM.pcss.depthBuffer = &depthBuffer;
+                    RenderDataSM.pcss.client_width = &client_width;
+                    RenderDataSM.pcss.client_height = &client_height;
+                    // RenderDataSM.pcss.shaderDepthPass = &shader_SM_PCSS_O_DP;
+                    // RenderDataSM.pcss.shaderRenderPass = &shader_SM_PCSS_O_RP;
+                    RenderDataSM.pcss.shaderDepthDebug = &shader_DBD;
+                    RenderDataSM.pcss.view = &view;
+                    RenderDataSM.pcss.projection = &projection;
+                    RenderDataSM.pcss.lightView = &lightView;
+                    RenderDataSM.pcss.lightProjection = &lightProjectionOrthogonal;
+                    RenderDataSM.pcss.shadowBias = &shadowBias;
+                    RenderDataSM.pcss.pcfRadius = &pcfRadius;
+                    RenderDataSM.pcss.quadVAO = &quadVAO;
+                    RenderDataSM.pcss.planeVAO = &planeVAO;
+                    RenderDataSM.pcss.planeModel = &planeModel;
+                    RenderDataSM.pcss.modelVAO = &modelVAO;
+                    RenderDataSM.pcss.modelIndexCount = &modelIndexCount;
+                    RenderDataSM.pcss.modelModel = &modelModel;
+                    break;
+                }
+
+                case SHADOW_MAP_PERSPECTIVE_PCSS:
+                case SHADOW_MAP_PERSPECTIVE_PCSS_DEBUG:
+                {
+                    RenderDataSM.pcss.depthBuffer = &depthBuffer;
+                    RenderDataSM.pcss.client_width = &client_width;
+                    RenderDataSM.pcss.client_height = &client_height;
+                    RenderDataSM.pcss.shaderDepthPass = &shader_SM_PCSS_P_DP;
+                    RenderDataSM.pcss.shaderRenderPass = &shader_SM_PCSS_P_RP;
+                    RenderDataSM.pcss.shaderDepthDebug = &shader_DBD;
+                    RenderDataSM.pcss.view = &view;
+                    RenderDataSM.pcss.projection = &projection;
+                    RenderDataSM.pcss.lightView = &lightView;
+                    RenderDataSM.pcss.lightProjection = &lightProjectionPerspective;
+                    RenderDataSM.pcss.shadowBias = &shadowBias;
+                    RenderDataSM.pcss.pcfRadius = &pcfRadius;
+                    RenderDataSM.pcss.quadVAO = &quadVAO;
+                    RenderDataSM.pcss.planeVAO = &planeVAO;
+                    RenderDataSM.pcss.planeModel = &planeModel;
+                    RenderDataSM.pcss.modelVAO = &modelVAO;
+                    RenderDataSM.pcss.modelIndexCount = &modelIndexCount;
+                    RenderDataSM.pcss.modelModel = &modelModel;
+                    break;
+                }
+
                 case SHADOW_MAP_ORTHOGONAL_ESM:
                 case SHADOW_MAP_ORTHOGONAL_ESM_DEBUG:
                 {
@@ -1538,6 +1586,30 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 case SHADOW_MAP_PERSPECTIVE_NOISE_DEBUG:
                 {
                     ShadowMapNoiseDebug(RenderDataSM.noise);
+                    break;
+                }
+
+                case SHADOW_MAP_ORTHOGONAL_PCSS:
+                {
+                    ShadowMapPcss(RenderDataSM.pcss);
+                    break;
+                }
+
+                case SHADOW_MAP_ORTHOGONAL_PCSS_DEBUG:
+                {
+                    ShadowMapPcssDebug(RenderDataSM.pcss);
+                    break;
+                }
+
+                case SHADOW_MAP_PERSPECTIVE_PCSS:
+                {
+                    ShadowMapPcss(RenderDataSM.pcss);
+                    break;
+                }
+
+                case SHADOW_MAP_PERSPECTIVE_PCSS_DEBUG:
+                {
+                    ShadowMapPcssDebug(RenderDataSM.pcss);
                     break;
                 }
 
