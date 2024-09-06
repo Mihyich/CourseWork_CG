@@ -45,6 +45,7 @@
 #include "ShadowMap.h"
 #include "ShadowMapPcf.h"
 #include "ShadowMapNoise.h"
+#include "ShadowMapPcss.h"
 #include "ShadowMapEsm.h"
 #include "ShadowMapVsm.h"
 
