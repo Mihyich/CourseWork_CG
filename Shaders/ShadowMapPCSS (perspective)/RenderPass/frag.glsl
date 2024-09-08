@@ -44,9 +44,11 @@ in vec4 FragPos;
 in vec3 Normal;
 in vec4 FragPosLightSpace;
 
+in vec2 lightProjectionParams;
+
 uniform sampler2D shadowMap;
-uniform float shadowBias = 0.001;
-uniform float pcfRadius = 1.0;
+uniform float shadowBias;
+uniform float pcfRadius;
 
 #define PI 3.14159265358
 
@@ -133,8 +135,7 @@ vec3 computeLightColor(vec3 fragPos, vec3 normal)
 vec2 sampleDisk(int sampleIndex, int numSamples)
 {
     float angle = float(sampleIndex) / float(numSamples) * 2.0 * PI;
-    float radius = sqrt(float(sampleIndex) / float(numSamples));
-    return vec2(cos(angle), sin(angle)) * radius;
+    return vec2(cos(angle), sin(angle));
 }
 
 float SearchBlocker(vec3 projCoords, float searchRadius)
@@ -143,25 +144,30 @@ float SearchBlocker(vec3 projCoords, float searchRadius)
     float blockerDepthSum = 0.0;
     int numBlockers = 0;
 
+    // Вычисление размера текстеля
+    vec2 texelSize = 1.0 / textureSize(shadowMap, 0); // 0 — уровень MIP карты
+
     // Выполняем выборки вокруг текущей точки (в пределах searchRadius)
-    for (int i = 0; i < numSamples; ++i) {
+    for (int i = 0; i < numSamples; ++i)
+    {
         // Генерация смещенной позиции выборки (например, случайное смещение или с использованием диска)
-        vec2 offset = sampleDisk(i, numSamples) * searchRadius;
+        vec2 offset = sampleDisk(i, numSamples) * texelSize * searchRadius;
 
         // Прочитаем глубину из карты теней для соседней точки
         float depthInShadowMap = texture(shadowMap, projCoords.xy + offset).r;
 
         // Если точка блокирует свет, добавляем её глубину
-        if (depthInShadowMap < projCoords.z) {
+        if (depthInShadowMap < projCoords.z + shadowBias)
+        {
             blockerDepthSum += depthInShadowMap;
-            numBlockers++;
+            ++numBlockers;
         }
     }
 
     // Если найдены блокирующие объекты, усредняем их глубину
     if (numBlockers > 0)
     {
-        return blockerDepthSum / numBlockers;
+        return blockerDepthSum / float(numBlockers);
     }
 
     // Если блокирующие объекты не найдены, возвращаем -1
@@ -176,11 +182,14 @@ float EstimatePenumbraSize(float fragDepth, float blockerDepth)
         return 0.0;
     }
 
+    float viewLightFragDepth = lightProjectionParams.y / (fragDepth * 2.0 - 1.0 - lightProjectionParams.x);
+    float viewLightBlockerDepth = lightProjectionParams.y / (blockerDepth * 2.0 - 1.0 - lightProjectionParams.x);
+
     // Радиус источника света (например, диска для направленного света)
-    float lightRadius = 0.05;  // Настраиваемая величина, зависит от источника света
+    float lightRadius = 10.0;  // Настраиваемая величина, зависит от источника света
 
     // Оценка размера полутени
-    float penumbraSize = (fragDepth - blockerDepth) / blockerDepth * lightRadius;
+    float penumbraSize = (viewLightFragDepth - viewLightBlockerDepth) / viewLightBlockerDepth * lightRadius;
 
     // Возвращаем оценку размера полутени
     return penumbraSize;
@@ -189,58 +198,45 @@ float EstimatePenumbraSize(float fragDepth, float blockerDepth)
 float PerformPCF(vec3 projCoords, float penumbraSize)
 {
     // Определение ядра для PCF
-    int sampleCount = 16;  // Количество выборок (можно регулировать для улучшения качества)
+    int samleSize = 16; // Предпочтительно нечетное
+    int halfSize = samleSize / 2;
+    float samleCount = pow(halfSize * 2 + 1, 2.0);
+
     float shadow = 0.0;
     
     // Применяем значение penumbraSize для масштабирования области выборки
     float filterRadius = penumbraSize;
 
+    // Вычисление размера текстеля
+    vec2 texelSize = 1.0 / textureSize(shadowMap, 0); // 0 — уровень MIP карты
+
     // Цикл по выборкам вокруг текущей координаты в пространстве света
-    for (int x = -sampleCount / 2; x < sampleCount / 2; ++x)
+    for (int x = -halfSize; x <= halfSize; ++x)
     {
-        for (int y = -sampleCount / 2; y < sampleCount / 2; ++y)
+        for (int y = -halfSize; y <= halfSize; ++y)
         {
-            // Смещаем координаты для выборок в окрестности
-            vec2 offset = vec2(float(x), float(y)) * filterRadius / float(sampleCount);
-            vec2 sampleCoords = projCoords.xy + offset;
-
-            // Проверка, чтобы выборки не выходили за границы текстуры
-            if (sampleCoords.x >= 0.0 && sampleCoords.x <= 1.0 && sampleCoords.y >= 0.0 && sampleCoords.y <= 1.0)
-            {
-                // Получаем глубину из карты теней
-                float closestDepth = texture(shadowMap, sampleCoords).r;
-
-                // Текущая глубина фрагмента
-                float currentDepth = projCoords.z;
-
-                // Проверка тени для этой выборки
-                if (closestDepth < currentDepth)
-                {
-                    shadow += 1.0;
-                }
-            }
+            float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize * filterRadius).r;
+            shadow += projCoords.z - shadowBias > pcfDepth ? 1.0 : 0.0;
         }
     }
 
-    // Усредняем результат выборок
-    shadow /= float(sampleCount * sampleCount);
-
-    return shadow;
+    return shadow / samleCount;
 }
 
 float ShadowCalculation(vec4 fragPosLightSpace)
 {
     // Преобразуем координаты в проекционные
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
-    projCoords.xy = projCoords.xy * 0.5 + 0.5;
+    projCoords = projCoords * 0.5 + 0.5;
+
+    if (projCoords.z > 1.0)
+        return 0.0;
 
     // Шаг 1: Оценка блокирующих объектов
-    float blockerDepth = SearchBlocker(projCoords, 0.02);
+    float blockerDepth = SearchBlocker(projCoords, pcfRadius);
 
     if (blockerDepth < 0.0)
-    {
-        return 1.0; // Освещённый фрагмент
-    }
+        return 0.0;
 
     // Шаг 2: Оценка размера полутени
     float penumbraSize = EstimatePenumbraSize(projCoords.z, blockerDepth);
