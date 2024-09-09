@@ -295,6 +295,12 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static Shader shader_SM_PCSS_P_DP; // ShadowMap (PCSS) Perspective Depth Pass
     static Shader shader_SM_PCSS_P_RP; // ShadowMap (PCSS) Perspective Render Pass
 
+    static Shader shader_SM_PCSS_NOISE_O_DP; // ShadowMap (PCSS_NOISE) Orthogonal Depth Pass
+    static Shader shader_SM_PCSS_NOISE_O_RP; // ShadowMap (PCSS_NOISE) Orthogonal Render Pass
+
+    static Shader shader_SM_PCSS_NOISE_P_DP; // ShadowMap (PCSS_NOISE) Perspective Depth Pass
+    static Shader shader_SM_PCSS_NOISE_P_RP; // ShadowMap (PCSS_NOISE) Perspective Render Pass
+
     static Shader shader_RT_BVH; // RayTracing BVH Debug
 
     static Shader shader_IO; // ImageOut
@@ -582,6 +588,26 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_PCSS_P_RP.delete_shader(GL_VERTEX_SHADER);
         shader_SM_PCSS_P_RP.delete_shader(GL_FRAGMENT_SHADER);
 
+        shader_SM_PCSS_NOISE_P_DP.set_shader_name("Shaders/ShadowMapPCSS_NOISE (perspective)/DepthPass");
+        shader_SM_PCSS_NOISE_P_DP.create_from_file("Shaders/ShadowMapPCSS_NOISE (perspective)/DepthPass/vert.glsl", GL_VERTEX_SHADER);
+        shader_SM_PCSS_NOISE_P_DP.create_from_file("Shaders/ShadowMapPCSS_NOISE (perspective)/DepthPass/frag.glsl", GL_FRAGMENT_SHADER);
+        shader_SM_PCSS_NOISE_P_DP.link_program();
+        shader_SM_PCSS_NOISE_P_DP.init_uniforms_blocks_attribs();
+        shader_SM_PCSS_NOISE_P_DP.print_uniforms_blocks_attribs();
+        shader_SM_PCSS_NOISE_P_DP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
+        shader_SM_PCSS_NOISE_P_DP.delete_shader(GL_VERTEX_SHADER);
+        shader_SM_PCSS_NOISE_P_DP.delete_shader(GL_FRAGMENT_SHADER);
+
+        shader_SM_PCSS_NOISE_P_RP.set_shader_name("Shaders/ShadowMapPCSS_NOISE (perspective)/RenderPass");
+        shader_SM_PCSS_NOISE_P_RP.create_from_file("Shaders/ShadowMapPCSS_NOISE (perspective)/RenderPass/vert.glsl", GL_VERTEX_SHADER);
+        shader_SM_PCSS_NOISE_P_RP.create_from_file("Shaders/ShadowMapPCSS_NOISE (perspective)/RenderPass/frag.glsl", GL_FRAGMENT_SHADER);
+        shader_SM_PCSS_NOISE_P_RP.link_program();
+        shader_SM_PCSS_NOISE_P_RP.init_uniforms_blocks_attribs();
+        shader_SM_PCSS_NOISE_P_RP.print_uniforms_blocks_attribs();
+        shader_SM_PCSS_NOISE_P_RP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
+        shader_SM_PCSS_NOISE_P_RP.delete_shader(GL_VERTEX_SHADER);
+        shader_SM_PCSS_NOISE_P_RP.delete_shader(GL_FRAGMENT_SHADER);
+
         shader_RT_BVH.set_shader_name("Shaders/RayTraceBvhDebug");
         shader_RT_BVH.create_from_file("Shaders/RayTraceBvhDebug/vert.glsl", GL_VERTEX_SHADER);
         shader_RT_BVH.create_from_file("Shaders/RayTraceBvhDebug/geom.glsl", GL_GEOMETRY_SHADER);
@@ -661,6 +687,9 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_PCSS_P_RP.use();
         glUniform1i(shader_SM_PCSS_P_RP.get_uniform_location("shadowMap"), 0);
 
+        shader_SM_PCSS_NOISE_P_RP.use();
+        glUniform1i(shader_SM_PCSS_P_RP.get_uniform_location("shadowMap"), 0);
+
         shader_IO.use();
         glUniform1i(shader_IO.get_uniform_location("colorImage"), 0);
 
@@ -709,6 +738,10 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         glUniformBlockBinding(ProgrammId, blockIndex, 0);
 
         ProgrammId = shader_SM_PCSS_P_RP.getProgramId();
+        blockIndex = glGetUniformBlockIndex(ProgrammId, "Lighting");
+        glUniformBlockBinding(ProgrammId, blockIndex, 0);
+
+        ProgrammId = shader_SM_PCSS_NOISE_P_RP.getProgramId();
         blockIndex = glGetUniformBlockIndex(ProgrammId, "Lighting");
         glUniformBlockBinding(ProgrammId, blockIndex, 0);
 
@@ -1742,6 +1775,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_NOISE_P_RP.delete_program();
         shader_SM_PCSS_P_DP.delete_program();
         shader_SM_PCSS_P_RP.delete_program();
+        shader_SM_PCSS_NOISE_P_DP.delete_program();
+        shader_SM_PCSS_NOISE_P_RP.delete_program();
         shader_RT_BVH.delete_program();
         shader_IO.delete_program();
         shader_RT_HARD.delete_program();
