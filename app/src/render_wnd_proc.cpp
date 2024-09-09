@@ -1098,6 +1098,54 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     break;
                 }
 
+                case SHADOW_MAP_ORTHOGONAL_PCSS_NOISE:
+                case SHADOW_MAP_ORTHOGONAL_PCSS_NOISE_DEBUG:
+                {
+                    RenderDataSM.pcss_noise.depthBuffer = &depthBuffer;
+                    RenderDataSM.pcss_noise.client_width = &client_width;
+                    RenderDataSM.pcss_noise.client_height = &client_height;
+                    // RenderDataSM.pcss_noise.shaderDepthPass = &shader_SM_PCSS_NOISE_O_DP;
+                    // RenderDataSM.pcss_noise.shaderRenderPass = &shader_SM_PCSS_NOISE_O_RP;
+                    RenderDataSM.pcss_noise.shaderDepthDebug = &shader_DBD;
+                    RenderDataSM.pcss_noise.view = &view;
+                    RenderDataSM.pcss_noise.projection = &projection;
+                    RenderDataSM.pcss_noise.lightView = &lightView;
+                    RenderDataSM.pcss_noise.lightProjection = &lightProjectionPerspective;
+                    RenderDataSM.pcss_noise.shadowBias = &shadowBias;
+                    RenderDataSM.pcss_noise.pcfRadius = &pcfRadius;
+                    RenderDataSM.pcss_noise.quadVAO = &quadVAO;
+                    RenderDataSM.pcss_noise.planeVAO = &planeVAO;
+                    RenderDataSM.pcss_noise.planeModel = &planeModel;
+                    RenderDataSM.pcss_noise.modelVAO = &modelVAO;
+                    RenderDataSM.pcss_noise.modelIndexCount = &modelIndexCount;
+                    RenderDataSM.pcss_noise.modelModel = &modelModel;
+                    break;
+                }
+
+                case SHADOW_MAP_PERSPECTIVE_PCSS_NOISE:
+                case SHADOW_MAP_PERSPECTIVE_PCSS_NOISE_DEBUG:
+                {
+                    RenderDataSM.pcss_noise.depthBuffer = &depthBuffer;
+                    RenderDataSM.pcss_noise.client_width = &client_width;
+                    RenderDataSM.pcss_noise.client_height = &client_height;
+                    RenderDataSM.pcss_noise.shaderDepthPass = &shader_SM_PCSS_NOISE_P_DP;
+                    RenderDataSM.pcss_noise.shaderRenderPass = &shader_SM_PCSS_NOISE_P_RP;
+                    RenderDataSM.pcss_noise.shaderDepthDebug = &shader_DBD;
+                    RenderDataSM.pcss_noise.view = &view;
+                    RenderDataSM.pcss_noise.projection = &projection;
+                    RenderDataSM.pcss_noise.lightView = &lightView;
+                    RenderDataSM.pcss_noise.lightProjection = &lightProjectionPerspective;
+                    RenderDataSM.pcss_noise.shadowBias = &shadowBias;
+                    RenderDataSM.pcss_noise.pcfRadius = &pcfRadius;
+                    RenderDataSM.pcss_noise.quadVAO = &quadVAO;
+                    RenderDataSM.pcss_noise.planeVAO = &planeVAO;
+                    RenderDataSM.pcss_noise.planeModel = &planeModel;
+                    RenderDataSM.pcss_noise.modelVAO = &modelVAO;
+                    RenderDataSM.pcss_noise.modelIndexCount = &modelIndexCount;
+                    RenderDataSM.pcss_noise.modelModel = &modelModel;
+                    break;
+                }
+
                 case SHADOW_MAP_ORTHOGONAL_ESM:
                 case SHADOW_MAP_ORTHOGONAL_ESM_DEBUG:
                 {
@@ -1643,6 +1691,30 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 case SHADOW_MAP_PERSPECTIVE_PCSS_DEBUG:
                 {
                     ShadowMapPcssDebug(RenderDataSM.pcss);
+                    break;
+                }
+
+                case SHADOW_MAP_ORTHOGONAL_PCSS_NOISE:
+                {
+                    ShadowMapPcssNoise(RenderDataSM.pcss_noise);
+                    break;
+                }
+
+                case SHADOW_MAP_ORTHOGONAL_PCSS_NOISE_DEBUG:
+                {
+                    ShadowMapPcssNoiseDebug(RenderDataSM.pcss_noise);
+                    break;
+                }
+
+                case SHADOW_MAP_PERSPECTIVE_PCSS_NOISE:
+                {
+                    ShadowMapPcssNoise(RenderDataSM.pcss_noise);
+                    break;
+                }
+
+                case SHADOW_MAP_PERSPECTIVE_PCSS_NOISE_DEBUG:
+                {
+                    ShadowMapPcssNoiseDebug(RenderDataSM.pcss_noise);
                     break;
                 }
 
