@@ -49,6 +49,7 @@ in vec2 lightProjectionParams;
 uniform sampler2D shadowMap;
 uniform float shadowBias;
 uniform float pcfRadius;
+uniform float lightRadius = 1.0; // Радиус источника света
 
 #define PI 3.14159265358
 
@@ -184,9 +185,6 @@ float EstimatePenumbraSize(float fragDepth, float blockerDepth)
 
     float viewLightFragDepth = lightProjectionParams.y / (fragDepth * 2.0 - 1.0 - lightProjectionParams.x);
     float viewLightBlockerDepth = lightProjectionParams.y / (blockerDepth * 2.0 - 1.0 - lightProjectionParams.x);
-
-    // Радиус источника света (например, диска для направленного света)
-    float lightRadius = 10.0;  // Настраиваемая величина, зависит от источника света
 
     // Оценка размера полутени
     float penumbraSize = (viewLightFragDepth - viewLightBlockerDepth) / viewLightBlockerDepth * lightRadius;
