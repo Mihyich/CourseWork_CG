@@ -5,8 +5,9 @@
 #define ALG_SM_PCF 1
 #define ALG_SM_NOISE 2
 #define ALG_SM_PCSS 3
-#define ALG_SM_ESM 4
-#define ALG_SM_VSM 5
+#define ALG_SM_PCSS_NOISE 4
+#define ALG_SM_ESM 5
+#define ALG_SM_VSM 6
 
 #define IDB_EDIT_RES_X 2
 #define IDB_EDIT_RES_Y 3
@@ -230,6 +231,7 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
             SendMessage(ComboBoxAlgoritmHwnd, CB_ADDSTRING, (WPARAM)0, (LPARAM)L"ShadowMap PCF");
             SendMessage(ComboBoxAlgoritmHwnd, CB_ADDSTRING, (WPARAM)0, (LPARAM)L"ShadowMap NOISE");
             SendMessage(ComboBoxAlgoritmHwnd, CB_ADDSTRING, (WPARAM)0, (LPARAM)L"ShadowMap PCSS");
+            SendMessage(ComboBoxAlgoritmHwnd, CB_ADDSTRING, (WPARAM)0, (LPARAM)L"ShadowMap PCSS_NOISE");
             SendMessage(ComboBoxAlgoritmHwnd, CB_ADDSTRING, (WPARAM)0, (LPARAM)L"ShadowMap ESM");
             SendMessage(ComboBoxAlgoritmHwnd, CB_ADDSTRING, (WPARAM)0, (LPARAM)L"ShadowMap VSM");
             SendMessage(ComboBoxAlgoritmHwnd, CB_SETCURSEL, (WPARAM)ALG_SM_PCF, 0);
@@ -477,8 +479,8 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
                             SetFocus(hWnd);
 
                             const int alg = SendMessage((HWND)lParam, CB_GETCURSEL, 0, 0);
-                            const WINBOOL bias = (alg == ALG_SM) || (alg == ALG_SM_PCF) || (alg == ALG_SM_NOISE) || (alg == ALG_SM_PCSS) || (alg == ALG_SM_ESM);
-                            const WINBOOL pcf = (alg == ALG_SM_PCF) || (alg == ALG_SM_NOISE) || (alg == ALG_SM_PCSS);
+                            const WINBOOL bias = (alg == ALG_SM) || (alg == ALG_SM_PCF) || (alg == ALG_SM_NOISE) || (alg == ALG_SM_PCSS) || (alg == ALG_SM_PCSS_NOISE) || (alg == ALG_SM_ESM);
+                            const WINBOOL pcf = (alg == ALG_SM_PCF) || (alg == ALG_SM_NOISE) || (alg == ALG_SM_PCSS) || (alg == ALG_SM_PCSS_NOISE);
                             const WINBOOL expK = (alg == ALG_SM_ESM);
 
                             EnableWindow(StaticBiasHwnd, bias);
@@ -613,6 +615,37 @@ LRESULT CALLBACK ShadowMapWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
                                         else
                                         {
                                             SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOW_ALG, SHADOW_MAP_PERSPECTIVE_PCSS, 0);
+                                        }
+                                    }
+
+                                    break;
+                                }
+
+                                case ALG_SM_PCSS_NOISE:
+                                {
+                                    ProjecitonType type = *reinterpret_cast<ProjecitonType*>(SendMessage(app::GeneralShadowOptionsWnd.getHwnd(), WM_GET_PROJ_TYPE, 0, 0));
+                                    WINBOOL RenderDebug = SendMessage(TabRenderDebugHwnd, BM_GETCHECK, 0, 0) == BST_CHECKED;
+
+                                    if (type == PROJ_ORTHO)
+                                    {
+                                        if (RenderDebug)
+                                        {
+                                            SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOW_ALG, SHADOW_MAP_ORTHOGONAL_PCSS_NOISE_DEBUG, 0);
+                                        }
+                                        else
+                                        {
+                                            SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOW_ALG, SHADOW_MAP_ORTHOGONAL_PCSS_NOISE, 0);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (RenderDebug)
+                                        {
+                                            SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOW_ALG, SHADOW_MAP_PERSPECTIVE_PCSS_NOISE_DEBUG, 0);
+                                        }
+                                        else
+                                        {
+                                            SendMessage(app::RenderWnd.getHwnd(), WM_SET_SHADOW_ALG, SHADOW_MAP_PERSPECTIVE_PCSS_NOISE, 0);
                                         }
                                     }
 
