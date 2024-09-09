@@ -49,7 +49,7 @@ in vec2 lightProjectionParams;
 uniform sampler2D shadowMap;
 uniform float shadowBias;
 uniform float pcfRadius;
-uniform float lightRadius = 1.0; // Радиус источника света
+uniform float lightRadius = 20.0; // Радиус источника света
 
 #define PI 3.14159265358
 
@@ -133,6 +133,26 @@ vec3 computeLightColor(vec3 fragPos, vec3 normal)
     return diff;
 }
 
+// Случайное число
+float rand(vec2 uv)
+{
+    return fract(sin(dot(uv, vec2(12.9898, 4.1414))) * 43758.5453);
+}
+
+// Случайное гауссово распределение
+float randomGaussian(float mean, float stddev, vec2 seed) {
+    float u1 = rand(seed);
+    float u2 = rand(seed + vec2(1.0));
+    float r = sqrt(-2.0 * log(u1)) * cos(2.0 * PI * u2);
+    return mean + stddev * r;
+}
+
+// Шум
+vec2 generateNoise(float mean, float stddev, vec2 seed)
+{
+    return vec2(randomGaussian(mean, stddev, seed * PI), randomGaussian(mean, stddev, seed));
+}
+
 vec2 sampleDisk(int sampleIndex, int numSamples)
 {
     float angle = float(sampleIndex) / float(numSamples) * 2.0 * PI;
@@ -213,7 +233,8 @@ float PerformPCF(vec3 projCoords, float penumbraSize)
     {
         for (int y = -halfSize; y <= halfSize; ++y)
         {
-            float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize * filterRadius).r;
+            vec2 noiseOffset = generateNoise(0.0, 1.0, projCoords.xy + vec2(x, y));
+            float pcfDepth = texture(shadowMap, projCoords.xy + noiseOffset * texelSize * filterRadius).r;
             shadow += projCoords.z - shadowBias > pcfDepth ? 1.0 : 0.0;
         }
     }
