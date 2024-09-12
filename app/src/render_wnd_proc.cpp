@@ -568,6 +568,26 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_NOISE_P_RP.delete_shader(GL_VERTEX_SHADER);
         shader_SM_NOISE_P_RP.delete_shader(GL_FRAGMENT_SHADER);
 
+        shader_SM_PCSS_O_DP.set_shader_name("Shaders/ShadowMapPCSS (orthogonal)/DepthPass");
+        shader_SM_PCSS_O_DP.create_from_file("Shaders/ShadowMapPCSS (orthogonal)/DepthPass/vert.glsl", GL_VERTEX_SHADER);
+        shader_SM_PCSS_O_DP.create_from_file("Shaders/ShadowMapPCSS (orthogonal)/DepthPass/frag.glsl", GL_FRAGMENT_SHADER);
+        shader_SM_PCSS_O_DP.link_program();
+        shader_SM_PCSS_O_DP.init_uniforms_blocks_attribs();
+        shader_SM_PCSS_O_DP.print_uniforms_blocks_attribs();
+        shader_SM_PCSS_O_DP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
+        shader_SM_PCSS_O_DP.delete_shader(GL_VERTEX_SHADER);
+        shader_SM_PCSS_O_DP.delete_shader(GL_FRAGMENT_SHADER);
+
+        shader_SM_PCSS_O_RP.set_shader_name("Shaders/ShadowMapPCSS (orthogonal)/RenderPass");
+        shader_SM_PCSS_O_RP.create_from_file("Shaders/ShadowMapPCSS (orthogonal)/RenderPass/vert.glsl", GL_VERTEX_SHADER);
+        shader_SM_PCSS_O_RP.create_from_file("Shaders/ShadowMapPCSS (orthogonal)/RenderPass/frag.glsl", GL_FRAGMENT_SHADER);
+        shader_SM_PCSS_O_RP.link_program();
+        shader_SM_PCSS_O_RP.init_uniforms_blocks_attribs();
+        shader_SM_PCSS_O_RP.print_uniforms_blocks_attribs();
+        shader_SM_PCSS_O_RP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
+        shader_SM_PCSS_O_RP.delete_shader(GL_VERTEX_SHADER);
+        shader_SM_PCSS_O_RP.delete_shader(GL_FRAGMENT_SHADER);
+
         shader_SM_PCSS_P_DP.set_shader_name("Shaders/ShadowMapPCSS (perspective)/DepthPass");
         shader_SM_PCSS_P_DP.create_from_file("Shaders/ShadowMapPCSS (perspective)/DepthPass/vert.glsl", GL_VERTEX_SHADER);
         shader_SM_PCSS_P_DP.create_from_file("Shaders/ShadowMapPCSS (perspective)/DepthPass/frag.glsl", GL_FRAGMENT_SHADER);
@@ -587,6 +607,26 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_PCSS_P_RP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
         shader_SM_PCSS_P_RP.delete_shader(GL_VERTEX_SHADER);
         shader_SM_PCSS_P_RP.delete_shader(GL_FRAGMENT_SHADER);
+
+        shader_SM_PCSS_NOISE_O_DP.set_shader_name("Shaders/ShadowMapPCSS_NOISE (orthogonal)/DepthPass");
+        shader_SM_PCSS_NOISE_O_DP.create_from_file("Shaders/ShadowMapPCSS_NOISE (orthogonal)/DepthPass/vert.glsl", GL_VERTEX_SHADER);
+        shader_SM_PCSS_NOISE_O_DP.create_from_file("Shaders/ShadowMapPCSS_NOISE (orthogonal)/DepthPass/frag.glsl", GL_FRAGMENT_SHADER);
+        shader_SM_PCSS_NOISE_O_DP.link_program();
+        shader_SM_PCSS_NOISE_O_DP.init_uniforms_blocks_attribs();
+        shader_SM_PCSS_NOISE_O_DP.print_uniforms_blocks_attribs();
+        shader_SM_PCSS_NOISE_O_DP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
+        shader_SM_PCSS_NOISE_O_DP.delete_shader(GL_VERTEX_SHADER);
+        shader_SM_PCSS_NOISE_O_DP.delete_shader(GL_FRAGMENT_SHADER);
+
+        shader_SM_PCSS_NOISE_O_RP.set_shader_name("Shaders/ShadowMapPCSS_NOISE (orthogonal)/RenderPass");
+        shader_SM_PCSS_NOISE_O_RP.create_from_file("Shaders/ShadowMapPCSS_NOISE (orthogonal)/RenderPass/vert.glsl", GL_VERTEX_SHADER);
+        shader_SM_PCSS_NOISE_O_RP.create_from_file("Shaders/ShadowMapPCSS_NOISE (orthogonal)/RenderPass/frag.glsl", GL_FRAGMENT_SHADER);
+        shader_SM_PCSS_NOISE_O_RP.link_program();
+        shader_SM_PCSS_NOISE_O_RP.init_uniforms_blocks_attribs();
+        shader_SM_PCSS_NOISE_O_RP.print_uniforms_blocks_attribs();
+        shader_SM_PCSS_NOISE_O_RP.report(REPORT_VS | REPORT_FS | REPORT_PROG);
+        shader_SM_PCSS_NOISE_O_RP.delete_shader(GL_VERTEX_SHADER);
+        shader_SM_PCSS_NOISE_O_RP.delete_shader(GL_FRAGMENT_SHADER);
 
         shader_SM_PCSS_NOISE_P_DP.set_shader_name("Shaders/ShadowMapPCSS_NOISE (perspective)/DepthPass");
         shader_SM_PCSS_NOISE_P_DP.create_from_file("Shaders/ShadowMapPCSS_NOISE (perspective)/DepthPass/vert.glsl", GL_VERTEX_SHADER);
@@ -684,11 +724,17 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_NOISE_P_RP.use();
         glUniform1i(shader_SM_NOISE_P_RP.get_uniform_location("shadowMap"), 0);
 
+        shader_SM_PCSS_O_RP.use();
+        glUniform1i(shader_SM_PCSS_O_RP.get_uniform_location("shadowMap"), 0);
+
         shader_SM_PCSS_P_RP.use();
         glUniform1i(shader_SM_PCSS_P_RP.get_uniform_location("shadowMap"), 0);
 
+        shader_SM_PCSS_NOISE_O_RP.use();
+        glUniform1i(shader_SM_PCSS_NOISE_O_RP.get_uniform_location("shadowMap"), 0);
+
         shader_SM_PCSS_NOISE_P_RP.use();
-        glUniform1i(shader_SM_PCSS_P_RP.get_uniform_location("shadowMap"), 0);
+        glUniform1i(shader_SM_PCSS_NOISE_P_RP.get_uniform_location("shadowMap"), 0);
 
         shader_IO.use();
         glUniform1i(shader_IO.get_uniform_location("colorImage"), 0);
@@ -737,7 +783,15 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         blockIndex = glGetUniformBlockIndex(ProgrammId, "Lighting");
         glUniformBlockBinding(ProgrammId, blockIndex, 0);
 
+        ProgrammId = shader_SM_PCSS_O_RP.getProgramId();
+        blockIndex = glGetUniformBlockIndex(ProgrammId, "Lighting");
+        glUniformBlockBinding(ProgrammId, blockIndex, 0);
+
         ProgrammId = shader_SM_PCSS_P_RP.getProgramId();
+        blockIndex = glGetUniformBlockIndex(ProgrammId, "Lighting");
+        glUniformBlockBinding(ProgrammId, blockIndex, 0);
+
+        ProgrammId = shader_SM_PCSS_NOISE_O_RP.getProgramId();
         blockIndex = glGetUniformBlockIndex(ProgrammId, "Lighting");
         glUniformBlockBinding(ProgrammId, blockIndex, 0);
 
@@ -1056,8 +1110,8 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     RenderDataSM.pcss.depthBuffer = &depthBuffer;
                     RenderDataSM.pcss.client_width = &client_width;
                     RenderDataSM.pcss.client_height = &client_height;
-                    // RenderDataSM.pcss.shaderDepthPass = &shader_SM_PCSS_O_DP;
-                    // RenderDataSM.pcss.shaderRenderPass = &shader_SM_PCSS_O_RP;
+                    RenderDataSM.pcss.shaderDepthPass = &shader_SM_PCSS_O_DP;
+                    RenderDataSM.pcss.shaderRenderPass = &shader_SM_PCSS_O_RP;
                     RenderDataSM.pcss.shaderDepthDebug = &shader_DBD;
                     RenderDataSM.pcss.view = &view;
                     RenderDataSM.pcss.projection = &projection;
@@ -1104,13 +1158,13 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     RenderDataSM.pcss_noise.depthBuffer = &depthBuffer;
                     RenderDataSM.pcss_noise.client_width = &client_width;
                     RenderDataSM.pcss_noise.client_height = &client_height;
-                    // RenderDataSM.pcss_noise.shaderDepthPass = &shader_SM_PCSS_NOISE_O_DP;
-                    // RenderDataSM.pcss_noise.shaderRenderPass = &shader_SM_PCSS_NOISE_O_RP;
+                    RenderDataSM.pcss_noise.shaderDepthPass = &shader_SM_PCSS_NOISE_O_DP;
+                    RenderDataSM.pcss_noise.shaderRenderPass = &shader_SM_PCSS_NOISE_O_RP;
                     RenderDataSM.pcss_noise.shaderDepthDebug = &shader_DBD;
                     RenderDataSM.pcss_noise.view = &view;
                     RenderDataSM.pcss_noise.projection = &projection;
                     RenderDataSM.pcss_noise.lightView = &lightView;
-                    RenderDataSM.pcss_noise.lightProjection = &lightProjectionPerspective;
+                    RenderDataSM.pcss_noise.lightProjection = &lightProjectionOrthogonal;
                     RenderDataSM.pcss_noise.shadowBias = &shadowBias;
                     RenderDataSM.pcss_noise.pcfRadius = &pcfRadius;
                     RenderDataSM.pcss_noise.quadVAO = &quadVAO;
@@ -1845,8 +1899,12 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         shader_SM_NOISE_O_RP.delete_program();
         shader_SM_NOISE_P_DP.delete_program();
         shader_SM_NOISE_P_RP.delete_program();
+        shader_SM_PCSS_O_DP.delete_program();
+        shader_SM_PCSS_O_RP.delete_program();
         shader_SM_PCSS_P_DP.delete_program();
         shader_SM_PCSS_P_RP.delete_program();
+        shader_SM_PCSS_NOISE_O_DP.delete_program();
+        shader_SM_PCSS_NOISE_O_RP.delete_program();
         shader_SM_PCSS_NOISE_P_DP.delete_program();
         shader_SM_PCSS_NOISE_P_RP.delete_program();
         shader_RT_BVH.delete_program();
