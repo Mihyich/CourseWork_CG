@@ -775,7 +775,7 @@ void __cdecl mat4_set_ortho_projection_with_aspect(pmat4 m, float l, float r, fl
 
 void __cdecl mat4_set_perspective_projection(pmat4 m, float w, float h, float n, float f, float fov)
 {
-    const float inv_k = 1.f / (w / h);
+    const float inv_k = h / w;
 	const float inv_tangent = 1.f / tanf(fov / 2.f);
 	const float dif = f - n;
 
