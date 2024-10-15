@@ -1,0 +1,1087 @@
+\chapter{Технологическая часть}
+
+В данном разделе будут рассмотрены средства реализации задания,
+представлены листинги алгоритмов умножения матриц,
+анализы трудоемкости, затраты по пямати,
+а также тестовые данные, которые использовались
+для проверки корректности работы алгоритмов.
+
+\section{Выбор языка программирования и среды разработки}
+
+Для реализации алгоритмов был выбран язык программирования \textit{C},
+а в качестве среды разработки -- \textit{Visual Studio Code}.
+Для замеров процессорного времени использовалась функция
+\textit{clock\_gettime()} \cite{get_clocktime} для систем поддерживающих
+стандарт POSIX из бибилотеки \textit{time.h}.
+Для Windows -- две функции:
+\textit{QueryPerformanceFrequency()} \cite{QueryPerformanceFrequency} и
+\textit{QueryPerformanceCounter()} \cite{QueryPerformanceCounter}
+-- из библиотеки\textit{Windows.h}.
+Для построения графиков выбран язык программирования \textit{Python}
+и библиотека \textit{matplotlib} \cite{mpl}.
+
+\section{Исходные файлы программы}
+
+Программа состоит из следующих файлов:
+\begin{itemize}
+    \item Заголовоные файлы:
+    \begin{enumerate}
+        \item $matrix.h$ -- Объявление функций для работы с матрицей;
+        \item $mult\_std.h$ -- Объявление функции стандартного умножения матриц;
+        \item $mult\_vinograd.h$ -- Объявление функции умножения матриц по алгоритму Копперсмита--Винограда;
+        \item $mult\_vinograd_opt.h$ -- Объявление оптимизированной функции умножения матриц по алгоритму Копперсмита--Винограда;
+        \item $proc\_time.h$ -- Объявление функций для замера процессорного времени алгоритмов;
+        \item $str.h$ -- Объявление функций для работы со строками;
+        \item $test.h$ -- Объявление функции тестирования алгоритмов;
+        \item $timing.h$ -- Объявление функций для замера процессорного времени.
+    \end{enumerate}
+    \item Исходные файлы:
+    \begin{enumerate}
+        \item $main.c$ -- файл с головной функцией, вызывающей меню программы;
+        \item $matrix.c$ -- Реализация функций для работы с матрицей;
+        \item $mult\_std.h$ -- Реализация функции стандартного умножения матриц;
+        \item $mult\_vinograd.h$ -- Реализация функции умножения матриц по алгоритму Копперсмита--Винограда;
+        \item $mult\_vinograd_opt.h$ -- Реализация оптимизированной функции умножения матриц по алгоритму Копперсмита--Винограда;
+        \item $proc\_time.c$ -- Реализация функций для замера процессорного времени алгоритмов;
+        \item $str.c$ -- Реализация функций для работы со строками;
+        \item $test.c$ -- Реализация функции тестирования алгоритмов;
+        \item $timing.c$ -- Реализация функций для замера процессорного времени.
+    \end{enumerate}
+\end{itemize}
+
+\section{Реализация алгоритмов}
+
+Ниже представлены реализации алгоритмов поиска расстояний Левенштейна и Дамерау-Левенштейна
+(листинги \ref{lst:std_mult}--\ref{lst:vin_opt_mult}).
+
+\begin{center}
+	\captionsetup{justification=centering, singlelinecheck=off}
+	\begin{lstlisting}[label=lst:alloc_matrix, caption=Алгоритм создания матрицы и заполнения ее нулями]
+int** alloc_matrix(size_t r, size_t c)
+{
+    if (r == 0 || c == 0)
+        return NULL;
+
+    int** p = calloc(r, sizeof(int*));
+    int* d = NULL;
+
+    if (p)
+    {
+        d = calloc(r * c, sizeof(int));
+
+        if (d)
+        {
+            for (size_t i = 0; i < r; ++i)
+                p[i] = d + c * i;
+        }
+        else
+        {
+            free(p);
+            p = NULL;
+        }
+    }
+
+    return p;
+}
+    \end{lstlisting}
+\end{center}
+
+\begin{center}
+	\captionsetup{justification=centering, singlelinecheck=off}
+	\begin{lstlisting}[label=lst:std_mult, caption=Алгоритма стандартного умножения матриц]
+int** mult_std(int** mat1, size_t r1, size_t c1, int** mat2, size_t r2, size_t c2)
+{
+    if (c1 != r2)
+        return NULL;
+
+    int** res = alloc_matrix(r1, c2);
+    
+    if (!res)
+        return NULL;
+
+    for (size_t i = 0; i < r1; ++i)
+        for (size_t j = 0; j < c2; ++j)
+            for (size_t k = 0; k < c1; ++k)
+                res[i][j] += mat1[i][k] * mat2[k][j];
+
+    return res;
+}
+	\end{lstlisting}
+\end{center}
+
+\begin{center}
+	\captionsetup{justification=centering, singlelinecheck=off}
+	\begin{lstlisting}[label=lst:vin_mult, caption=Алгоритм Копперсмита--Винограда умножения матриц]
+int** mult_vinograd(int** mat1, size_t r1, size_t c1, int** mat2, size_t r2, size_t c2)
+{
+    if (c1 != r2)
+        return NULL;
+
+    int** res = alloc_matrix(r1, c2);
+
+    if (!res)
+        return NULL;
+
+    int* tmp_row = calloc(r1, sizeof(int));
+    if (!tmp_row)
+    {
+        free_matrix(&res, r1);
+        return NULL;
+    }
+
+    int* tmp_col = calloc(c2, sizeof(int));
+    if (!tmp_col)
+    {
+        free_matrix(&res, r1);
+        free(tmp_row);
+        return NULL;
+    }
+
+    for (size_t i = 0; i < r1; ++i)
+        for (size_t j = 0; j < c1 / 2; ++j)
+            tmp_row[i] += mat1[i][2 * j] * mat1[i][2 * j + 1];
+
+    for (size_t i = 0; i < c2; ++i)
+        for (size_t j = 0; j < r2 / 2; ++j)
+            tmp_col[i] += mat2[2 * j][i] * mat2[2 * j + 1][i];
+
+
+    for (size_t i = 0; i < r1; ++i) {
+        for (size_t j = 0; j < c2; ++j) {
+            res[i][j] = -tmp_row[i] - tmp_col[j];
+            for (size_t k = 0; k < c1 / 2; ++k) {
+                res[i][j] += (mat1[i][2 * k] + mat2[2 * k + 1][j]) *
+                                (mat1[i][2 * k + 1] + mat2[2 * k][j]);
+            }
+        }
+    }
+
+    if (c1 % 2 == 1) {
+        for (size_t i = 0; i < r1; ++i) {
+            for (size_t j = 0; j < c2; ++j) {
+                res[i][j] += mat1[i][c1 - 1] * mat2[c1 - 1][j];
+            }
+        }
+    }
+
+    free(tmp_row);
+    free(tmp_col);
+
+    return res;
+}
+	\end{lstlisting}
+\end{center}
+
+\begin{center}
+	\captionsetup{justification=centering, singlelinecheck=off}
+	\begin{lstlisting}[label=lst:vin_opt_mult, caption=Оптимизированный алгоритм Копперсмита--Винограда умножения матриц]
+int** mult_vinograd_opt(int** mat1, size_t r1, size_t c1, int** mat2, size_t r2, size_t c2)
+{
+    if (c1 != r2)
+        return NULL;
+
+    int** res = alloc_matrix(r1, c2);
+    int* tmp_row = calloc(r1 + c2 + r1 + c2, sizeof(int));
+
+    if (!res || !tmp_row)
+    {
+        free_matrix(&res, r1);
+        if (tmp_row) free(tmp_row);
+        return NULL;
+    }
+
+    int* tmp_col = tmp_row + r1;
+    int* tmprc_end = tmp_col + c2;
+
+    int *tr, *tc;
+    int *m1, *m2, *m3, *m4, *m5, *m6;
+    int *rs;
+
+    if (c1 % 2)
+    {
+        size_t tmp_row_c = c1 - c1 % 2;
+        size_t tmp_col_r = r2 - r2 % 2;
+
+        for (tr = tmp_row, m1 = *mat1, m2 = m1 + 1; tr < tmp_col; ++tr, m1 += c1, m2 += c1)
+            for (size_t j = 0; j < tmp_row_c; j += 2)
+                *tr += *(m1 + j) * *(m2 + j);
+
+        for (tc = tmp_col, m1 = *mat2, m2 = *mat2 + c2; tc < tmprc_end; ++tc, ++m1, ++m2)
+        {
+            m3 = m1;
+            m4 = m2;
+
+            for (size_t j = 0; j < tmp_col_r; j += 2)
+            {
+                *tc += *m3 * *m4;
+                m3 += c2 + c2;
+                m4 += c2 + c2;
+            }
+        }
+
+        for (tr = tmp_row, m1 = *mat1, m2 = m1 + 1, rs = *res; tr < tmp_col; ++tr, m1 += c1, m2 += c1)
+        {
+            for (tc = tmp_col, m3 = *mat2, m4 = m3 + c2; tc < tmprc_end; ++tc, ++m3, ++m4)
+            {
+                *rs = -*tr - *tc + *(m1 + c1 - 1) * *(m3 + c2 * (r2 - 1));
+                m5 = m3;
+                m6 = m4;
+
+                for (size_t k = 0; k < tmp_row_c; k += 2)
+                {
+                    *rs += 
+                        (*(m1 + k) + *m6) *
+                        (*(m2 + k) + *m5);
+
+                    m5 += c2 + c2;
+                    m6 += c2 + c2;
+                }
+
+                ++rs;
+            }
+        }
+    }
+    else
+    {
+        for (tr = tmp_row, m1 = *mat1, m2 = m1 + 1; tr < tmp_col; ++tr, m1 += c1, m2 += c1)
+            for (size_t j = 0; j < c1; j += 2)
+                *tr += *(m1 + j) * *(m2 + j);
+
+        for (tc = tmp_col, m1 = *mat2, m2 = *mat2 + c2; tc < tmprc_end; ++tc, ++m1, ++m2)
+        {
+            m3 = m1;
+            m4 = m2;
+
+            for (size_t j = 0; j < r2; j += 2)
+            {
+                *tc += *m3 * *m4;
+                m3 += c2 + c2;
+                m4 += c2 + c2;
+            }
+        }
+
+        for (tr = tmp_row, m1 = *mat1, m2 = m1 + 1, rs = *res; tr < tmp_col; ++tr, m1 += c1, m2 += c1)
+        {
+            for (tc = tmp_col, m3 = *mat2, m4 = m3 + c2; tc < tmprc_end; ++tc, ++m3, ++m4)
+            {
+                *rs = -*tr - *tc;
+                m5 = m3;
+                m6 = m4;
+
+                for (size_t k = 0; k < c1; k += 2)
+                {
+                    *rs += 
+                        (*(m1 + k) + *m6) *
+                        (*(m2 + k) + *m5);
+
+                    m5 += c2 + c2;
+                    m6 += c2 + c2;
+                }
+
+                ++rs;
+            }
+        }
+    }
+
+    free(tmp_row);
+
+    return res;
+}
+	\end{lstlisting}
+\end{center}
+
+\section{Описание типов данных}
+
+Выбранные типы данных:
+
+\begin{enumerate}
+    \item Алгоритм создания матрицы и заполнения ее нулями (\ref{lst:alloc_matrix}):
+    \begin{itemize}
+        \item Матрица, состоящая из двух массивов:
+        \begin{itemize} 
+            \item Массив указателей на строки матрицы -- тип \textit{$int^*$}, длиной \( r \);
+            \item Массив элементов -- тип \textit{int}, размерностью \( r \times c \).
+        \end{itemize}
+        \item Дополнительные переменные -- тип \textit{size\_t}, количество -- 3.
+    \end{itemize}
+    \item Стандартный алгоритм умножения матриц (\ref{lst:std_mult}):
+    \begin{itemize}
+        \item Матрица mat1 -- тип \textit{$int^{**}$}, состоящая из двух массивов:
+        \begin{itemize}
+            \item Массив указателей на строки матрицы -- тип \textit{int*}, длиной \( r1 \);
+            \item Массив элементов -- тип \textit{int}, размерностью \( r1 \times c1 \).
+        \end{itemize}
+        \item Матрица mat2 -- тип \textit{$int^{**}$}, состоящая из двух массивов:
+        \begin{itemize}
+            \item Массив указателей на строки матрицы -- тип \textit{int*}, длиной \( r2 \);
+            \item Массив элементов -- тип \textit{int}, размерностью \( r2 \times c2 \).
+        \end{itemize}
+        \item Матрица mat3 -- тип \textit{$int^{**}$}, состоящая из двух массивов:
+        \begin{itemize}
+            \item Массив указателей на строки матрицы -- тип \textit{int*}, длиной \( r1 \);
+            \item Массив элементов -- тип \textit{int}, размерностью \( r1 \times c2 \).
+        \end{itemize}
+        \item Дополнительные переменные -- тип \textit{size\_t}, количество -- 7.
+    \end{itemize}
+    \item Алгоритм Копперсмита--Винограда умножения матриц (\ref{lst:vin_mult}):
+    \begin{itemize}
+        \item Матрица mat1 -- тип \textit{$int^{**}$}, состоящая из двух массивов:
+        \begin{itemize}
+            \item Массив указателей на строки матрицы -- тип \textit{int*}, длиной \( r1 \);
+            \item Массив элементов -- тип \textit{int}, размерностью \( r1 \times c1 \).
+        \end{itemize}
+        \item Матрица mat2 -- тип \textit{$int^{**}$}, состоящая из двух массивов:
+        \begin{itemize}
+            \item Массив указателей на строки матрицы -- тип \textit{int*}, длиной \( r2 \);
+            \item Массив элементов -- тип \textit{int}, размерностью \( r2 \times c2 \).
+        \end{itemize}
+        \item Матрица mat3 -- тип \textit{$int^{**}$}, состоящая из двух массивов:
+        \begin{itemize}
+            \item Массив указателей на строки матрицы -- тип \textit{int*}, длиной \( r1 \);
+            \item Массив элементов -- тип \textit{int}, размерностью \( r1 \times c2 \).
+        \end{itemize}
+        \item Массив--кеш tmp\_row -- тип \textit{$int^{*}$}, длиной \( r1 \) из элементов типа \textit{int};
+        \item Массив--кеш tmp\_col -- тип \textit{$int^{*}$}, длиной \( c2 \) из элементов типа \textit{int};
+        \item Дополнительные переменные -- тип \textit{size\_t}, количество -- 7.
+    \end{itemize}
+    \item Оптимизированный алгоритм Копперсмита--Винограда умножения матриц (\ref{lst:vin_opt_mult}):
+    \begin{itemize}
+        \item Матрица mat1 -- тип \textit{$int^{**}$}, состоящая из двух массивов:
+        \begin{itemize}
+            \item Массив указателей на строки матрицы -- тип \textit{int*}, длиной \( r1 \);
+            \item Массив элементов -- тип \textit{int}, размерностью \( r1 \times c1 \).
+        \end{itemize}
+        \item Матрица mat2 -- тип \textit{$int^{**}$}, состоящая из двух массивов:
+        \begin{itemize}
+            \item Массив указателей на строки матрицы -- тип \textit{int*}, длиной \( r2 \);
+            \item Массив элементов -- тип \textit{int}, размерностью \( r2 \times c2 \).
+        \end{itemize}
+        \item Матрица mat3 -- тип \textit{$int^{**}$}, состоящая из двух массивов:
+        \begin{itemize}
+            \item Массив указателей на строки матрицы -- тип \textit{int*}, длиной \( r1 \);
+            \item Массив элементов -- тип \textit{int}, размерностью \( r1 \times c2 \).
+        \end{itemize}
+        \item Массив--кеш tmp\_row -- тип \textit{$int^{*}$}, длиной \( r1 + c2 \) из элементов типа \textit{int};
+        \item Дополнительный указатели -- тип \textit{$int^{*}$}, количество -- 11;
+        \item Дополнительные переменные -- тип \textit{size\_t}, количество -- 9.
+    \end{itemize}
+\end{enumerate}
+
+\section{Оценка затрат алгоритмов по памяти}
+
+\begin{enumerate}
+    \item Алгоритм создания матрицы и заполнения ее нулями (\ref{lst:alloc_matrix}):
+    \begin{eqnarray*}
+        (r \cdot c) \cdot sizeof(int) + \\
+        r \cdot sizeof(int^{*}) + \\
+        sizeof(int^{**}) + \\
+        3 \cdot sizeof(size\_t)
+    \end{eqnarray*}
+    \item Стандартный алгоритм умножения матриц (\ref{lst:std_mult}):
+    \begin{eqnarray*}
+        (r1 \cdot c1 + r2 \cdot c2 + r1 \cdot c2) \cdot sizeof(int) + \\
+        (r1 + r2 + r1) \cdot sizeof(int^{*}) + \\
+        3 \cdot sizeof(int^{**}) + \\
+        7 \cdot sizeof(size\_t)
+    \end{eqnarray*}
+    \item Алгоритм Копперсмита--Винограда умножения матриц (\ref{lst:vin_mult}):
+    \begin{eqnarray*}
+        (r1 \cdot c1 + r2 \cdot c2 + r1 \cdot c2 + r1 + c2) \cdot sizeof(int) + \\
+        (r1 + r2 + r1 + 2) \cdot sizeof(int^{*}) + \\
+        3 \cdot sizeof(int^{**}) + \\
+        7 \cdot sizeof(size\_t)
+    \end{eqnarray*}
+    \item Оптимизированный алгоритм Копперсмита--Винограда умножения матриц (\ref{lst:vin_opt_mult})
+    \begin{eqnarray*}
+        (r1 \cdot c1 + r2 \cdot c2 + r1 \cdot c2 + r1 + c2) \cdot sizeof(int) + \\
+        (r1 + r2 + r1 + 12) \cdot sizeof(int^{*}) + \\
+        3 \cdot sizeof(int^{**}) + \\
+        9 \cdot sizeof(size\_t)
+    \end{eqnarray*}
+\end{enumerate}
+
+\section{Трудоемкость}
+
+\begin{enumerate}
+    \item Алгоритм создания матрицы и заполнения ее нулями (\ref{lst:alloc_matrix}):
+    \begin{equation*}
+        I_{alo} =
+        3 +
+        \begin{cases}
+            \min
+            \begin{cases}
+                1 \\
+                p_1
+            \end{cases} & \textit{л.с.: $r = 0~\bigvee~c = 0$ } \\
+            \max
+            \begin{cases}
+                1 \\
+                p_1
+            \end{cases} & \textit{х.с.: $r \ne 0~\bigwedge~c \ne 0$}
+        \end{cases}
+    \end{equation*}
+
+    , где
+
+    \begin{equation*}
+        p_1 =
+        5 + f_c +
+        \begin{cases}
+            \min
+            \begin{cases}
+                1 \\
+                p_2
+            \end{cases} & \textit{л.с.: $p$ } \\
+            \max
+            \begin{cases}
+                1 \\
+                p_2
+            \end{cases} & \textit{х.с.: $!p$ }
+        \end{cases}
+    \end{equation*}
+
+    , где
+
+    \begin{equation*}
+        p_2 =
+        6 + f_c + 
+        \begin{cases}
+            \min
+            \begin{cases}
+                f_r + 1 \\
+                2 + r \cdot 8
+            \end{cases} & \textit{л.с.: $d$ } \\
+            \max
+            \begin{cases}
+                f_r + 1 \\
+                2 + r \cdot 8
+            \end{cases} & \textit{х.с.: $!d$ }
+        \end{cases}
+    \end{equation*}
+
+    Рассмторим худший случай,
+    он же успешное создание матрицы и
+    заполнения ее нулями. Тогда,
+
+    \begin{equation*}
+        p_1 = 5 + f_c + p_2
+    \end{equation*}
+
+    \begin{equation*}
+        p_2 = 8 + f_c + r \cdot 8
+    \end{equation*}
+
+    \begin{equation*}
+        I_{alo} = 3 + p_1
+    \end{equation*}
+
+    , то есть
+
+    \begin{equation*}
+        I_{alo} = 16 + 2 \cdot f_c + r \cdot 8
+    \end{equation*}
+
+    , где \( f_c \) -- трудоемкость функции \textit{free}.
+
+    \item Стандартный алгоритм умножения матриц (\ref{lst:std_mult}):
+    \begin{equation*}
+        I_{std} = 
+        1 +
+        \begin{cases}
+            \min
+            \begin{cases}
+                1 \\
+                p_1
+            \end{cases} & \textit{л.с.: $c_1 \ne r_2$} \\
+            \max
+            \begin{cases}
+                1 \\
+                p_1
+            \end{cases} & \textit{х.с.: $c_1 = r_2$}
+        \end{cases}
+    \end{equation*}
+
+    , где
+    
+    \begin{equation*}
+        p_1 =
+        4 + I_{alo} +
+        \begin{cases}
+            \min
+            \begin{cases}
+                1 \\
+                p_2
+            \end{cases} & \textit{л.с.: !res} \\
+            \max
+            \begin{cases}
+                1 \\
+                p_2
+            \end{cases} & \textit{х.с.: res}
+        \end{cases}
+    \end{equation*}
+
+    , где
+
+    \begin{equation*}
+        p_2 = 3 + 4 \cdot r_1 + 4 \cdot r_1 \cdot c_2 + 17 \cdot r_1 \cdot c_1 \cdot c_2
+    \end{equation*}
+
+    Рассмторим худший случай,
+    он же успешное умножение матриц.
+    Тогда,
+
+    \begin{equation*}
+        I_{std} = 1 + p_1
+    \end{equation*}
+
+    \begin{equation*}
+        p_1 = 4 + I_{alo} + p_2
+    \end{equation*}
+
+    , то есть
+
+    \begin{equation*}
+        I_{std} = 8 + I_{alo} + 4 \cdot r_1 + 4 \cdot r_1 \cdot c_2 + 17 \cdot r_1 \cdot c_1 \cdot c_2
+    \end{equation*}
+
+    \item Алгоритм Копперсмита--Винограда умножения матриц (\ref{lst:vin_mult}):
+    \begin{equation*}
+        I_{vin} =
+        1 +
+        \begin{cases}
+            \min
+            \begin{cases}
+                1 \\
+                p_1
+            \end{cases} & \textit{л.с.: $c_1 \ne r_2$} \\
+            \max
+            \begin{cases}
+                1 \\
+                p_1
+            \end{cases} & \textit{х.с.: $c_1 = r_2$}
+        \end{cases}
+    \end{equation*}
+
+    , где
+
+    \begin{equation*}
+        p_1 =
+        4 + I_{alo} +
+        \begin{cases}
+            \min
+            \begin{cases}
+                1 \\
+                p_2
+            \end{cases} & \textit{л.с.: !res} \\
+            \max
+            \begin{cases}
+                1 \\
+                p_2
+            \end{cases} & \textit{х.с.: res}
+        \end{cases}
+    \end{equation*}
+
+    , где
+
+    \begin{equation*}
+        p_2 =
+        4 + f_c +
+        \begin{cases}
+            \min
+            \begin{cases}
+                4 + f_f \\
+                p_3
+            \end{cases} & \textit{л.с.: $!tmp\_row$} \\
+            \max
+            \begin{cases}
+                4 + f_f \\
+                p_3
+            \end{cases} & \textit{х.с.: $tmp\_row$}
+        \end{cases}
+    \end{equation*}
+
+    , где
+
+    \begin{equation*}
+        p_3 =
+        4 + f_c +
+        \begin{cases}
+            \min
+            \begin{cases}
+                5 + f_f + f_r \\
+                p_4
+            \end{cases} & \textit{л.с.: $!tmp\_col$} \\
+            \max
+            \begin{cases}
+                5 + f_f + f_r \\
+                p_4
+            \end{cases} & \textit{х.с.: $tmp\_col$}
+        \end{cases}
+    \end{equation*}
+
+    , где
+
+    \begin{equation*}
+        p_4 =
+        5 + p_5 + 2 \cdot f_r
+        \begin{cases}
+            \min
+            \begin{cases}
+                0 \\
+                p_6
+            \end{cases} & \textit{л.с.: $c_1~\%~2 = 1$} \\
+            \max
+            \begin{cases}
+                0 \\
+                p_6
+            \end{cases} & \textit{х.с.: $c_1~\%~2 \ne 1$}
+        \end{cases}
+    \end{equation*}
+
+    , где
+
+    \begin{eqnarray*}
+        p_5 = 6 + 10 \cdot r_1 + 21 \cdot r_1 \cdot c_1 \div 2 + \\
+        6 \cdot c_2 + 21 \cdot c_2 \cdot r_2 \div 2 + \\
+        17 \cdot r_1 \cdot c_2 + 39 \cdot r_1 \cdot c_2 \cdot c_1 \div 2
+    \end{eqnarray*}
+
+    и
+
+    \begin{equation*}
+        p_6 = 2 + 4 \cdot r_1 + 19 \cdot r_1 \cdot c_2
+    \end{equation*}
+
+    Рассмотрим худший случай,
+    он же успешное умножение матриц.
+    Тогда,
+
+    \begin{equation*}
+        I_{vin} = 1 + p_1
+    \end{equation*}
+
+    \begin{equation*}
+        p_1 = 4 + I_{alo} + p_2
+    \end{equation*}
+
+    \begin{equation*}
+        p_2 = 4 + f_c + p_3
+    \end{equation*}
+
+    \begin{equation*}
+        p_3 = 4 + f_c + p_4
+    \end{equation*}
+
+    \begin{equation*}
+        p_4 = 5 + 2 \cdot f_r + p_5 + p_6
+    \end{equation*}
+
+    То есть,
+
+    \begin{eqnarray*}
+        I_{vin_b} = 26 + I_{alo} + 2 \cdot f_c + 2 \cdot f_r + \\
+        14 \cdot r_1 + 21 \cdot r_1 \cdot c_1 \div 2 + \\
+        6 \cdot c_2 + 21 \cdot c_2 \cdot r_2 \div 2 + \\
+        36 \cdot r_1 \cdot c_2 + 39 \cdot r_1 \cdot c_2 \cdot c_1 \div 2
+    \end{eqnarray*}
+
+    Рассмотрим лучший случай,
+    он же успешное умножение матриц,
+    с учетом того, что для первых 4-ех условных блоков,
+    необходимо выбрать худший. Тогда,
+
+    \begin{equation*}
+        I_{vin} = 1 + p_1
+    \end{equation*}
+
+    \begin{equation*}
+        p_1 = 4 + I_{alo} + p_2
+    \end{equation*}
+
+    \begin{equation*}
+        p_2 = 4 + f_c + p_3
+    \end{equation*}
+
+    \begin{equation*}
+        p_3 = 4 + f_c + p_4
+    \end{equation*}
+
+    \begin{equation*}
+        p_4 = 5 + 2 \cdot f_r + p_5
+    \end{equation*}
+
+    То есть,
+
+    \begin{eqnarray*}
+        I_{vin_w} = 24 + I_{alo} + 2 \cdot f_c + 2 \cdot f_r + \\
+        10 \cdot r_1 + 21 \cdot r_1 \cdot c_1 \div 2 + \\
+        6 \cdot c_2 + 21 \cdot c_2 \cdot r_2 \div 2 + \\
+        17 \cdot r_1 \cdot c_2 + 39 \cdot r_1 \cdot c_2 \cdot c_1 \div 2
+    \end{eqnarray*}
+
+    \item Оптимизированный алгоритм Копперсмита--Винограда умножения матриц (\ref{lst:vin_opt_mult}):
+    \begin{equation*}
+        I_{vin\_opt} =
+        1 +
+        \begin{cases}
+            \min
+            \begin{cases}
+                1 \\
+                p_1
+            \end{cases} & \textit{л.с.: $c_1 \ne r_2$} \\
+            \max
+            \begin{cases}
+                1 \\
+                p_1
+            \end{cases} & \textit{х.с.: $c_1 = r_2$}
+        \end{cases}
+    \end{equation*}
+
+    , где
+
+    \begin{equation*}
+        p_1 =
+        10 + I_{alo} + f_c +
+        \begin{cases}
+            \min
+            \begin{cases}
+                4 + f_r + p_2 \\
+                p_3
+            \end{cases} & \textit{л.с.: $!res~\bigvee~!tmp\_row$} \\
+            \max
+            \begin{cases}
+                4 + f_r + p_2 \\
+                p_3
+            \end{cases} & \textit{х.с.: $res~\bigwedge~tmp\_row$}
+        \end{cases}
+    \end{equation*}
+
+    , где
+
+    \begin{equation*}
+        p_2 =
+        1 +
+        \begin{cases}
+            \min
+            \begin{cases}
+                0 \\
+                1 + f_r
+            \end{cases} & \textit{л.с.: !tmp\_row} \\
+            \max
+            \begin{cases}
+                0 \\
+                1 + f_r
+            \end{cases} & \textit{х.с.: tmp\_row}
+        \end{cases}
+    \end{equation*}
+
+    и
+
+    \begin{equation*}
+        p_3 =
+        7 + f_r +
+        \begin{cases}
+            \min
+            \begin{cases}
+                p_4 \\
+                p_5
+            \end{cases} & \textit{л.с.: $c_1~\%~2 = 0$} \\
+            \max
+            \begin{cases}
+                p_4 \\
+                p_5
+            \end{cases} & \textit{х.с.: $c_1~\%~2 \ne 0$}
+        \end{cases}
+    \end{equation*}
+
+    , где
+
+    \begin{eqnarray*}
+        p_4 = 26 + 16 \cdot r_1 + 5 \cdot r_1 \cdot c_1 + \\
+        8 \cdot c_2 + 6 \cdot c_2 \cdot r_2 + \\
+        17 \cdot r_1 \cdot c_2 + 9 \cdot r_1 \cdot c_1 \cdot c_2
+    \end{eqnarray*}
+
+    и
+
+    \begin{eqnarray*}
+        p_5 = 20 + 16 \cdot r_1 + 5 \cdot r_1 \cdot c_1 + \\
+        8 \cdot c_2 + 6 \cdot r_2 \cdot c_2 + \\
+        15 \cdot r_1 \cdot c_2 + 9 \cdot r_1 \cdot c_1 \cdot c_2
+    \end{eqnarray*}
+
+    Рассмотрим худший случай,
+    он же успешное умножение матриц,
+    при нечетном $c_1$. Тогда,
+
+    \begin{equation*}
+        I_{vin\_opt_w} = 1 + p_1
+    \end{equation*}
+
+    \begin{equation*}
+        p_1 = 10 + I_{alo} + f_c + p_3
+    \end{equation*}
+
+    \begin{equation*}
+        p_3 = 7 + f_r + p_4
+    \end{equation*}
+
+    То есть,
+
+    \begin{eqnarray*}
+        I_{vin\_opt_w} = 44 + I_{alo} + f_c + f_r + \\
+        16 \cdot r_1 + 5 \cdot r_1 \cdot c_1 + \\
+        8 \cdot c_2 + 6 \cdot c_2 \cdot r_2 + \\
+        17 \cdot r_1 \cdot c_2 + 9 \cdot r_1 \cdot c_1 \cdot c_2
+    \end{eqnarray*}
+
+    Рассмотрим лучший случай,
+    он же успешное умножение матриц,
+    при четном $c_1$. Тогда,
+
+    \begin{equation*}
+        I_{vin\_opt_b} = 1 + p_1
+    \end{equation*}
+
+    \begin{equation*}
+        p_1 = 10 + I_{alo} + f_c + p_3
+    \end{equation*}
+
+    \begin{equation*}
+        p_3 = 7 + f_r + p_5
+    \end{equation*}
+
+    То есть,
+
+    \begin{eqnarray*}
+        I_{vin\_opt_b} = 38 + I_{alo} + f_c + f_r + \\
+        16 \cdot r_1 + 5 \cdot r_1 \cdot c_1 + \\
+        8 \cdot c_2 + 6 \cdot r_2 \cdot c_2 + \\
+        15 \cdot r_1 \cdot c_2 + 9 \cdot r_1 \cdot c_1 \cdot c_2
+    \end{eqnarray*}
+    
+\end{enumerate}
+
+\section{Тестирование}
+
+Классы эквивалентности:
+
+\begin{itemize}
+    \item Квадратные матрицы;
+    \item Матрицы с четными размерами;
+    \item Матрицы с нечетными размерами;
+\end{itemize}
+
+В таблице \ref{tbl:tests} представлены модульные тесты.
+Все тесты пройдены успешно.
+
+\begin{table}[ht]
+	\begin{center}
+        \begin{threeparttable}
+			\captionsetup{justification=centering, singlelinecheck=off}
+			\caption{\label{tbl:tests} Модульные тесты}
+			\begin{tabular}{|c|c|c|r|r|r|}
+				\hline
+				& \multicolumn{2}{c|}{Входные данные} & \multicolumn{3}{c|}{Ожидаемый результат} \\
+				\hline
+				№ & mat1 & mat2 & \multicolumn{3}{c|}{Стандартный; К.--В.; Опт. К.--В.} \\
+				\hline
+				1
+                &
+                \( A_{1 \times 1} =
+                \begin{bmatrix}
+                    2
+                \end{bmatrix}
+                \)
+                &
+                \( B_{1 \times 1} =
+                \begin{bmatrix}
+                    2
+                \end{bmatrix}
+                \)
+                &
+                \multicolumn{3}{c|}
+                {
+                    \( C_{1 \times 1} =
+                    \begin{bmatrix}
+                        4
+                    \end{bmatrix}
+                    \)
+                } \\
+				\hline
+				2
+                &
+                \( A_{2 \times 2} =
+                \begin{bmatrix}
+                    1 & 2 \\
+                    3 & 4
+                \end{bmatrix}
+                \)
+                & 
+                \( B_{2 \times 2} =
+                \begin{bmatrix}
+                    1 & 2 \\
+                    3 & 4
+                \end{bmatrix}
+                \)
+                &
+                \multicolumn{3}{c|}
+                {
+                    \( C_{2 \times 2} =
+                    \begin{bmatrix}
+                        7 & 10 \\
+                        15 & 22
+                    \end{bmatrix}
+                    \)
+                } \\
+				\hline
+				3
+                &
+                \( A_{3 \times 3} =
+                \begin{bmatrix}
+                    1 & 2 & 3 \\
+                    4 & 5 & 6 \\
+                    7 & 8 & 9
+                \end{bmatrix}
+                \)
+                &
+                \( B_{3 \times 3} =
+                \begin{bmatrix}
+                    1 & 2 & 3 \\
+                    4 & 5 & 6 \\
+                    7 & 8 & 9
+                \end{bmatrix}
+                \)
+                &
+                \multicolumn{3}{c|}
+                {
+                    \( C_{3 \times 3} =
+                    \begin{bmatrix}
+                        30 & 36 & 42 \\
+                        66 & 81 & 96 \\
+                        102 & 126 & 150
+                    \end{bmatrix}
+                \)
+                } \\
+				\hline
+				4
+                &
+                \( A_{4 \times 4} =
+                \begin{bmatrix}
+                    1 & 2 & 3 & 4 \\
+                    5 & 6 & 7 & 8 \\
+                    9 & 10 & 11 & 12 \\
+                    13 & 14 & 15 & 16
+                \end{bmatrix}
+                \)
+                &
+                \( B_{4 \times 4} =
+                \begin{bmatrix}
+                    1 & 2 & 3 & 4 \\
+                    5 & 6 & 7 & 8 \\
+                    9 & 10 & 11 & 12 \\
+                    13 & 14 & 15 & 16
+                \end{bmatrix}
+                \)
+                &
+                \multicolumn{3}{c|}
+                {
+                    \( C_{4 \times 4} =
+                    \begin{bmatrix}
+                        90 & 100 & 110 & 120 \\
+                        202 & 228 & 254 & 280 \\
+                        314 & 356 & 398 & 440 \\
+                        426 & 484 & 542 & 600
+                    \end{bmatrix}
+                \)
+                } \\
+				\hline
+				5
+                &
+                \( A_{1 \times 1} =
+                \begin{bmatrix}
+                    2
+                \end{bmatrix}
+                \)
+                &
+                \( B_{1 \times 2} =
+                \begin{bmatrix}
+                    1 & 2
+                \end{bmatrix}
+                \)
+                &
+                \multicolumn{3}{c|}
+                {
+                    \( C_{1 \times 2} =
+                    \begin{bmatrix}
+                        2 & 4
+                    \end{bmatrix}
+                    \)
+                } \\
+				\hline
+				6
+                &
+                \( A_{2 \times 1} =
+                \begin{bmatrix}
+                    1 \\
+                    2
+                \end{bmatrix}
+                \)
+                &
+                \( B_{1 \times 2} =
+                \begin{bmatrix}
+                    1 & 2
+                \end{bmatrix}
+                \)
+                &
+                \multicolumn{3}{c|}
+                {
+                    \( C_{2 \times 2} =
+                    \begin{bmatrix}
+                        1 & 2 \\
+                        2 & 4
+                    \end{bmatrix}
+                \)
+                } \\
+				\hline
+				7
+                &
+                \( A_{2 \times 4} =
+                \begin{bmatrix}
+                    1 & 2 & 3 & 4 \\
+                    5 & 6 & 7 & 8
+                \end{bmatrix}
+                \)
+                &
+                \( B_{4 \times 5} =
+                \begin{bmatrix}
+                    1 & 2 & 3 & 4 & 5 \\
+                    6 & 7 & 8 & 9 & 10 \\
+                    11 & 12 & 13 & 14 & 15 \\
+                    16 & 17 & 18 & 19 & 20
+                \end{bmatrix}
+                \)
+                &
+                \multicolumn{3}{c|}
+                {
+                    \( C_{2 \times 5} =
+                    \begin{bmatrix}
+                        110 & 120 & 130 & 140 & 150 \\
+                        246 & 272 & 298 & 324 & 250
+                    \end{bmatrix}
+                    \)
+                } \\
+				\hline
+			\end{tabular}
+        \end{threeparttable}
+	\end{center}
+\end{table}
+
+\clearpage
+
+\section*{Вывод}
+
+В этом разделе были рассмотрены средства реализации задания,
+представлены листинги алгоритмов умножения матриц,
+а также тесты,
+был проведен анализ трудоемкости алгоритмов.
