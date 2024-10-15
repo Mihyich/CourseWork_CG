@@ -20,6 +20,13 @@
 *.out
 *.app
 
+# LaTex
+*.aux
+*.fls
+*.gz
+*.toc
+*.fdb_latexmk
+
 # CMake
 CMakeFiles/
 CMakeCache.txt
