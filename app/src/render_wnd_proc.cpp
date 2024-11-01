@@ -243,7 +243,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static float lightProjFov = degrees_to_radians(60.0f);
 
     static DepthBuffer depthBuffer = {0, 0, 0, 0};
-    static DepthBufferExp depthBufferExp = {0, 0, 0, 0, 0};
+    // static DepthBufferExp depthBufferExp = {0, 0, 0, 0, 0};
 
     static RayTraceBVHTree BVH;
     static GLuint VertexSSBO = 0;
@@ -338,7 +338,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             1920, 1080);
 
         GenDepthFrameBuffer(depthBuffer, 1920, 1080);
-        GenExpDepthFrameBuffer(depthBufferExp, 1920, 1080);
+        // GenExpDepthFrameBuffer(depthBufferExp, 1920, 1080);
 
         // Вау-эффект, для первого RayTracing дерева, потом автоматически дерево перестроится
         // по желанию пользователя загрузить новую модель
@@ -1203,7 +1203,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 case SHADOW_MAP_ORTHOGONAL_ESM:
                 case SHADOW_MAP_ORTHOGONAL_ESM_DEBUG:
                 {
-                    RenderDataSM.esm.depthBuffer = &depthBufferExp;
+                    RenderDataSM.esm.depthBuffer = &depthBuffer;
                     RenderDataSM.esm.client_width = &client_width;
                     RenderDataSM.esm.client_height = &client_height;
                     RenderDataSM.esm.shaderDepthPass = &shader_SM_ESM_O_DP;
@@ -1227,7 +1227,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 case SHADOW_MAP_PERSPECTIVE_ESM:
                 case SHADOW_MAP_PERSPECTIVE_ESM_DEBUG:
                 {
-                    RenderDataSM.esm.depthBuffer = &depthBufferExp;
+                    RenderDataSM.esm.depthBuffer = &depthBuffer;
                     RenderDataSM.esm.client_width = &client_width;
                     RenderDataSM.esm.client_height = &client_height;
                     RenderDataSM.esm.shaderDepthPass = &shader_SM_ESM_P_DP;
@@ -1468,7 +1468,7 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             glFinish();
 
             GenDepthFrameBuffer(depthBuffer, *val1, *val2);
-            GenExpDepthFrameBuffer(depthBufferExp, *val1, *val2);
+            // GenExpDepthFrameBuffer(depthBufferExp, *val1, *val2);
 
             glFlush();
             glFinish();
@@ -1868,9 +1868,9 @@ LRESULT RenderWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         if (depthBuffer.Texture) glDeleteTextures(1, &depthBuffer.Texture);
         if (depthBuffer.FBO) glDeleteFramebuffers(1, &depthBuffer.FBO);
 
-        if (depthBufferExp.Texture) glDeleteTextures(1, &depthBufferExp.Texture);
-        if (depthBufferExp.RBO) glDeleteRenderbuffers(1, &depthBufferExp.RBO);
-        if (depthBufferExp.FBO) glDeleteFramebuffers(1, &depthBufferExp.FBO);
+        // if (depthBufferExp.Texture) glDeleteTextures(1, &depthBufferExp.Texture);
+        // if (depthBufferExp.RBO) glDeleteRenderbuffers(1, &depthBufferExp.RBO);
+        // if (depthBufferExp.FBO) glDeleteFramebuffers(1, &depthBufferExp.FBO);
 
         if (VertexSSBO) glDeleteBuffers(1, &VertexSSBO);
         if (MatrixSSBO) glDeleteBuffers(1, &MatrixSSBO);

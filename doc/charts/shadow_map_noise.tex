@@ -1,0 +1,468 @@
+\begin{figure}
+  \centering
+  \begin{tikzpicture}[y=1cm, x=1cm, yscale=\globalscale*0.8,xscale=\globalscale*0.8, every node/.style={font=\scriptsize}, every node/.append style={scale=\globalscale}, inner sep=0pt, outer sep=0pt]
+    \path[draw=black,miter limit=10.0,dash pattern=on 0.0794cm off 0.0794cm] (16.4042, 21.2148) -- (16.6688, 21.2148) -- (16.9333, 21.2148);
+  
+  
+  
+    \path[draw=black,fill=white,dash pattern=on 0.0794cm off 0.0794cm] (12.1708, 23.3249) rectangle (16.4042, 19.1048);
+  
+  
+  
+    \path[draw=black,miter limit=10.0,dash pattern=on 0.0794cm off 0.0794cm] (4.2333, 15.9298) -- (4.7625, 15.9165);
+  
+  
+  
+    \path[draw=black,fill=white,dash pattern=on 0.0794cm off 0.0794cm] (0.0, 21.2214) rectangle (4.2333, 10.6381);
+  
+  
+  
+    \path[draw=black,miter limit=10.0,dash pattern=on 0.0794cm off 0.0794cm] (3.7042, 22.2533) -- (4.7625, 22.2533);
+  
+  
+  
+    \path[draw=black,miter limit=10.0] (2.1167, 21.4596) -- (2.1167, 20.9304);
+  
+  
+  
+    \path[draw=black,fill=white,rounded corners=0.4445cm] (0.5292, 23.0471) rectangle (3.7042, 21.4596);
+  
+  
+  
+    \begin{scope}[shift={(-0.0132, 0.0132)}]
+      \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)}] (text830) at (2.1167, 22.1456){Начало};
+  
+  
+  
+    \end{scope}
+    \path (4.7625, 23.5762) rectangle (5.7944, 20.9304);
+  
+  
+  
+    \path[draw=black,miter limit=10.0] (5.7944, 23.5762) -- (4.7625, 23.5762) -- (4.7625, 20.9304) -- (5.7944, 20.9304);
+  
+  
+  
+    \begin{scope}[shift={(-0.0132, 0.0132)}]
+      \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)} ] (text9586) at (6.5, 22.1456){Алгоритм теневых карт с фильтрацией шумом};
+  
+  
+  
+    \end{scope}
+    \path[draw=black,miter limit=10.0] (2.1167, 19.3429) -- (2.1167, 18.827);
+  
+  
+  
+    \path[draw=black,fill=white] (0.5292, 20.9304) rectangle (3.7042, 19.3429);
+  
+  
+  
+    \begin{scope}[shift={(-0.0132, 0.0132)}]
+      \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)}] (text741) at (2.1167, 20.029){Инициализировать теневую карту};
+  
+  
+  
+    \end{scope}
+    \path[draw=black,miter limit=10.0] (2.1167, 17.2395) -- (2.1167, 16.7235);
+  
+  
+  
+    \path[draw=black,fill=white] (0.5292, 18.827) rectangle (3.7042, 17.2395);
+  
+  
+  
+    \begin{scope}[shift={(-0.0132, 0.0132)}]
+      \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)}] (text7418) at (2.1167, 17.9387){Инициализировать источник света};
+  
+  
+  
+    \end{scope}
+    \path[draw=black,miter limit=10.0] (2.1167, 15.136) -- (2.1167, 14.6069);
+  
+  
+  
+    \path[draw=black,fill=white] (0.5292, 16.7235) rectangle (3.7042, 15.136);
+  
+  
+  
+    \begin{scope}[shift={(-0.0132, 0.0132)}]
+      \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)}] (text6602) at (2.1167, 15.8221){Инициализировать камеру};
+  
+  
+  
+    \end{scope}
+    \path[draw=black,miter limit=10.0] (2.1167, 13.0194) -- (2.1167, 12.4902);
+  
+  
+  
+    \path[draw=black,fill=white] (0.5292, 14.6069) rectangle (3.7042, 13.0194);
+  
+  
+  
+    \begin{scope}[shift={(-0.0132, 0.0132)}]
+      \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)}] (text9819) at (2.1167, 13.7054){Инициализировать модели};
+  
+  
+  
+    \end{scope}
+    \path (4.7625, 17.4662) rectangle (5.7944, 14.3669);
+  
+  
+  
+    \path[draw=black,miter limit=10.0] (5.7944, 17.4662) -- (4.7625, 17.4662) -- (4.7625, 14.3669) -- (5.7944, 14.3669);
+  
+  
+  
+    \begin{scope}[shift={(-0.0132, 0.0132)}]
+      \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)} ] (text7887) at (6.5, 15.8221){Подготовительный этап, инициализирующий минимально необходимые};
+  
+  
+  
+    \end{scope}
+    \path[draw=black,miter limit=10.0] (2.1167, 10.9027) -- (2.1167, 10.3701) -- (8.6254, 10.3701) -- (8.6254, 23.5992) -- (14.2875, 23.5992) -- (14.2875, 23.0471);
+  
+  
+  
+    \path[draw=black,fill=white] (0.5292, 12.4902) rectangle (3.7042, 10.9027);
+  
+  
+  
+    \begin{scope}[shift={(-0.0132, 0.0132)}]
+      \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)}] (text6833) at (2.1167, 11.5887){Инициализировать
+  шейдеры};
+  
+  
+  
+    \end{scope}
+    \path[draw=black,miter limit=10.0] (14.2875, 21.4596) -- (14.2875, 20.9304);
+  
+  
+  
+    \path[draw=black,fill=white] (12.7, 23.0471) rectangle (15.875, 21.4596);
+  
+  
+  
+    \begin{scope}[shift={(-0.0132, 0.0132)}]
+      \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)}] (text7755) at (14.2875, 22.1456){Нарисовать сцену с точки зрения источника света};
+  
+  
+  
+    \end{scope}
+    \path[draw=black,miter limit=10.0] (14.2875, 19.3429) -- (14.2875, 18.5756);
+  
+  
+  
+    \path[draw=black,fill=white] (12.7, 20.9304) rectangle (15.875, 19.3429);
+  
+  
+  
+    \begin{scope}[shift={(-0.0132, 0.0132)}]
+      \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)}] (text3051) at (14.2875, 20.029){Заполнить теневую карту значениями глубины};
+  
+  
+  
+    \end{scope}
+    \path (16.9333, 22.5377) rectangle (17.9652, 19.8919);
+  
+  
+  
+    \path[draw=black,miter limit=10.0] (17.9652, 22.5377) -- (16.9333, 22.5377) -- (16.9333, 19.8919) -- (17.9652, 19.8919);
+  
+  
+  
+    \begin{scope}[shift={(-0.0132, 0.0132)}]
+      \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)} ] (text4923) at (18.5, 21.1137){Этап заполнения теневой карты};
+  
+  
+  
+    \end{scope}
+    \path[draw=black,miter limit=10.0] (14.2875, 17.2527) -- (14.2875, 16.7235);
+  
+  
+  
+    \path[draw=black,fill=white,miter limit=10.0] (13.2292, 18.5756) -- (15.3458, 18.5756) -- (15.875, 18.1523) -- (15.875, 17.2527) -- (12.7, 17.2527) -- (12.7, 18.1523) -- cycle;
+  
+  
+  
+    \begin{scope}[shift={(-0.0132, 0.0132)}]
+      \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)}] (text4800) at (14.2875, 17.8065){Обработка N пикселей};
+  
+  
+  
+    \end{scope}
+    \path[draw=black,miter limit=10.0,dash pattern=on 0.0794cm off 0.0794cm] (15.875, 15.9298) -- (16.6688, 15.9298);
+  
+  
+  
+    \path[draw=black,miter limit=10.0] (14.2875, 15.136) -- (14.2875, 14.6069);
+  
+  
+  
+    \path[draw=black,fill=white] (12.7, 16.7235) rectangle (15.875, 15.136);
+  
+  
+  
+    \begin{scope}[shift={(-0.0132, 0.0132)}]
+      \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)}] (text1572) at (14.2875, 15.8221){Преобразовать координаты фрагмента в пространство света};
+  
+  
+  
+    \end{scope}
+    \path (16.6688, 16.7367) rectangle (17.7271, 15.1228);
+  
+  
+  
+    \path[draw=black,miter limit=10.0] (17.7271, 16.7367) -- (16.6688, 16.7367) -- (16.6688, 15.1228) -- (17.7271, 15.1228);
+  
+  
+  
+    \begin{scope}[shift={(-0.0132, 0.0132)}]
+      \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)} ] (text2822) at (18, 15.8221){Далее
+  d1};
+  
+  
+  
+    \end{scope}
+    \path[draw=black,fill=white,rounded corners=0.4445cm] (0.5292, 3.2544) rectangle (3.7042, 1.6669);
+  
+  
+  
+    \begin{scope}[shift={(-0.0132, 0.0132)}]
+      \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)}] (text75) at (2.1167, 2.3548){Конец};
+  
+  
+  
+    \end{scope}
+    \path[draw=black,miter limit=10.0] (14.2875, 11.1673) -- (14.2875, 10.6381);
+  
+  
+  
+    \path[draw=black,fill=white,miter limit=10.0] (13.2292, 12.4902) -- (15.3458, 12.4902) -- (15.875, 12.0669) -- (15.875, 11.1673) -- (12.7, 11.1673) -- (12.7, 12.0669) -- cycle;
+  
+  
+  
+    \begin{scope}[shift={(-0.0132, 0.0132)}]
+      \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)},scale=0.9] (text4690) at (14.2875, 11.721){Обработка MxM окаймляющих пикселей};
+  
+  
+  
+    \end{scope}
+    \path[draw=black,miter limit=10.0] (14.2875, 13.0194) -- (14.2875, 12.4902);
+  
+  
+  
+    \path[draw=black,miter limit=10.0,dash pattern=on 0.0794cm off 0.0794cm] (15.875, 13.806) -- (16.6688, 13.8023);
+  
+  
+  
+    \path[draw=black,fill=white] (12.7, 14.6069) rectangle (15.875, 13.0194);
+  
+  
+  
+    \begin{scope}[shift={(-0.0132, 0.0132)}]
+      \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)}] (text5632) at (14.2875, 13.7054){aver = 0};
+  
+  
+  
+    \end{scope}
+    \path[draw=black,miter limit=10.0,dash pattern=on 0.0794cm off 0.0794cm] (15.875, 9.8515) -- (16.6688, 9.8552);
+  
+  
+  
+    \path[draw=black,miter limit=10.0] (14.2875, 9.0506) -- (14.2875, 8.5196);
+  
+  
+  
+    \path[draw=black,fill=white] (12.7, 10.6381) rectangle (15.875, 9.0506);
+  
+  
+  
+    \begin{scope}[shift={(-0.0132, 0.0132)}]
+      \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)},scale=0.9] (text8315) at (14.2875, 9.7367){Считать соответствующую глубину в окрестности со сдвигом по шуму};
+  
+  
+  
+    \end{scope}
+    \path (16.6688, 10.6646) rectangle (17.7271, 9.0506);
+  
+  
+  
+    \path[draw=black,miter limit=10.0] (17.7271, 10.6646) -- (16.6688, 10.6646) -- (16.6688, 9.0506) -- (17.7271, 9.0506);
+  
+  
+  
+    \begin{scope}[shift={(-0.0132, 0.0132)}]
+      \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)} ] (text240) at (18, 9.7631){Далее
+  d2};
+  
+  
+  
+    \end{scope}
+    \path (16.6688, 14.6069) rectangle (17.7271, 12.9929);
+  
+  
+  
+    \path[draw=black,miter limit=10.0] (17.7271, 14.6069) -- (16.6688, 14.6069) -- (16.6688, 12.9929) -- (17.7271, 12.9929);
+  
+  
+  
+    \begin{scope}[shift={(-0.0132, 0.0132)}]
+      \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)} ] (text3334) at (18.5, 13.7054){Количество перекрываемых глубин};
+  
+  
+  
+    \end{scope}
+    \path[draw=black,miter limit=10.0] (15.875, 7.7258) -- (16.3761, 7.7242) -- (16.3761, 6.5979);
+  
+  
+  
+    \path[draw=black,fill=black,miter limit=10.0] (16.3761, 6.459) -- (16.2835, 6.6442) -- (16.3761, 6.5979) -- (16.4687, 6.6442) -- cycle;
+  
+  
+  
+    \begin{scope}[shift={(-0.0132, 0.0132)}]
+      \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)}] (text4706) at (16.0602, 7.911){Да};
+  
+  
+  
+    \end{scope}
+    \path[draw=black,miter limit=10.0] (12.7, 7.7258) -- (12.065, 7.7242) -- (12.065, 4.3127) -- (14.2875, 4.3127) -- (14.2875, 3.9521);
+  
+  
+  
+    \path[draw=black,fill=black,miter limit=10.0] (14.2875, 3.8132) -- (14.1949, 3.9984) -- (14.2875, 3.9521) -- (14.3801, 3.9984) -- cycle;
+  
+  
+  
+    \path[draw=black,fill=white,miter limit=10.0] (14.2875, 8.5196) -- (15.875, 7.7258) -- (14.2875, 6.9321) -- (12.7, 7.7258) -- cycle;
+  
+  
+  
+    \begin{scope}[shift={(-0.0132, 0.0132)}]
+      \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)}] (text9537) at (14.2875, 7.62){d1 > d2};
+  
+  
+  
+    \end{scope}
+    \path[draw=black,miter limit=10.0] (16.3761, 4.8419) -- (16.3761, 4.3127) -- (14.2875, 4.3127) -- (14.2875, 3.9521);
+  
+  
+  
+    \path[draw=black,fill=black,miter limit=10.0] (14.2875, 3.8132) -- (14.1949, 3.9984) -- (14.2875, 3.9521) -- (14.3801, 3.9984) -- cycle;
+  
+  
+  
+    \path[draw=black,fill=white] (14.7902, 6.4294) rectangle (17.9652, 4.8419);
+  
+  
+  
+    \begin{scope}[shift={(-0.0132, 0.0132)}]
+      \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)}] (text395) at (16.3777, 5.5298){aver += 1};
+  
+  
+  
+    \end{scope}
+    \path[draw=black,miter limit=10.0] (14.2875, 2.4606) -- (14.2875, 1.9315);
+  
+  
+  
+    \path[draw=black,fill=white,miter limit=10.0,cm={ -1.0,-0.0,0.0,-1.0,(28.575, 6.2442)}] (13.2292, 3.7835) -- (15.3458, 3.7835) -- (15.875, 3.3602) -- (15.875, 2.4606) -- (12.7, 2.4606) -- (12.7, 3.3602) -- cycle;
+  
+  
+  
+    \begin{scope}[shift={(-0.0132, 0.0132)}]
+      \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)}] (text193) at (14.2875, 3.0162){Пока остались пиксели в окрестности};
+  
+  
+  
+    \end{scope}
+    \path[draw=black,miter limit=10.0,dash pattern=on 0.0794cm off 0.0794cm] (3.7042, 7.7258) -- (4.7625, 7.7258);
+  
+  
+  
+    \path[draw=black,miter limit=10.0] (2.1167, 6.9321) -- (2.1167, 5.9267);
+  
+  
+  
+    \path[draw=black,fill=white] (0.5292, 8.5196) rectangle (3.7042, 6.9321);
+  
+  
+  
+    \begin{scope}[shift={(-0.0132, 0.0132)}]
+      \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)}] (text8417) at (2.1167, 7.62){aver /= MxM};
+  
+  
+  
+    \end{scope}
+    \path (4.7625, 8.5328) rectangle (5.4504, 6.9189);
+  
+  
+  
+    \path[draw=black,miter limit=10.0] (5.4504, 8.5328) -- (4.7625, 8.5328) -- (4.7625, 6.9189) -- (5.4504, 6.9189);
+  
+  
+  
+    \begin{scope}[shift={(-0.0132, 0.0132)}]
+      \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)} ] (text3422) at (6.5, 7.62){Среднее арифметическое значение в диапазоне [0, 1]};
+  
+  
+  
+    \end{scope}
+    \path (4.7625, 6.1913) rectangle (5.4504, 4.0481);
+  
+  
+  
+    \path[draw=black,miter limit=10.0] (5.4504, 6.1913) -- (4.7625, 6.1913) -- (4.7625, 4.0481) -- (5.4504, 4.0481);
+  
+  
+  
+    \begin{scope}[shift={(-0.0132, 0.0132)}]
+      \node[text=black,anchor=south,fit={(0,0) (5, 1.5875)},scale=0.7] (text1916) at (6.7, 5.0271){Освещение применяется с учетом значения aver, на которое умножается диффузная и спекулярная состовляющие};
+  
+  
+  
+    \end{scope}
+    \path[draw=black,miter limit=10.0,dash pattern=on 0.0794cm off 0.0794cm] (3.7042, 5.1313) -- (4.2333, 5.1313) -- (4.7625, 5.1189);
+  
+  
+  
+    \path[draw=black,miter limit=10.0] (2.1167, 4.3392) -- (2.1167, 3.2544);
+  
+  
+  
+    \path[draw=black,fill=white] (0.5292, 5.9267) rectangle (3.7042, 4.3392);
+  
+  
+  
+    \path[draw=black,miter limit=10.0] (0.8467, 5.9267) -- (0.8467, 4.3392)(3.3867, 5.9267) -- (3.3867, 4.3392);
+  
+  
+  
+    \begin{scope}[shift={(-0.0132, 0.0132)}]
+      \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)}] (text9174) at (2.1167, 5.0271){Применить\\полное\\освещение};
+  
+  
+  
+    \end{scope}
+    \path[draw=black,miter limit=10.0] (14.2875, 0.6085) -- (14.2875, 0.0794) -- (8.6254, 0.0794) -- (8.6254, 9.6044) -- (2.1167, 9.6044) -- (2.1167, 8.5196);
+  
+  
+  
+    \path[draw=black,fill=white,miter limit=10.0,cm={ -1.0,-0.0,0.0,-1.0,(28.575, 2.54)}] (13.2292, 1.9315) -- (15.3458, 1.9315) -- (15.875, 1.5081) -- (15.875, 0.6085) -- (12.7, 0.6085) -- (12.7, 1.5081) -- cycle;
+  
+  
+  
+    \begin{scope}[shift={(-0.0132, 0.0132)}]
+      \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)}] (text14) at (14.2875, 1.1642){Пока остались необработанные пиксели};
+  
+  
+  
+    \end{scope}
+  
+  \end{tikzpicture}
+  
+  \caption{Схема алгоритма теневых карт с линейной фильтрацией шумом (NOISE)}
+  \label{chart:shadow_map_noise}
+  
+  \end{figure}
+  

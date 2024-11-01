@@ -1,0 +1,158 @@
+<mxfile host="65bd71144e">
+    <diagram id="0uTzgsicN61LqTIEJt5u" name="Page-1">
+        <mxGraphModel dx="496" dy="1470" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="53" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;strokeColor=default;fontColor=default;endArrow=none;endFill=0;dashed=1;" edge="1" parent="1" source="51" target="52">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="51" value="" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;" vertex="1" parent="1">
+                    <mxGeometry x="534" y="-938.5699999999999" width="160" height="159.5" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=none;endFill=0;dashed=1;" edge="1" parent="1" source="21" target="26">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;" vertex="1" parent="1">
+                    <mxGeometry x="74" y="-859.0699999999999" width="160" height="400" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;dashed=1;endArrow=none;endFill=0;" parent="1" source="2" target="4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="39" style="edgeStyle=none;html=1;endArrow=none;endFill=0;" edge="1" parent="1" source="2" target="6">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="Начало" style="rounded=1;whiteSpace=wrap;html=1;arcSize=28;" parent="1" vertex="1">
+                    <mxGeometry x="94" y="-928.0699999999999" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="Алгоритм стандартных теневых карт" style="strokeWidth=1;shape=mxgraph.flowchart.annotation_1;align=left;pointerEvents=1;whiteSpace=wrap;fontColor=default;" parent="1" vertex="1">
+                    <mxGeometry x="254" y="-948.0699999999999" width="39" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="40" style="edgeStyle=none;html=1;endArrow=none;endFill=0;" edge="1" parent="1" source="6" target="9">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="Инициализировать теневую карту" style="rounded=0;whiteSpace=wrap;" parent="1" vertex="1">
+                    <mxGeometry x="94" y="-848.0699999999999" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" style="edgeStyle=none;html=1;endArrow=none;endFill=0;" edge="1" parent="1" source="9" target="11">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="Инициализировать источник света" style="rounded=0;whiteSpace=wrap;" parent="1" vertex="1">
+                    <mxGeometry x="94" y="-768.5699999999999" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="42" style="edgeStyle=none;html=1;endArrow=none;endFill=0;" edge="1" parent="1" source="11" target="22">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="Инициализировать камеру" style="rounded=0;whiteSpace=wrap;" parent="1" vertex="1">
+                    <mxGeometry x="94" y="-689.0699999999999" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="43" style="edgeStyle=none;html=1;endArrow=none;endFill=0;" edge="1" parent="1" source="22" target="38">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="Инициализировать модели" style="rounded=0;whiteSpace=wrap;" vertex="1" parent="1">
+                    <mxGeometry x="94" y="-609.0699999999999" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" value="Подготовительный этап, инициализирующий минимально необходимые данные" style="strokeWidth=1;shape=mxgraph.flowchart.annotation_1;align=left;pointerEvents=1;whiteSpace=wrap;labelBorderColor=none;labelBackgroundColor=none;spacing=2;" vertex="1" parent="1">
+                    <mxGeometry x="254" y="-717.14" width="39" height="117.14" as="geometry"/>
+                </mxCell>
+                <mxCell id="48" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=default;fontColor=default;endArrow=none;endFill=0;" edge="1" parent="1" source="38" target="46">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="154" y="-449.07"/>
+                            <mxPoint x="414" y="-449.07"/>
+                            <mxPoint x="414" y="-949.0699999999999"/>
+                            <mxPoint x="614" y="-949.0699999999999"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="38" value="Инициализировать&#10;шейдеры" style="rounded=0;whiteSpace=wrap;" vertex="1" parent="1">
+                    <mxGeometry x="94" y="-529.0699999999999" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="50" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=default;fontColor=default;endArrow=none;endFill=0;" edge="1" parent="1" source="46" target="49">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="46" value="Нарисовать сцену, с точки зрения источника света" style="rounded=0;whiteSpace=wrap;" vertex="1" parent="1">
+                    <mxGeometry x="554" y="-928.0699999999999" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="55" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;fontColor=default;endArrow=none;endFill=0;" edge="1" parent="1" source="49">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="614" y="-759.0699999999999" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="49" value="Заполнить теневую карту значениями глубины" style="rounded=0;whiteSpace=wrap;" vertex="1" parent="1">
+                    <mxGeometry x="554" y="-848.0699999999999" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="52" value="Этап заполнения теневой карты" style="strokeWidth=1;shape=mxgraph.flowchart.annotation_1;align=left;pointerEvents=1;whiteSpace=wrap;fontColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="714" y="-908.8199999999999" width="39" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="59" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=default;fontColor=default;endArrow=none;endFill=0;" edge="1" parent="1" source="56" target="58">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="56" value="Обработка N пикселей" style="shape=loopLimit;whiteSpace=wrap;html=1;labelBackgroundColor=none;labelBorderColor=none;fontColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="554" y="-759.0699999999999" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="83" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=default;fontColor=default;endArrow=none;endFill=0;" edge="1" parent="1" source="57" target="82">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="57" value="Пока остались необработанные пиксели" style="shape=loopLimit;whiteSpace=wrap;html=1;labelBackgroundColor=none;labelBorderColor=none;fontColor=default;direction=west;" vertex="1" parent="1">
+                    <mxGeometry x="554" y="-349.07" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="61" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=default;fontColor=default;endArrow=none;endFill=0;" edge="1" parent="1" source="58">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="614" y="-609.0699999999999" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="65" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;strokeColor=default;fontColor=default;endArrow=none;endFill=0;dashed=1;" edge="1" parent="1" source="58" target="64">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="58" value="Преобразовать координаты фрагмента в пространство света " style="rounded=0;whiteSpace=wrap;" vertex="1" parent="1">
+                    <mxGeometry x="554" y="-689.0699999999999" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="68" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;strokeColor=default;fontColor=default;endArrow=none;endFill=0;" edge="1" parent="1" source="63" target="66">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="70" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=default;fontColor=default;endArrow=none;endFill=0;" edge="1" parent="1" source="63" target="69">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="63" value="Считать соответсвующее значение глубины из теневой карты" style="rounded=0;whiteSpace=wrap;" vertex="1" parent="1">
+                    <mxGeometry x="554" y="-608.5699999999999" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="64" value="Далее&#10;d1" style="strokeWidth=1;shape=mxgraph.flowchart.annotation_1;align=left;pointerEvents=1;whiteSpace=wrap;fontColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="704" y="-689.5699999999999" width="40" height="61" as="geometry"/>
+                </mxCell>
+                <mxCell id="66" value="Далее d2" style="strokeWidth=1;shape=mxgraph.flowchart.annotation_1;align=left;pointerEvents=1;whiteSpace=wrap;fontColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="704" y="-609.0699999999999" width="39" height="61" as="geometry"/>
+                </mxCell>
+                <mxCell id="75" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;strokeColor=default;fontColor=default;endArrow=classic;endFill=1;" edge="1" parent="1" source="69" target="71">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="76" value="Да" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=default;" vertex="1" connectable="0" parent="75">
+                    <mxGeometry x="-0.6164" relative="1" as="geometry">
+                        <mxPoint x="-3" y="-10" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="79" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;strokeColor=default;fontColor=default;endArrow=classic;endFill=1;" edge="1" parent="1" source="69" target="77">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="69" value="d1 &amp;gt; d2" style="rhombus;whiteSpace=wrap;html=1;labelBackgroundColor=none;labelBorderColor=none;fontColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="554" y="-529.0699999999999" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="81" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=default;fontColor=default;endArrow=classic;endFill=1;" edge="1" parent="1" source="71" target="57">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="71" value="Применить фоновое освещение" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;labelBackgroundColor=none;labelBorderColor=none;fontColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="633" y="-449.07" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="80" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=default;fontColor=default;endArrow=classic;endFill=1;" edge="1" parent="1" source="77" target="57">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="77" value="Применить полное освещение" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;labelBackgroundColor=none;labelBorderColor=none;fontColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="474" y="-449.07" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="82" value="Конец" style="rounded=1;whiteSpace=wrap;html=1;arcSize=28;" vertex="1" parent="1">
+                    <mxGeometry x="554" y="-279.07" width="120" height="60" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

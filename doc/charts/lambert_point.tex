@@ -1,0 +1,208 @@
+\begin{figure}
+\centering
+\begin{tikzpicture}[y=1cm, x=1cm, yscale=\globalscale,xscale=\globalscale, every node/.append style={scale=\globalscale}, inner sep=0pt, outer sep=0pt]
+  \path[draw=black,miter limit=10.0,dash pattern=on 0.0794cm off 0.0794cm] (3.175, 15.1077) -- (3.7042, 15.1077);
+
+
+
+  \path[draw=black,miter limit=10.0] (1.5875, 14.314) -- (1.5875, 13.7848);
+
+
+
+  \path[draw=black,fill=white,rounded corners=0.4445cm] (0.0, 15.9015) rectangle (3.175, 14.314);
+
+
+
+  \begin{scope}[shift={(-0.0132, 0.0132)}]
+    \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)}] (text1662) at (1.5875, 15.0019){Начало};
+
+
+
+  \end{scope}
+  \path (3.7042, 16.4306) rectangle (4.736, 13.7848);
+
+
+
+  \path[draw=black,miter limit=10.0] (4.736, 16.4306) -- (3.7042, 16.4306) -- (3.7042, 13.7848) -- (4.736, 13.7848);
+
+
+
+  \begin{scope}[shift={(-0.0132, 0.0132)}]
+    \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)} ] (text6565) at (5.5, 15.0019){Алгоритм Ламбертового освещения для точечных источников света};
+
+
+
+  \end{scope}
+  \path[draw=black,miter limit=10.0] (1.5875, 12.4619) -- (1.5875, 11.9327);
+
+
+
+  \path[draw=black,fill=white,miter limit=10.0] (0.5292, 13.7848) -- (2.6458, 13.7848) -- (3.175, 13.3615) -- (3.175, 12.4619) -- (0.0, 12.4619) -- (0.0, 13.3615) -- cycle;
+
+
+
+  \begin{scope}[shift={(-0.0132, 0.0132)}]
+    \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)}] (text7727) at (1.5875, 13.0175){Обработка N пикселей};
+
+
+
+  \end{scope}
+  \path[draw=black,miter limit=10.0] (1.5875, 2.1677) -- (1.5875, 1.6386);
+
+
+
+  \path[draw=black,fill=white,miter limit=10.0,cm={ -1.0,-0.0,0.0,-1.0,(3.175, 5.6584)}] (0.5292, 3.4906) -- (2.6458, 3.4906) -- (3.175, 3.0673) -- (3.175, 2.1677) -- (0.0, 2.1677) -- (0.0, 3.0673) -- cycle;
+
+
+
+  \begin{scope}[shift={(-0.0132, 0.0132)}]
+    \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)}] (text9988) at (1.5875, 2.7252){Пока остались необработанные пиксели};
+
+
+
+  \end{scope}
+  \path[draw=black,miter limit=10.0] (1.5875, 10.3452) -- (1.5875, 9.816);
+
+
+
+  \path[draw=black,miter limit=10.0,dash pattern=on 0.0794cm off 0.0794cm] (3.175, 11.139) -- (3.7042, 11.139);
+
+
+
+  \path[draw=black,fill=white] (0.0, 11.9327) rectangle (3.175, 10.3452);
+
+
+
+  \begin{scope}[shift={(-0.0132, 0.0132)}]
+    \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)}] (text7296) at (1.5875, 11.0331){$\vec{L}=norm(\vec{P_l}-\vec{P_f})$};
+
+
+
+  \end{scope}
+  \path[draw=black,miter limit=10.0,dash pattern=on 0.0794cm off 0.0794cm] (3.175, 9.0091) -- (3.7042, 9.0091);
+
+
+
+  \path[draw=black,miter limit=10.0] (1.5875, 8.2153) -- (1.5875, 7.6994);
+
+
+
+  \path[draw=black,fill=white] (0.0, 9.8028) rectangle (3.175, 8.2153);
+
+
+
+  \begin{scope}[shift={(-0.0132, 0.0132)}]
+    \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)}] (text6853) at (1.5875, 8.9165){$I_{\text{diff}}=\max\begin{cases}\vec{L} \cdot \vec{N} \\ 0\end{cases}$};
+
+
+
+  \end{scope}
+  \path[draw=black,fill=white,rounded corners=0.4445cm] (0.0, 1.6386) rectangle (3.175, 0.0511);
+
+
+
+  \begin{scope}[shift={(-0.0132, 0.0132)}]
+    \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)}] (text6673) at (1.5875, 0.7408){Конец};
+
+
+
+  \end{scope}
+  \path (3.7042, 11.9081) rectangle (4.736, 10.3698);
+
+
+
+  \path[draw=black,miter limit=10.0] (4.736, 11.9081) -- (3.7042, 11.9081) -- (3.7042, 10.3698) -- (4.736, 10.3698);
+
+
+
+  \begin{scope}[shift={(-0.0132, 0.0132)}]
+    \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)} ] (text6100) at (5.5, 11.0331){Вычисление направления от пикселя к источнику света};
+
+
+
+  \end{scope}
+  \path (3.7042, 9.7782) rectangle (4.736, 8.2399);
+
+
+
+  \path[draw=black,miter limit=10.0] (4.736, 9.7782) -- (3.7042, 9.7782) -- (3.7042, 8.2399) -- (4.736, 8.2399);
+
+
+
+  \begin{scope}[shift={(-0.0132, 0.0132)}]
+    \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)} ] (text9922) at (5.5, 8.9165){Вычисление косинуса угла между нормалью и вектором $\vec{L}$};
+
+
+
+  \end{scope}
+  \path[draw=black,miter limit=10.0,dash pattern=on 0.0794cm off 0.0794cm] (3.175, 6.8908) -- (3.7042, 6.8858);
+
+
+
+  \path[draw=black,miter limit=10.0] (1.5875, 6.1119) -- (1.5875, 5.6073);
+
+
+
+  \path[draw=black,fill=white] (0.0, 7.6994) rectangle (3.175, 6.1119);
+
+
+
+  \begin{scope}[shift={(-0.0132, 0.0132)}]
+    \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)}] (text8692) at (1.5875, 6.7998){$A=\max\begin{cases}1 - \frac{I_{\text{diff}}}{R} \\0\end{cases}$};
+
+
+
+  \end{scope}
+  \path (3.7042, 7.6502) rectangle (4.736, 6.1119);
+
+
+
+  \path[draw=black,miter limit=10.0] (4.736, 7.6502) -- (3.7042, 7.6502) -- (3.7042, 6.1119) -- (4.736, 6.1119);
+
+
+
+  \begin{scope}[shift={(-0.0132, 0.0132)}]
+    \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)} ] (text9266) at (5, 6.7733){Уменьшение интенсивности с расстоянием};
+
+
+
+  \end{scope}
+  \path[draw=black,miter limit=10.0] (1.5875, 4.0198) -- (1.5875, 3.4906);
+
+
+
+  \path[draw=black,miter limit=10.0,dash pattern=on 0.0794cm off 0.0794cm] (3.175, 4.7987) -- (3.7042, 4.7937);
+
+
+
+  \path[draw=black,fill=white] (0.0, 5.6073) rectangle (3.175, 4.0198);
+
+
+
+  \begin{scope}[shift={(-0.0132, 0.0132)}]
+    \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)}] (text8086) at (1.5875, 4.7096){$\text{LightColor} = \text{Color} \cdot \text{Intensity} \cdot A \cdot I_{\text{diff}}$};
+
+
+
+  \end{scope}
+  \path (3.7042, 5.5581) rectangle (4.736, 4.0198);
+
+
+
+  \path[draw=black,miter limit=10.0] (4.736, 5.5581) -- (3.7042, 5.5581) -- (3.7042, 4.0198) -- (4.736, 4.0198);
+
+
+
+  \begin{scope}[shift={(-0.0132, 0.0132)}]
+    \node[text=black,anchor=south,fit={(0,0) (3.175, 1.5875)},scale=0.8] (text1543) at (5.5, 4.6831){Результирующий цвет, где Intensity -- интенсивность источника света, Color -- цвет света};
+
+
+
+  \end{scope}
+
+\end{tikzpicture}
+
+\caption{Схема алгоритма Ламбертового освещения для точечного источника света}
+\label{chart:lambert_point}
+
+\end{figure}
