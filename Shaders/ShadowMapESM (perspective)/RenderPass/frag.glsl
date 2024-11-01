@@ -130,16 +130,14 @@ vec3 computeLightColor(vec3 fragPos, vec3 normal)
 
 float ShadowCalculation(vec4 fragPosLightSpace)
 {
-    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
-    projCoords.xy = projCoords.xy * 0.5 + 0.5;
+    vec3 projCoords = fragPosLightSpace.xyz;
+    projCoords = projCoords * 0.5 + 0.5;
 
     // Глубина текущего фрагмента из карты теней
     float closestDepth = texture(shadowMap, projCoords.xy).r; 
-    float currentDepth = exp(expK * projCoords.z);
+    float currentDepth = projCoords.z;
 
-    // Проверка на тень
-    float shadow = smoothstep(0.0, 1.0, clamp(closestDepth / currentDepth, 0.0, 1.0));
-    return shadow > 1.0 - shadowBias ? 1.0 : 1.0 - shadow;
+    return clamp( exp( -expK * (currentDepth - closestDepth)), shadowBias, 1.0 );
 }
 
 void main()

@@ -7,13 +7,13 @@
 #include "shader.h"
 #include "shader_extensions.h"
 
-#include "DepthBufferExpStruct.h"
+#include "DepthBufferStruct.h"
 
 #include "winapi_GLextensions.h"
 
 struct ShadowMapEsmRenderData
 {
-    DepthBufferExp* depthBuffer; 
+    DepthBuffer* depthBuffer; 
     GLsizei* client_width;
     GLsizei* client_height;
 

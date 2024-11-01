@@ -179,13 +179,18 @@ Windows NT или Windows 2000. Все функции этого набора я
         алгоритма мягких теневых карт с фильтрацией шумом (PCSS-NOISE);
         \item \text{ShadowMap.h} -- объявление функций стандартного алгоритма теневых карт;
         \item \text{ShadowMapPcf.h} -- объявление функций алгоритма теневых карт с фильтрацией (PCF);
-        \item \text{ShadowMapNoise.h} -- объвление функций алгоритма теневых карт с фильтрацией шумом (NOISE);
+        \item \text{ShadowMapNoise.h} -- объявление функций алгоритма теневых карт с фильтрацией шумом (NOISE);
         \item \text{ShadowMapPcss.h} -- объявление функций алгоритма мягких теневых карт с фильтрацией (PCSS);
         \item \text{ShadowMapPcssNosie.h} -- объявление функций алгоритма мягких теневых карт с фильтрацией шумом (PCSS-NOISE);
     \end{enumerate}
     \item \textbf{исходные} файлы:
     \begin{enumerate}[label=\arabic*), labelsep=0.5em]
-        \item 
+        \item \text{DepthBufferGenerator.cpp} -- реализация функции создания теневой карты;
+        \item \text{ShadowMap.cpp} -- реализация функций стандартного алгоритма теневых карт;
+        \item \text{ShadowMapPcf.cpp} -- реализация функций алгоритма теневых карт с фильтрацией (PCF);
+        \item \text{ShadowMapNoise.cpp} -- реализация функций алгоритма теневых карт с фильтрацией шумом (NOISE);
+        \item \text{ShadowMapPcss.cpp} -- реализация функций алгоритма мягких теневых карт с фильтрацией (PCSS);
+        \item \text{ShadowMapPcssNosie.cpp} -- реализация функций алгоритма мягких теневых карт с фильтрацией шумом (PCSS-NOISE);
     \end{enumerate}
 \end{itemize}
 
@@ -196,11 +201,50 @@ Windows NT или Windows 2000. Все функции этого набора я
 \begin{itemize}[label=---]
     \item \textbf{заголовочные} файлы:
     \begin{enumerate}[label=\arabic*), labelsep=0.5em]
-        \item 
+        \item \text{app\_args.h} -- объявление глобальных переменных приложения;
+        \item \text{user\_msgs.h}
+        \item \text{resource.h}
+        \item \text{cpu\_stop\_watch.hpp};
+        \item \text{cpu\_timing.h};
+        \item \text{formater.h}
+        \item \text{FpsSetterDialogProc.h}
+        \item \text{general\_shadow\_options\_wnd\_proc.h}
+        \item \text{Light.h}
+        \item \text{lighting\_wnd\_proc.h}
+        \item \text{LightStruct.h}
+        \item \text{main\_wnd\_proc.h}
+        \item \text{model\_wnd\_proc.h}
+        \item \text{ModelLoader.h}
+        \item \text{ModelLoaderDialogProc.h}
+        \item \text{PlaneMeshGenerator.h}
+        \item \text{ProjectionEnum.h}
+        \item \text{render\_wnd\_proc.h}
+        \item \text{ResolutionMapLimit.h}
+        \item \text{shadow\_wnd\_proc.h}
+        \item \text{ShadowAlgEnum.h}
+        \item \text{shadowMap\_wnd\_proc.h}
+        \item \text{time\_definers.h}
+        \item \text{toolbar\_wnd\_proc.h}
     \end{enumerate}
     \item \textbf{исходные} файлы:
     \begin{enumerate}[label=\arabic*), labelsep=0.5em]
-        \item 
+        \item \text{app\_args.cpp} -- объявление глобальных переменных приложения;
+        \item \text{cpu\_timing.cpp};
+        \item \text{formater.cpp}
+        \item \text{FpsSetterDialogProc.cpp}
+        \item \text{general\_shadow\_options\_wnd\_proc.cpp}
+        \item \text{Light.cpp}
+        \item \text{lighting\_wnd\_proc.cpp}
+        \item \text{main\_wnd\_proc.cpp}
+        \item \text{main.cpp}
+        \item \text{model\_wnd\_proc.cpp}
+        \item \text{ModelLoader.cpp}
+        \item \text{ModelLoaderDialogProc.cpp}
+        \item \text{PlaneMeshGenerator.cpp}
+        \item \text{render\_wnd\_proc.cpp}
+        \item \text{shadow\_wnd\_proc.cpp}
+        \item \text{shadowMap\_wnd\_proc.cpp}
+        \item \text{toolbar\_wnd\_proc.cpp}
     \end{enumerate}
 \end{itemize}
 
