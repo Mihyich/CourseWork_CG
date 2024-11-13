@@ -10,7 +10,7 @@
 интерфейс прикладного программирования Win32 API. Это набор функций
 для создания программ, работающих под управлением Microsoft Windows 98,
 Windows NT или Windows 2000. Все функции этого набора являются 32-битными,
-что отражено в названии интерфейса.~\cite{Win32Api_Shupak}
+что отражено в названии интерфейса~\cite{Win32Api_Shupak}.
 
 Инициализация, заполнение, обновление и использование теневых карт
 предполагается в шейдерных программах. Для этого требуется инициализация
@@ -18,14 +18,14 @@ Windows NT или Windows 2000. Все функции этого набора я
 позволяющих компилировать такие программы. Для того,
 чтобы связать контекст и оконное приложение на операционной системе
 \text{«Windows»} требуется непосредственно сама библиотека
-\textit{«opengl32.lib»}.~\cite{extOpenGL}
+\textit{«opengl32.lib»}~\cite{extOpenGL}.
 
 В ходе разработки реализации алгоритмов теневых карт потребуется
 использование матричных преобразований. Они должны не только позволять
 производить непосредственно сами преобразования, но и удовлетворять
 требованиям использования в шейдерных программах. А именно их представление
 в памяти должно соответсвовать ожиданиям шейдеров. Для этого отдельно
-разработан модуль линейной алгебры.~\cite{Linal}
+разработан модуль линейной алгебры~\cite{Linal}.
 
 Таким образом, в качестве среды программирования выбрана программа
 \text{Visual Studio Code}. Основным языком программирования всего приложения
@@ -52,10 +52,7 @@ Windows NT или Windows 2000. Все функции этого набора я
     модули, упомянутые выше, в единое целое.
 \end{enumerate}
 
-Помимо модулей основного приложения далее также будут описаны исходные коды
-шейдерных программ.
-
-\section{Исходные файлы модуля \text{«LA»}}
+\subsection{Исходные файлы модуля \text{«LA»}}
 
 В данной библиотеке реализованы такие математические объекты как:
 
@@ -96,7 +93,7 @@ Windows NT или Windows 2000. Все функции этого набора я
     \end{enumerate}
 \end{itemize}
 
-\section{Исходные файлы модуля \text{«WINAPI»}}
+\subsection{Исходные файлы модуля \text{«WINAPI»}}
 
 Файлы модуля представлены ниже:
 
@@ -112,7 +109,7 @@ Windows NT или Windows 2000. Все функции этого набора я
         \item \text{winapi\_console.h} -- объявление класса, обеспечивающего создание консоли и перенаправления потоков ввода-вывода;
         \item \text{winapi\_font\_common.h} -- объявление общих функций работы с шрифтами;
         \item \text{winapi\_font\_struct.h} -- объявление структуры шрифта;
-        \item \text{winapi\_font.h} -- объевление класса, обеспечивающего создание, использование и освобождение шрифта;
+        \item \text{winapi\_font.h} -- объявление класса, обеспечивающего создание, использование и освобождение шрифта;
         \item \text{winapi\_GLextensions.h} -- объявление функции загрузки расширений контекста \textit{«OpenGL»};
         \item \text{winapi\_GLwindow.h} -- объявление класса, реализующего создание, использование и освобождение окна, поддерживающего связывание с контекстом \textit{«OpenGL»}; 
         \item \text{winapi\_mat\_ext.h} -- объявление общих расчетных функций, специфичных для данного модуля;
@@ -139,7 +136,7 @@ Windows NT или Windows 2000. Все функции этого набора я
     \end{enumerate}
 \end{itemize}
 
-\section{Исходные файлы модуля \text{«GLSL»}}
+\subsection{Исходные файлы модуля \text{«GLSL»}}
 
 Файлы модуля представлены ниже:
 
@@ -158,7 +155,7 @@ Windows NT или Windows 2000. Все функции этого набора я
     \end{enumerate}
 \end{itemize}
 
-\section{Исходные файлы модуля \text{«ShadowMap»}}
+\subsection{Исходные файлы модуля \text{«ShadowMap»}}
 
 Файлы модуля представлены ниже:
 
@@ -166,7 +163,7 @@ Windows NT или Windows 2000. Все функции этого набора я
     \item \textbf{заголовочные} файлы:
     \begin{enumerate}[label=\arabic*), labelsep=0.5em]
         \item \text{DepthBufferGenerator.h} -- объявление функции создания теневой карты;
-        \item \text{DepthBufferStruct.h} -- объевление структуры теневой карты;
+        \item \text{DepthBufferStruct.h} -- объявление структуры теневой карты;
         \item \text{ShadowMapMainRenderData.h} -- объявление структуры необходимых данных для
         стандартного алгоритма теневых карт;
         \item \text{ShadowMapPcfRenderData.h} -- объявление структуры необходимых данных для
@@ -194,7 +191,7 @@ Windows NT или Windows 2000. Все функции этого набора я
     \end{enumerate}
 \end{itemize}
 
-\section{Исходные файлы модуля \text{«app»}}
+\subsection{Исходные файлы модуля \text{«app»}}
 
 Файлы модуля представлены ниже:
 
@@ -202,50 +199,259 @@ Windows NT или Windows 2000. Все функции этого набора я
     \item \textbf{заголовочные} файлы:
     \begin{enumerate}[label=\arabic*), labelsep=0.5em]
         \item \text{app\_args.h} -- объявление глобальных переменных приложения;
-        \item \text{user\_msgs.h}
-        \item \text{resource.h}
-        \item \text{cpu\_stop\_watch.hpp};
-        \item \text{cpu\_timing.h};
-        \item \text{formater.h}
-        \item \text{FpsSetterDialogProc.h}
-        \item \text{general\_shadow\_options\_wnd\_proc.h}
-        \item \text{Light.h}
-        \item \text{lighting\_wnd\_proc.h}
-        \item \text{LightStruct.h}
-        \item \text{main\_wnd\_proc.h}
-        \item \text{model\_wnd\_proc.h}
-        \item \text{ModelLoader.h}
-        \item \text{ModelLoaderDialogProc.h}
-        \item \text{PlaneMeshGenerator.h}
-        \item \text{ProjectionEnum.h}
-        \item \text{render\_wnd\_proc.h}
-        \item \text{ResolutionMapLimit.h}
-        \item \text{shadow\_wnd\_proc.h}
-        \item \text{ShadowAlgEnum.h}
-        \item \text{shadowMap\_wnd\_proc.h}
-        \item \text{time\_definers.h}
-        \item \text{toolbar\_wnd\_proc.h}
+        \item \text{user\_msgs.h} -- объявление пользовательских событий;
+        \item \text{resource.h} -- объявление индетификаторов элементов оконного приложения;
+        \item \text{cpu\_stop\_watch.hpp}; -- реализация класса таймера;
+        \item \text{cpu\_timing.h} -- объявление базового класса замера процессорного времени;
+        \item \text{formater.h} -- объявление функций конвертации строки в число;
+        \item \text{FpsSetterDialogProc.h} -- объявление функции обработки событий диалога установки числа обновления кадров в секунду;
+        \item \text{general\_shadow\_options\_wnd\_proc.h} -- объявление функции обработки событий окна изменения общих параметров теней;
+        \item \text{Light.h} -- объявление функций обновления данных UBO буфера;
+        \item \text{lighting\_wnd\_proc.h} -- объявление функции обработки событий окна изменения параметров источника света;
+        \item \text{LightStruct.h} -- объявление структуры, описывающей источник света с выравниванием, требуемым шейдерными программами;
+        \item \text{main\_wnd\_proc.h} -- объявление функции обработки событий родительского окна;
+        \item \text{ModelLoader.h} -- объявление функций загрузки трехмерной модели;
+        \item \text{ModelLoaderDialogProc.h} -- объявление функции обработки событий диалога выбора загружаемой модели;
+        \item \text{PlaneMeshGenerator.h} -- объявление функций создания специфичных примитивных трехмерных объектов;
+        \item \text{ProjectionEnum.h} -- объявление перечисления режима проекции;
+        \item \text{render\_wnd\_proc.h} -- объявление функции обработки событий окна отрисовки;
+        \item \text{ResolutionMapLimit.h} -- объявление максимальных размеров теневых карт;
+        \item \text{shadow\_wnd\_proc.h} -- объявление функции обработки событий окна держателя вкладок;
+        \item \text{ShadowAlgEnum.h} -- объявление перечисления алгоритмов теней;
+        \item \text{shadowMap\_wnd\_proc.h} -- объявление функции обработки событий окна изменения параметров тени;
+        \item \text{time\_definers.h} -- объявление временных констант;
+        \item \text{toolbar\_wnd\_proc.h} -- объявление функции обработки событий окна инструментов;
     \end{enumerate}
     \item \textbf{исходные} файлы:
     \begin{enumerate}[label=\arabic*), labelsep=0.5em]
-        \item \text{app\_args.cpp} -- объявление глобальных переменных приложения;
-        \item \text{cpu\_timing.cpp};
-        \item \text{formater.cpp}
-        \item \text{FpsSetterDialogProc.cpp}
-        \item \text{general\_shadow\_options\_wnd\_proc.cpp}
-        \item \text{Light.cpp}
-        \item \text{lighting\_wnd\_proc.cpp}
-        \item \text{main\_wnd\_proc.cpp}
-        \item \text{main.cpp}
-        \item \text{model\_wnd\_proc.cpp}
-        \item \text{ModelLoader.cpp}
-        \item \text{ModelLoaderDialogProc.cpp}
-        \item \text{PlaneMeshGenerator.cpp}
-        \item \text{render\_wnd\_proc.cpp}
-        \item \text{shadow\_wnd\_proc.cpp}
-        \item \text{shadowMap\_wnd\_proc.cpp}
-        \item \text{toolbar\_wnd\_proc.cpp}
+        \item \text{cpu\_timing.cpp} -- реализация базового класса замера процессорного времени;
+        \item \text{formater.cpp} -- реализация функций конвертации строки в число;
+        \item \text{FpsSetterDialogProc.cpp} -- реализация функции обработки событий диалога установки числа обновления кадров в секунду;
+        \item \text{general\_shadow\_options\_wnd\_proc.cpp} -- реализация функции обработки событий окна изменения общих параметров теней;
+        \item \text{Light.cpp} -- реализация функций обновления данных UBO буфера;
+        \item \text{lighting\_wnd\_proc.cpp} -- реализация функции обработки событий окна изменения параметров источника света;
+        \item \text{main\_wnd\_proc.cpp} -- реализация функции обработки событий родительского окна;
+        \item \text{main.cpp} -- точка входы программы;
+        \item \text{ModelLoader.cpp} -- реализация функций загрузки трехмерной модели;
+        \item \text{ModelLoaderDialogProc.cpp} -- реализация функции обработки событий диалога выбора загружаемой модели;
+        \item \text{PlaneMeshGenerator.cpp} -- реализация функций создания специфичных примитивных трехмерных объектов;
+        \item \text{render\_wnd\_proc.cpp} -- реализация функции обработки событий окна отрисовки;
+        \item \text{shadow\_wnd\_proc.cpp} -- реализация функции обработки событий окна держателя вкладок;
+        \item \text{shadowMap\_wnd\_proc.cpp} -- реализация функции обработки событий окна изменения параметров тени;
+        \item \text{toolbar\_wnd\_proc.cpp} -- реализация функции обработки событий окна инструментов;
     \end{enumerate}
 \end{itemize}
+
+\section{Реализация алгоритмов}
+
+В данном разделе будут описаны выбранные типы, структуры данных и
+представлены реализации алгоритмов теней.
+
+\subsection{Типы и структуры данных}
+
+В листинге~\ref{lst:light_struct} представлена структура, описывающая источник
+освещения в Ламбертовой модели с учетом выравнивания памяти, ожидаемой в шейдерных
+программах.
+
+Чтобы передать структуру с ожидаемым расположением полей в структуре в шейдер 
+необходимо следовать следующим правилам.
+
+\begin{enumerate}[label=\arabic*), labelsep=0.5em]
+    \item Если элемент представляет собой скаляр, использующий \(N\) базовых машинных единиц,
+    базовое выравнивание равно \(N\).
+    \item Если элемент представляет собой двух- или четырехкомпонентный вектор с компонентами
+    при использовании \(N\) базовых машинных единиц базовое выравнивание равно \(2N\) или
+    \(4N\) соответственно.
+    \item Если элемент представляет собой трехкомпонентный вектор с компонентами, занимающими
+    \(N\) базовых машинных единиц, базовое выравнивание равно \(4N\).
+    \item Если элемент представляет собой массив скаляров или векторов, базовое выравнивание
+    и шаг массива устанавливаются в соответствии с базовым выравниванием отдельного элемента массива
+    в соответствии с правилами (1), (2) и (3) и округляются в большую сторону
+    к базовому выравниванию четырехкомпонентного вектора. Массив может содержать отступы в начале
+    и конце. Базовое смещение элемента, следующего за массивом, округляется в большую сторону
+    до следующего значения, кратного базовому выравниванию.
+    \item Если элемент представляет собой матрицу, состоящую из \(C\) столбцов и \(R\)
+    строк, матрица хранится идентично массиву из \(C\)
+    векторов с \(R\) компонентами в каждой строке, согласно правилу (4).
+    \item Если элемент является массивом из \(S\) столбцов, то матрица хранится идентично строке векторов-столбцов \(S \times C\) с
+    компонентами \(R\) в каждом, согласно правилу (4).
+    \item Если элемент представляет собой матрицу, состоящую из \(C\) столбцов и \(R\) строк,
+    то матрица сохраняется идентично массиву векторов с \(R\) строками с \(C\) компонентами,
+    согласно правилу (4).
+    \item Если элемент представляет собой массив из \(S\) матриц, состоящих из \(R\) строк
+    и \(С\) столбцов, то матрица сохраняется идентично строке из \(S \times R\)
+    векторов с \(C\) компонентами в каждой строке, согласно правилу (4).
+    \item Если элемент является структурой, базовое выравнивание структуры равно
+    \(N\), где \(N\) - наибольшее базовое значение выравнивания для любого из ее элементов,
+    округленное до базового значения выравнивания для четырехкомпонентного вектора. Затем отдельным
+    элементам этой подструктуры присваиваются смещения применяя набор правил рекурсивно,
+    где базовое смещение первого элемента подструктуры равно выровненному смещению структуры.
+    Структура может иметь отступы в конце; базовое смещение элемента, следующего за подструктурой,
+    округляется в большую сторону к следующему кратному базовому выравниванию структуры.
+    \item Если элемент представляет собой массив из \(S\) структур, элементы
+    массива располагаются по порядку в соответствии с правилом (9).
+\end{enumerate}
+
+Рациональнее было бы использовать объединение - \text{union}, но GLSL его не
+поддерживает~\cite{}.
+
+\begin{center}
+\captionsetup{justification=centering, singlelinecheck=off}
+\begin{lstlisting}[label=lst:light_struct, caption={Источник освещения}]
+struct Light
+{
+    // Кратность 16 ==================================================================
+    vec3 position;     // Позиция (12 байт)
+    float pad0;        // Выравнивание для GLSL vec3 (еще 4 байта)
+    // Кратность 16 ==================================================================
+    vec3 direction;    // Направление (12 байт)
+    float pad1;        // Выравнивание для GLSL vec3 (еще 4 байта)
+    // Кратность 16 ==================================================================
+    vec3 color;        // Цвет (12 байт)
+    float pad2;        // Выравнивание для GLSL vec3 (еще 4 байта)
+    // Кратность 16 ==================================================================
+    float radius;      // Радиус действия (4 байта)
+    float intensity;   // Интенсивность (4 байта)
+    float innerCutoff; // Угол (в радианах) внутреннего конуса (4 байта)
+    float outerCutoff; // Угол (в радианах) внешнего конуса (4 байта)
+    // Кратность 16 ==================================================================
+    int   type;        // Тип источника света: 0 - PointLight; 1 - SpotLight (4 байта)
+    float pad3;        // Дополнительные паддинги,
+    float pad4;        // чтобы сделать размер структуры
+    float pad5;        // кратным 16 (3 * 4 = 12 байт)
+    // Кратность 16 ==================================================================
+};
+\end{lstlisting}
+\end{center}
+
+В листинге~\ref{lst:shadow_map_main_struct} представлена структура,
+описывающая необходимые данные для алгоритма стандартных теневых карт.
+
+\begin{center}
+\captionsetup{justification=centering, singlelinecheck=off}
+\begin{lstlisting}[label=lst:shadow_map_main_struct, caption={Структура параметров для стандартного алгоритма теневых карт}]
+struct ShadowMapMainRenderData
+{
+    DepthBuffer* depthBuffer; // Структура теневой карты
+    GLsizei* client_width;    // Ширина клиентской области рисования в пикселях
+    GLsizei* client_height;   // Высота клиентской области рисования в пикселях
+
+    Shader* shaderDepthPass;  // Объект класса шейдер
+    Shader* shaderRenderPass; // Объект класса шейдер
+    Shader* shaderDepthDebug; // Объект класса шейдер
+
+    mat4* view;               // Матрица вида камеры пользователя
+    mat4* projection;         // Матрица проекции камеры пользователя
+
+    mat4* lightView;          // Матрица вида источника освещения
+    mat4* lightProjection;    // Матрица проекции источника освещения
+
+    GLfloat* shadowBias;      // Корректирующее смещение
+
+    GLuint* quadVAO;          // Идентификатор буфера двумерного объекта, прямоугольник
+
+    GLuint* planeVAO;         // Идентификатор буфера трехмерного объекта, плоскость
+    mat4* planeModel;         // Матрица модели этого объекта
+
+    GLuint* modelVAO;         // Идентификатор буфера трехмерного объекта
+    GLsizei* modelIndexCount; // Количество индексов в этой модели
+    mat4* modelModel;         // Матрица модели этого объекта
+};
+\end{lstlisting}
+\end{center}
+
+Для всех остальных алгоритмов теневых карт, помимо параметров
+приведенных выше, требуется еще один параметр - \text{pcfRadius}.
+Таким образом, структура выглядит как в
+листинге~\ref{lst:shadow_map_pcf_struct}.
+
+\begin{center}
+\captionsetup{justification=centering, singlelinecheck=off}
+\begin{lstlisting}[label=lst:shadow_map_pcf_struct, caption={Структура параметров для алгоритмов теневых карт с фильтрацией}]
+struct ShadowMapMainRenderData
+{
+    DepthBuffer* depthBuffer; // Структура теневой карты
+    GLsizei* client_width;    // Ширина клиентской области рисования в пикселях
+    GLsizei* client_height;   // Высота клиентской области рисования в пикселях
+
+    Shader* shaderDepthPass;  // Объект класса шейдер
+    Shader* shaderRenderPass; // Объект класса шейдер
+    Shader* shaderDepthDebug; // Объект класса шейдер
+
+    mat4* view;               // Матрица вида камеры пользователя
+    mat4* projection;         // Матрица проекции камеры пользователя
+
+    mat4* lightView;          // Матрица вида источника освещения
+    mat4* lightProjection;    // Матрица проекции источника освещения
+
+    GLfloat* shadowBias;      // Корректирующее смещение
+    GLfloat* pcfRadius;       // Радиус фильтрации
+
+    GLuint* quadVAO;          // Идентификатор буфера двумерного объекта, прямоугольник
+
+    GLuint* planeVAO;         // Идентификатор буфера трехмерного объекта, плоскость
+    mat4* planeModel;         // Матрица модели этого объекта
+
+    GLuint* modelVAO;         // Идентификатор буфера трехмерного объекта
+    GLsizei* modelIndexCount; // Количество индексов в этой модели
+    mat4* modelModel;         // Матрица модели этого объекта
+};
+\end{lstlisting}
+\end{center}
+
+В листингах~\ref{lst:shadow_map_main_struct}~--~\ref{lst:shadow_map_pcf_struct}
+использовалась структура \text{теневой карты}. Она описана в
+листинге~\ref{lst:shadow_map}.
+
+\begin{center}
+\captionsetup{justification=centering, singlelinecheck=off}
+\begin{lstlisting}[label=lst:shadow_map, caption={Структура теневой карты}]
+struct DepthBuffer
+{
+    GLuint Texture; // Идентификатор карты - текстуры
+    GLuint FBO;     // Идентификатор кадрового буфера
+    GLsizei width;  // Длина карты в пикселях
+    GLsizei height; // Высота карты в пикселях
+};
+\end{lstlisting}
+\end{center}
+
+Все описанные алгоритмы, как представлено в
+схемах~\ref{chart:shadow_map}~--~\ref{chart:shadow_map_pcss_noise},
+имеют идентичный этап заполнения карты теней (листинг~\ref{lst:shadow_map_init}).
+В этом участке кода, выполняется заполнение теневой карты, в которую заносится
+информация глубины объекта.
+
+\begin{center}
+\captionsetup{justification=centering, singlelinecheck=off}
+\begin{lstlisting}[label=lst:shadow_map_init, caption=Алгоритм заполнения теневой карты]
+void DepthPass(ShadowMapMainRenderData& data)
+{
+    glViewport(0, 0, data.depthBuffer->width, data.depthBuffer->height);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, data.depthBuffer->FBO);
+    glClear(GL_DEPTH_BUFFER_BIT);
+
+    data.shaderDepthPass->use();
+    uniform_matrix4f(data.shaderDepthPass->get_uniform_location("view"), data.lightView);
+    uniform_matrix4f(data.shaderDepthPass->get_uniform_location("projection"), data.lightProjection);
+
+    glBindVertexArray(*data.modelVAO);
+    uniform_matrix4f(data.shaderDepthPass->get_uniform_location("model"), data.modelModel);
+    glDrawElements(GL_TRIANGLES, *data.modelIndexCount, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+}
+\end{lstlisting}
+\end{center}
+
+\subsection{Алгоритм стандартных теневых карт}
+
+\subsection{Алгоритм теневых карт с фильтрацией}
+
+\subsection{Алгоритм теневых карт с фильтрацией шумом}
+
+\subsection{Алгоритм мягких теневых карт с фильтрацией}
+
+\subsection{Алгоритм мягких теневых карт с фильтрацией шумом}
 
 \section*{Вывод}
