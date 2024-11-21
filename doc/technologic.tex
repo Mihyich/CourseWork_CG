@@ -416,6 +416,8 @@ struct DepthBuffer
 \end{lstlisting}
 \end{center}
 
+\subsection{Реализация основных этапов алгоритмов теней}
+
 Все описанные алгоритмы, как представлено в
 схемах~\ref{chart:shadow_map}~--~\ref{chart:shadow_map_pcss_noise},
 имеют идентичный этап заполнения карты теней (листинг~\ref{lst:shadow_map_init}).
@@ -439,6 +441,46 @@ void DepthPass(ShadowMapMainRenderData& data)
     glBindVertexArray(*data.modelVAO);
     uniform_matrix4f(data.shaderDepthPass->get_uniform_location("model"), data.modelModel);
     glDrawElements(GL_TRIANGLES, *data.modelIndexCount, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+}
+\end{lstlisting}
+\end{center}
+
+В приведенной приведенной выше...
+
+Второй этап алгоритмов теневых карт так же является практически одинаковым для всех реализаций
+алгоритмов за исключением передачи некоторых уникальных данных в соответствующую шейдерную
+программу. В листинге~\ref{lst:shadow_map_render} приведена реализация этапа рисования сцены с учетом теней для
+алгоритма стандартных теневых карт.
+
+\begin{center}
+\captionsetup{justification=centering, singlelinecheck=off}
+\begin{lstlisting}[label=lst:shadow_map_render, caption=Алгоритм заполнения теневой карты]
+void RenderPass(ShadowMapMainRenderData& data)
+{
+    glViewport(0, 0, *data.client_width, *data.client_height);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    data.shaderRenderPass->use();
+    uniform_matrix4f(data.shaderRenderPass->get_uniform_location("view"), data.view);
+    uniform_matrix4f(data.shaderRenderPass->get_uniform_location("projection"), data.projection);
+    uniform_matrix4f(data.shaderRenderPass->get_uniform_location("lightView"), data.lightView);
+    uniform_matrix4f(data.shaderRenderPass->get_uniform_location("lightProjection"), data.lightProjection);
+    glUniform1f(data.shaderRenderPass->get_uniform_location("shadowBias"), *data.shadowBias);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, data.depthBuffer->Texture);
+
+    glBindVertexArray(*data.modelVAO);
+    uniform_matrix4f(data.shaderRenderPass->get_uniform_location("model"), data.modelModel);
+    glDrawElements(GL_TRIANGLES, *data.modelIndexCount, GL_UNSIGNED_INT, 0);
+
+    glBindVertexArray(*data.planeVAO);
+    uniform_matrix4f(data.shaderRenderPass->get_uniform_location("model"), data.planeModel);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
     glBindVertexArray(0);
 }
 \end{lstlisting}
