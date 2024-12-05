@@ -1,0 +1,192 @@
+<mxfile host="65bd71144e">
+    <diagram id="PSXwg84rqV06VN-MkGx3" name="Page-1">
+        <mxGraphModel dx="1071" dy="764" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="3" style="edgeStyle=none;html=1;endArrow=oval;endFill=1;strokeWidth=1;startSize=18;endSize=18;" edge="1" parent="1" source="2">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="360" y="810" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="4" value="Пользователь" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="3">
+                    <mxGeometry x="1" y="6" relative="1" as="geometry">
+                        <mxPoint x="-6" y="20" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="13" style="edgeStyle=none;html=1;strokeWidth=1;endArrow=oval;endFill=1;startSize=19;endSize=18;" edge="1" parent="1" source="2">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="360" y="670" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="2" value="&lt;b&gt;WinApi&lt;/b&gt;&lt;br&gt;Графический интерфейс управления приложением" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="281" y="710" width="158" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" style="edgeStyle=none;rounded=1;html=1;strokeWidth=1;endArrow=oval;endFill=1;startSize=18;endSize=11;exitX=0.25;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="6">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="600" y="600" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="700" y="600"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="33" style="edgeStyle=none;rounded=1;html=1;strokeWidth=1;endArrow=halfCircle;endFill=0;startSize=18;endSize=11;" edge="1" parent="1" source="6">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="850" y="670" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="35" style="edgeStyle=none;rounded=1;html=1;strokeWidth=1;endArrow=oval;endFill=1;startSize=18;endSize=11;" edge="1" parent="1" source="6">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="730" y="610" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="44" style="edgeStyle=none;rounded=1;html=1;strokeWidth=1;endArrow=halfCircle;endFill=0;startSize=18;endSize=11;" edge="1" parent="1" source="6">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="730" y="740" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="6" value="&lt;b&gt;OpenGL&lt;/b&gt;&lt;br&gt;Графическое API&lt;b&gt;&amp;nbsp;&lt;br&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="670" y="640" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="46" style="edgeStyle=none;rounded=1;html=1;strokeWidth=1;endArrow=oval;endFill=1;startSize=18;endSize=11;" edge="1" parent="1" source="7">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="730" y="740" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="7" value="&lt;b&gt;Assimp&lt;/b&gt;&lt;br&gt;Модуль загрузки 3D-моделей" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="550" y="710" width="110" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="37" style="edgeStyle=none;rounded=1;html=1;strokeWidth=1;endArrow=oval;endFill=1;startSize=18;endSize=11;" edge="1" parent="1" source="8">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="490" y="410" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="8" value="&lt;b&gt;La&lt;/b&gt;&lt;br&gt;Модуль линейной алгебры" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="430" y="310" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="34" style="edgeStyle=none;rounded=1;html=1;strokeWidth=1;endArrow=halfCircle;endFill=0;startSize=18;endSize=11;" edge="1" parent="1" source="9">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="730" y="610" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="36" style="edgeStyle=none;rounded=1;html=1;strokeWidth=1;endArrow=oval;endFill=1;startSize=18;endSize=11;" edge="1" parent="1" source="9">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="600" y="550" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="42" style="edgeStyle=none;rounded=1;html=1;strokeWidth=1;endArrow=halfCircle;endFill=0;startSize=18;endSize=11;" edge="1" parent="1" source="9">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="490" y="409.9999999999999" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="730" y="410"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="9" value="&lt;b&gt;ShadowMap&lt;/b&gt;&lt;br&gt;Модуль реализация алгоритмов теневых карт" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="670" y="520" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" style="edgeStyle=none;rounded=1;html=1;strokeWidth=1;endArrow=oval;endFill=1;startSize=18;endSize=11;" edge="1" parent="1" source="10">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="850" y="670" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="43" style="edgeStyle=none;rounded=1;html=1;strokeWidth=1;endArrow=halfCircle;endFill=0;startSize=18;endSize=11;" edge="1" parent="1" source="10">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="490" y="410" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="960" y="410"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="10" value="&lt;b&gt;GLSL&lt;/b&gt;&lt;br&gt;Модуль компиляции шейдеров и линковнки шейдерных программ" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="890" y="640" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" style="edgeStyle=none;html=1;strokeWidth=1;endArrow=halfCircle;endFill=0;startSize=18;endSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;rounded=1;" edge="1" parent="1" source="11">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="360" y="670" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="455" y="670"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="28" style="edgeStyle=none;rounded=1;html=1;exitX=1.007;exitY=0.725;exitDx=0;exitDy=0;strokeWidth=1;endArrow=halfCircle;endFill=0;startSize=18;endSize=11;exitPerimeter=0;" edge="1" parent="1" source="11">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="600" y="600" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="29" style="edgeStyle=none;rounded=1;html=1;strokeWidth=1;endArrow=halfCircle;endFill=0;startSize=18;endSize=11;" edge="1" parent="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="600" y="550" as="targetPoint"/>
+                        <mxPoint x="530" y="550" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="40" style="edgeStyle=none;rounded=1;html=1;strokeWidth=1;endArrow=halfCircle;endFill=0;startSize=18;endSize=11;" edge="1" parent="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="490" y="410" as="targetPoint"/>
+                        <mxPoint x="490" y="530" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="11" value="&lt;b&gt;Render_wnd&lt;/b&gt;&lt;br&gt;Окно рисования" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="380" y="520" width="150" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" style="edgeStyle=none;html=1;strokeWidth=1;endArrow=halfCircle;endFill=0;startSize=18;endSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;rounded=1;" edge="1" parent="1" source="12">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="360" y="670" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="280" y="670"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="20" style="edgeStyle=none;html=1;strokeWidth=1;endArrow=oval;endFill=1;startSize=18;endSize=18;rounded=1;" edge="1" parent="1" source="12">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="160" y="550" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="160" y="600"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="12" value="&lt;b&gt;Toolbar_wnd&lt;/b&gt;&lt;br&gt;Окно настроек параметров" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="220" y="570" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" style="edgeStyle=none;html=1;strokeWidth=1;endArrow=halfCircle;endFill=0;startSize=18;endSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;rounded=1;" edge="1" parent="1" source="18">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="160" y="550" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="80" y="550"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="39" style="edgeStyle=none;rounded=1;html=1;strokeWidth=1;endArrow=halfCircle;endFill=0;startSize=18;endSize=11;" edge="1" parent="1" source="18">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="490" y="410" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="80" y="410"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="18" value="&lt;b&gt;Shadow_wnd&lt;/b&gt;&lt;br&gt;Окно настроек параметров теней" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="20" y="450" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" style="edgeStyle=none;html=1;strokeWidth=1;endArrow=halfCircle;endFill=0;startSize=18;endSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;rounded=1;" edge="1" parent="1" source="19">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="160" y="550" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="250" y="550"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="38" style="edgeStyle=none;rounded=1;html=1;strokeWidth=1;endArrow=halfCircle;endFill=0;startSize=18;endSize=11;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="19">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="490" y="410" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="250" y="410"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="19" value="&lt;b&gt;Light_wnd&lt;/b&gt;&lt;br&gt;Окно настроек параметров освещения&amp;nbsp;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="180" y="450" width="140" height="60" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
