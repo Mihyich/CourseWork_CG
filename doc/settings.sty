@@ -26,6 +26,8 @@
 \usetikzlibrary{fit}
 \usetikzlibrary{matrix, shapes.geometric}
 \RequirePackage{csquotes}
+\RequirePackage{array}
+\RequirePackage{longtable}
 
 \hypersetup
 {
@@ -39,20 +41,6 @@
 	pdfsubject={},
 	pdfkeywords={}
 }
-
-\titleformat{\section}
-	{\LARGE\bfseries}
-	{\thesection}
-	{1em}{}
-
-\titleformat{\subsection}
-	{\large\bfseries}
-	{\thesubsection}
-	{1em}{}
-
-\titlespacing*{\chapter}{0pt}{-30pt}{1em}
-\titlespacing*{\section}{\parindent}{*4}{*4}
-\titlespacing*{\subsection}{\parindent}{*3}{*3}
 
 \lstset
 {
@@ -70,7 +58,7 @@
 	breaklines=true,                     % Break long lines
 	breakatwhitespace=true,              % Only break lines at whitespace
 	backgroundcolor=\color{white},       % Background color of the code
-	morekeywords={size_t, uint16_t},     % Add custom keywords
+	morekeywords={size_t, uint16_t, gl_Position, location},     % Add custom keywords
 	emph={                               % Add macro names here
 		GL_FRAMEBUFFER, GL_DEPTH_BUFFER_BIT, GL_COLOR_BUFFER_BIT,
 		GL_TRIANGLES, GL_UNSIGNED_INT, GL_TEXTURE0, GL_TEXTURE_2D
@@ -79,12 +67,12 @@
 	emph=[2]{                            % Custom struct types here
 		ShadowMapMainRenderData, Light, vec3,
 		DepthBuffer, GLsizei, Shader, mat4,
-		GLfloat, GLuint
+		GLfloat, GLuint, vec4
 	},
     emphstyle=[2]\color{ForestGreen},    % Set color for struct types
 	emph=[3]{                            % Custom struct types here
 		glViewport, glClear, uniform_matrix4f,
-		glDrawElement
+		glDrawElement, version, layout, uniform
 	},
     emphstyle=[3]\color{cyan},           % Set color for struct types
 	literate=
@@ -159,8 +147,20 @@
 \AtBeginDocument
 {
 	\fontsize{14}{21}\selectfont
+
 	\titleformat{name=\chapter,numberless}[block]{\normalfont\LARGE\bfseries\centering}{}{0pt}{}
 	\titleformat{\chapter}[block]{\normalfont\huge\bfseries}{}{0pt}{\thechapter\quad}
+
+	\titleformat{\section}{\LARGE\bfseries}{\thesection}{1em}{}
+	\titleformat{name=\section,numberless}{\LARGE\bfseries\centering}{}{0pt}{}
+
+	\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
+	\titleformat{name=\subsection,numberless}{\large\bfseries\centering}{}{0pt}{}
+
+	\titlespacing*{\chapter}{0pt}{-30pt}{1em}
+	\titlespacing*{\section}{\parindent}{*4}{*4}
+	\titlespacing*{\subsection}{\parindent}{*3}{*3}
+
 	\setlength{\parindent}{1.25cm}
 	\captionsetup{labelsep=endash}
 	\captionsetup[figure]{name={Рисунок}}

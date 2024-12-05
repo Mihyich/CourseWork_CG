@@ -33,6 +33,85 @@ Windows NT или Windows 2000. Все функции этого набора я
 \text{C}, который наибольшим образом схож с языком программирования шейдерных
 программ -- \text{GLSL}.
 
+\section{Выбор графического API}
+
+Для реализации алгоритмов рисования экранируемых и собственных теней в реальном времени
+был выбран графический API, предоставляющий работу с графическими
+ускорителями (\hbox{рисунок~\ref{img:cpu_gpu_interaction}})~\cite{extOpenGL}.
+
+\begin{figure}[h!]
+    \centering
+    \includesvg[width=0.8\linewidth]{charts/3dAPImodern.svg}
+    \caption{Схема взаимодействия приложения с графическим ускорителем через API.}
+    \label{img:cpu_gpu_interaction}
+\end{figure}
+
+\subsection{OpenGL}
+
+OpenGL, описанный в книге Гинсбурга и Пурномо \cite{OpenGLES},
+представляет собой высокоуровневый API,
+который ориентирован на удобство разработки и поддержку кроссплатформенных приложений.
+
+Основные достоинства OpenGL.
+
+\begin{enumerate}[label=\arabic*), labelsep=0.5em]
+    \item \textbf{Кроссплатформенность}. OpenGL поддерживается практически на всех операционных системах,
+    включая Windows, macOS и Linux.
+    Эта универсальность делает его предпочтительным выбором для приложений,
+    которые должны работать на различных устройствах.
+    \item \textbf{Простота разработки}. Благодаря высокоуровневой архитектуре,
+    OpenGL позволяет быстро разрабатывать графические приложения,
+    абстрагируя сложные операции взаимодействия с GPU.
+    Как отмечает Боресков в книге «Расширения OpenGL»~\cite{extOpenGL},
+    даже расширенные возможности API остаются интуитивно понятными благодаря
+    наличию хорошо документированных интерфейсов.
+    \item \textbf{Совместимость с современными графическими возможностями}.
+    OpenGL 4.5 поддерживает такие функции, как буферы кадров (FBO),
+    использование шейдеров и текстурные массивы,
+    что делает его подходящим для реализации современных алгоритмов рендеринга.
+\end{enumerate}
+
+\subsection{Vulkan}
+
+Вулкан, описанный в книге Селлерса~\cite{Vulkan},
+представляет собой низкоуровневый API,
+который предоставляет разработчику максимальный контроль над процессами работы
+с графическим оборудованием.
+
+Основные достоинства Vulkan.
+
+\begin{enumerate}[label=\arabic*), labelsep=0.5em]
+    \item \textbf{Высокая производительность}.
+    Vulkan позволяет эффективно распределять ресурсы GPU и управлять многопоточностью,
+    что делает его подходящим для ресурсоемких приложений.
+    \item \textbf{Гибкость и контроль}.
+    Разработчик полностью контролирует управление памятью,
+    синхронизацию потоков и рендеринг.
+    \item \textbf{Сложность разработки}.
+    Селлерс отмечает, разработка на Vulkan требует значительно большего объема кода и
+    глубокой экспертизы в графических технологиях. Это делает его менее подходящим для задач,
+    где требуется быстрая реализация.
+\end{enumerate}
+
+\subsection{DirectX}
+
+DirectX, описанный Горнаковым~\cite{DirectX_with_OpenGL},
+является API, ориентированным на Windows-платформы.
+
+Основные достоинства DirectX.
+
+\begin{enumerate}[label=\arabic*), labelsep=0.5em]
+    \item \textbf{Высокая производительность}.
+    DirectX обеспечивает эффективное взаимодействие с GPU,
+    что делает его оптимальным выбором для игр и других графических приложений,
+    работающих на Windows.
+    \item \textbf{Глубокая интеграция с Windows}.
+    DirectX максимально использует возможности операционной системы и оборудования,
+    обеспечивая стабильную производительность.
+    \item \textbf{Ограниченная платформенная поддержка}.
+    DirectX не поддерживается на macOS и Linux.
+\end{enumerate}
+
 \section{Исходные модули программы}
 
 Программа для удобства разделена на модули:
@@ -293,7 +372,7 @@ Windows NT или Windows 2000. Все функции этого набора я
 \end{enumerate}
 
 Рациональнее было бы использовать объединение - \text{union}, но GLSL его не
-поддерживает~\cite{}.
+поддерживает~\cite{OpenGL_DevidVolf}.
 
 \begin{center}
 \captionsetup{justification=centering, singlelinecheck=off}
@@ -446,7 +525,9 @@ void DepthPass(ShadowMapMainRenderData& data)
 \end{lstlisting}
 \end{center}
 
-В приведенной приведенной выше...
+Приведенная выше реализация алгоритма заполнения теневой карты, является универсальной для
+всех алгоритмов теней, за исключением того, что для каждого алгоритма используется
+своя структура данных.
 
 Второй этап алгоритмов теневых карт так же является практически одинаковым для всех реализаций
 алгоритмов за исключением передачи некоторых уникальных данных в соответствующую шейдерную
@@ -486,14 +567,607 @@ void RenderPass(ShadowMapMainRenderData& data)
 \end{lstlisting}
 \end{center}
 
-\subsection{Алгоритм стандартных теневых карт}
+Помимо таких параметров как \text{view},
+\text{projection}, \text{lightView}, \text{lightProjection} и
+\text{shadowBias}, которые являются общими для всех реализаций,
+есть дополнительный -- \text{pcfRadius}, используемый во всех
+алгоритмах кроме стандартного.
 
-\subsection{Алгоритм теневых карт с фильтрацией}
+\subsection{Реализация алгоритма стандартных теневых карт}
 
-\subsection{Алгоритм теневых карт с фильтрацией шумом}
+\subsection*{Подготовительный этап}
 
-\subsection{Алгоритм мягких теневых карт с фильтрацией}
+В подготовительном этапе рисования теней, представленном в листинге~\ref{lst:shadow_map_init},
+используется шейдерная программа, контролирующая заполнение теневой карты значениями глубины
+(\hbox{листинги~\ref{lst:shadow_map_init_vert}~--~\ref{lst:shadow_map_init_frag}}).
 
-\subsection{Алгоритм мягких теневых карт с фильтрацией шумом}
+\begin{center}
+\captionsetup{justification=centering, singlelinecheck=off}
+\begin{lstlisting}[label=lst:shadow_map_init_vert, caption=Вершинный шейдер заполнения теневой карты]
+#version 460 core
+
+layout(location = 0) in vec3 aPos;
+
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+
+void main()
+{
+    gl_Position = projection * view * model * vec4(aPos, 1.0);
+}
+\end{lstlisting}
+\end{center}
+
+\begin{center}
+\captionsetup{justification=centering, singlelinecheck=off}
+\begin{lstlisting}[label=lst:shadow_map_init_frag, caption=Фрагментный шейдер заполнения теневой карты]
+#version 460 core
+
+void main()
+{
+
+}
+\end{lstlisting}
+\end{center}
+
+Особенностью реализации фрагментного шейдера (листинг~\ref{lst:shadow_map_init_frag})
+является пустая головная функция, так как никакой обработки пикселей не происходит,
+за исключением записи значений их глубины в теневую карту, предварительно
+подключенную на запись перед рисованием объектов, отбрасывающих тени.
+
+Важно отметить, что рисовать все объекты подряд не требуется. Если достоверно известно,
+что экранируемая и собственная тени какого-либо объекта не будут видны с точки зрения пользователя,
+то такие объекты можно пропустить. При этом экранируемые тени от других объектов все еще будут корректно
+отображаться на поверхностях чужих объектов.
+
+Именно поэтому в подготовительном этапе отображается только обозреваемый объект, в то время как
+рисование плоскости игнорируется.
+
+Реализация шейдерной программы, приведенной в
+листингах~\ref{lst:shadow_map_init_vert}~--~\ref{lst:shadow_map_init_frag},
+является общей для всех реализаций подготовительного этапа рисования теней.
+
+\subsection*{Заключительный этап}
+
+Используя заполненную теневую карту в первом этапе рисования,
+заключительная шейдерная программа рисует сцену с учетом теней и освещения
+(листинги~\ref{lst:shadow_map_vert}~--~\ref{lst:shadow_map_frag}).
+
+\begin{center}
+\captionsetup{justification=centering, singlelinecheck=off}
+\begin{lstlisting}[label=lst:shadow_map_vert, caption=Вершинный шейдер преобразования координат]
+#version 460 core
+
+layout(location = 0) in vec3 aPos;
+layout(location = 1) in vec3 aNormal;
+
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+
+uniform mat4 lightView;
+uniform mat4 lightProjection;
+
+out vec4 FragPos;
+out vec3 Normal;
+out vec4 FragPosLightSpace;
+
+void main()
+{
+    FragPos = model * vec4(aPos, 1.0);
+    Normal = mat3(transpose(inverse(model))) * aNormal;
+    FragPosLightSpace = lightProjection * lightView * FragPos;
+    gl_Position = projection * view * FragPos;
+}
+\end{lstlisting}
+\end{center}
+
+\begin{center}
+\captionsetup{justification=centering, singlelinecheck=off}
+\begin{lstlisting}[label=lst:shadow_map_frag, caption=Фрагментный шейдер с учетом теней и освещения]
+#version 460 core
+
+// Определение структур, описывающих освещение ...
+
+out vec4 FragColor;
+
+in vec4 FragPos;
+in vec3 Normal;
+in vec4 FragPosLightSpace;
+
+uniform sampler2D shadowMap;
+uniform float shadowBias;
+
+// Объявление и реализация функций вычисляющих освещение ...
+
+float ShadowCalculation(vec4 fragPosLightSpace)
+{
+    // Конвертация из [-1, 1] в [0, 1]
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    projCoords = projCoords * 0.5 + 0.5;
+
+    // Глубина текущего фрагмента из карты теней
+    float closestDepth = texture(shadowMap, projCoords.xy).r; 
+    float currentDepth = projCoords.z;
+
+    // Проверка на тень
+    float shadow = step(closestDepth + shadowBias, currentDepth);
+    shadow *= step(currentDepth, 1.0);
+
+    return shadow;
+}
+
+void main()
+{
+    vec3 color = vec3(0.5);
+    vec3 ambient = 0.15 * color;
+
+    vec3 diffuse = computeLightColor(FragPos.xyz, Normal) * color;
+
+    float shadow = ShadowCalculation(FragPosLightSpace);                      
+    vec3 lighting = (ambient + (1.0 - shadow) * diffuse);
+
+    FragColor = vec4(lighting, 1.0);
+}
+\end{lstlisting}
+\end{center}
+
+Вершинный шейдер, представленный в листинге~\ref{lst:shadow_map_vert}
+является общим для всех алгоритмов рисования теней.
+
+Фрагментный шейдер (листинг~\ref{lst:shadow_map_frag}) имеет вариацию в зависимости
+от вида проецирования: ортогонального или перспективного. В приведенном примере используется
+перспективное проецирование тени. Отличие ортогонального проецирования от перспективного
+заключается лишь в конвертации координат, то есть измена только функция
+\textit{ShadowCalculation()}. Реализация такой вариации приведена в
+листинге~\ref{lst:shadow_map_frag_ortho}.
+
+\begin{center}
+\captionsetup{justification=centering, singlelinecheck=off}
+\begin{lstlisting}[label=lst:shadow_map_frag_ortho, caption=Фрагментный шейдер с учетом ортогонального проецирония теней]
+// ...
+
+float ShadowCalculation(vec4 fragPosLightSpace)
+{
+    // Конвертация из [-1, 1] в [0, 1]
+    vec3 projCoords = fragPosLightSpace.xyz;
+    projCoords = projCoords * 0.5 + 0.5;
+
+    // Глубина текущего фрагмента из карты теней
+    float closestDepth = texture(shadowMap, projCoords.xy).r; 
+    float currentDepth = projCoords.z;
+
+    // Проверка на тень
+    float shadow = step(closestDepth + shadowBias, currentDepth);
+    shadow *= step(currentDepth, 1.0);
+
+    return shadow;
+}
+
+//...
+\end{lstlisting}
+\end{center}
+
+По итогу, перспективное деление игнорируется в силу того, что используется
+матрица ортогонального проецирования вместо перспективного.
+
+\subsection{Реализация алгоритма теневых карт с фильтрацией}
+
+Как было уточнено выше, шейдерная программа
+(листинги~\ref{lst:shadow_map_init_vert}~--~\ref{lst:shadow_map_init_frag})
+в подготовительном этапе эквивалентна во всех реализациях,
+так же как и вершинный шейдер в заключительном этапе
+(листинг~\ref{lst:shadow_map_vert}). Поэтому здесь и далее для всех
+реализаций алгоритмов теней будут приведены только фрагметные шейдеры
+заключительного этапа.
+
+В листинге~\ref{lst:shadow_map_pcf_frag} представлена реализация фрагментного шейдера заключительного
+этапа рисования с учетом перспективной проекции теней с фильтрацией и освещения.
+
+\begin{center}
+\captionsetup{justification=centering, singlelinecheck=off}
+\begin{lstlisting}[label=lst:shadow_map_pcf_frag, caption=Фрагментный шейдер с учетом перспективного проецирония теней]
+#version 460 core
+
+// Определение структур, описывающих освещение ...
+
+out vec4 FragColor;
+
+in vec4 FragPos;
+in vec3 Normal;
+in vec4 FragPosLightSpace;
+
+uniform sampler2D shadowMap;
+uniform float shadowBias;
+uniform float pcfRadius;
+
+// Объявление и реализация функций вычисляющих освещение ...
+
+float ShadowCalculation(vec4 fragPosLightSpace)
+{
+    // Конвертация из [-1, 1] в [0, 1]
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    projCoords = projCoords * 0.5 + 0.5;
+
+    // Проверка на тень
+    if (projCoords.z > 1.0)
+        return 0.0;
+    
+    // Тень с использованием PCF
+    float shadow = 0.0;
+    vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+    for (int x = -1; x <= 1; ++x)
+    {
+        for (int y = -1; y <= 1; ++y)
+        {
+            float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize * pcfRadius).r;
+            shadow += projCoords.z - shadowBias > pcfDepth ? 1.0 : 0.0;
+        }
+    }
+
+    return shadow / 9.0;
+}
+
+void main()
+{
+    vec3 color = vec3(0.5);
+    vec3 ambient = 0.15 * color;
+
+    vec3 diffuse = computeLightColor(FragPos.xyz, Normal) * color;
+
+    float shadow = ShadowCalculation(FragPosLightSpace);                      
+    vec3 lighting = (ambient + (1.0 - shadow) * diffuse);
+
+    FragColor = vec4(lighting, 1.0);
+}
+\end{lstlisting}
+\end{center}
+
+Вариация реализации фрагментного шейдера рисования теней с
+фильтрацией с ортогональной проекцией теней представлена в
+листинге~\ref{lst:shadow_map_pcf_ortho_frag}, конфигурация которой
+заключается только в функции \textit{ShadowCalculation()}.
+
+\begin{center}
+\captionsetup{justification=centering, singlelinecheck=off}
+\begin{lstlisting}[label=lst:shadow_map_pcf_ortho_frag, caption=Фрагментный шейдер с учетом ортогонального проецирония теней]
+// ...
+
+float ShadowCalculation(vec4 fragPosLightSpace)
+{
+    // Конвертация из [-1, 1] в [0, 1]
+    vec3 projCoords = fragPosLightSpace.xyz;
+    projCoords = projCoords * 0.5 + 0.5;
+    
+    // Тень с использованием PCF
+    float shadow = 0.0;
+    vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+    for (int x = -1; x <= 1; ++x)
+    {
+        for (int y = -1; y <= 1; ++y)
+        {
+            float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize * pcfRadius).r;
+            shadow += projCoords.z - shadowBias > pcfDepth ? 1.0 : 0.0;
+        }
+    }
+
+    return shadow / 9.0;
+}
+
+// ...
+\end{lstlisting}
+\end{center}
+
+\subsection{Реализация алгоритма теневых карт с фильтрацией шумом}
+
+В листинге~\ref{lst:shadow_map_noise_frag} представлена реализация фрагментного шейдера заключительного
+этапа рисования с учетом перспективной проекции теней с фильтрацией шумом и освещения.
+
+\begin{center}
+\captionsetup{justification=centering, singlelinecheck=off}
+\begin{lstlisting}[label=lst:shadow_map_noise_frag, caption=Фрагментный шейдер с учетом перспективного проецирония теней]
+#version 460 core
+
+// Объявление структур, описывающих освещение ...
+
+out vec4 FragColor;
+
+in vec4 FragPos;
+in vec3 Normal;
+in vec4 FragPosLightSpace;
+
+uniform sampler2D shadowMap;
+uniform float shadowBias;
+uniform float pcfRadius;
+
+#define PI 3.14159265358
+
+// Объявление и реализация функций вычисляющих освещение ...
+
+// Случайное число
+float rand(vec2 uv)
+{
+    return fract(sin(dot(uv, vec2(12.9898, 4.1414))) * 43758.5453);
+}
+
+// Случайное гауссово распределение
+float randomGaussian(float mean, float stddev, vec2 seed) {
+    float u1 = rand(seed);
+    float u2 = rand(seed + vec2(1.0));
+    float r = sqrt(-2.0 * log(u1)) * cos(2.0 * PI * u2);
+    return mean + stddev * r;
+}
+
+// Шум
+vec2 generateNoise(float mean, float stddev, vec2 seed)
+{
+    return vec2(randomGaussian(mean, stddev, seed * PI), randomGaussian(mean, stddev, seed));
+}
+
+float ShadowCalculation(vec4 fragPosLightSpace)
+{
+    // Конвертация из [-1, 1] в [0, 1]
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    projCoords = projCoords * 0.5 + 0.5;
+
+    // Проверка на тень
+    if (projCoords.z > 1.0)
+        return 0.0;
+    
+    // Тень с использованием Шума
+    float shadow = 0.0;
+    vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+    for (int x = -1; x <= 1; ++x)
+    {
+        for (int y = -1; y <= 1; ++y)
+        {
+            vec2 noiseOffset = generateNoise(0.0, 1.0, projCoords.xy + vec2(x, y));
+            float pcfDepth = texture(shadowMap, projCoords.xy + noiseOffset * texelSize * pcfRadius).r;
+            shadow += projCoords.z - shadowBias > pcfDepth ? 1.0 : 0.0;
+        }
+    }
+
+    return shadow / 9.0;
+}
+
+void main()
+{
+    vec3 color = vec3(0.5);
+    vec3 ambient = 0.15 * color;
+
+    vec3 diffuse = computeLightColor(FragPos.xyz, Normal) * color;
+
+    float shadow = ShadowCalculation(FragPosLightSpace);                      
+    vec3 lighting = (ambient + (1.0 - shadow) * diffuse);
+
+    FragColor = vec4(lighting, 1.0);
+}
+\end{lstlisting}
+\end{center}
+
+Вариация реализации фрагментного шейдера рисования теней с
+фильтрацией шумом с ортогональной проекцией теней представлена в
+листинге~\ref{lst:shadow_map_noise_ortho_frag}, конфигурация которой
+заключается только в функции \textit{ShadowCalculation()}.
+
+\begin{center}
+\captionsetup{justification=centering, singlelinecheck=off}
+\begin{lstlisting}[label=lst:shadow_map_noise_ortho_frag, caption=Фрагментный шейдер с учетом ортогонального проецирония теней]
+// ...
+
+float ShadowCalculation(vec4 fragPosLightSpace)
+{
+    // Конвертация из [-1, 1] в [0, 1]
+    vec3 projCoords = fragPosLightSpace.xyz;
+    projCoords = projCoords * 0.5 + 0.5;
+
+    // Проверка на тень
+    if (projCoords.z > 1.0)
+        return 0.0;
+    
+    // Тень с использованием Шума
+    float shadow = 0.0;
+    vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+    for (int x = -1; x <= 1; ++x)
+    {
+        for (int y = -1; y <= 1; ++y)
+        {
+            vec2 noiseOffset = generateNoise(0.0, 1.0, projCoords.xy + vec2(x, y));
+            float pcfDepth = texture(shadowMap, projCoords.xy + noiseOffset * texelSize * pcfRadius).r;
+            shadow += projCoords.z - shadowBias > pcfDepth ? 1.0 : 0.0;
+        }
+    }
+
+    return shadow / 9.0;
+}
+
+// ...
+\end{lstlisting}
+\end{center}
+
+\subsection{Реализация алгоритма мягких теневых карт с фильтрацией}
+
+В листинге~\ref{lst:shadow_map_pcss_frag} представлена реализация фрагментного шейдера заключительного
+этапа рисования с учетом перспективной проекции мягких теней с фильтрацией и освещения.
+
+\begin{center}
+\captionsetup{justification=centering, singlelinecheck=off}
+\begin{lstlisting}[label=lst:shadow_map_pcss_frag, caption=Фрагментный шейдер с учетом перспективного проецирония теней]
+#version 460 core
+
+// Объявление структур, описывающих освещение ...
+
+out vec4 FragColor;
+
+in vec4 FragPos;
+in vec3 Normal;
+in vec4 FragPosLightSpace;
+
+in vec2 lightProjectionParams;
+
+uniform sampler2D shadowMap;
+uniform float shadowBias;
+uniform float pcfRadius;
+uniform float lightRadius = 1.0; // Радиус источника света
+
+#define PI 3.14159265358
+
+// Объявление и реализация функций вычисляющих освещение ...
+
+vec2 sampleDisk(int sampleIndex, int numSamples)
+{
+    float angle = float(sampleIndex) / float(numSamples) * 2.0 * PI;
+    return vec2(cos(angle), sin(angle));
+}
+
+float SearchBlocker(vec3 projCoords, float searchRadius)
+{
+    int numSamples = 16;  // количество выборок вокруг текущего фрагмента
+    float blockerDepthSum = 0.0;
+    int numBlockers = 0;
+
+    // Вычисление размера текстеля
+    vec2 texelSize = 1.0 / textureSize(shadowMap, 0); // 0 - уровень MIP карты
+
+    // Выборки вокруг текущей точки (в пределах searchRadius)
+    for (int i = 0; i < numSamples; ++i)
+    {
+        // Генерация смещенной позиции выборки (например, случайное смещение или с использованием диска)
+        vec2 offset = sampleDisk(i, numSamples) * texelSize * searchRadius;
+
+        // Чтение глубины из карты теней для соседней точки
+        float depthInShadowMap = texture(shadowMap, projCoords.xy + offset).r;
+
+        // Если точка блокирует свет, добавить её глубину
+        if (depthInShadowMap < projCoords.z + shadowBias)
+        {
+            blockerDepthSum += depthInShadowMap;
+            ++numBlockers;
+        }
+    }
+
+    // Если найдены блокирующие объекты, усреднить их глубину
+    if (numBlockers > 0)
+    {
+        return blockerDepthSum / float(numBlockers);
+    }
+
+    // Если блокирующие объекты не найдены, вернуть -1
+    return -1.0;
+}
+
+float EstimatePenumbraSize(float fragDepth, float blockerDepth)
+{
+    // Если нет блокирующего объекта, полутени нет
+    if (blockerDepth < 0.0)
+    {
+        return 0.0;
+    }
+
+    float viewLightFragDepth = lightProjectionParams.y / (fragDepth * 2.0 - 1.0 - lightProjectionParams.x);
+    float viewLightBlockerDepth = lightProjectionParams.y / (blockerDepth * 2.0 - 1.0 - lightProjectionParams.x);
+
+    // Оценка размера полутени
+    float penumbraSize = (viewLightFragDepth - viewLightBlockerDepth) / viewLightBlockerDepth * lightRadius;
+
+    return penumbraSize;
+}
+
+float PerformPCF(vec3 projCoords, float penumbraSize)
+{
+    // Определение ядра для PCF
+    int samleSize = 16; // Предпочтительно нечетное
+    int halfSize = samleSize / 2;
+    float samleCount = pow(halfSize * 2 + 1, 2.0);
+
+    float shadow = 0.0;
+    
+    // Применить значение penumbraSize для масштабирования области выборки
+    float filterRadius = penumbraSize;
+
+    // Вычисление размера текстеля
+    vec2 texelSize = 1.0 / textureSize(shadowMap, 0); // 0 - уровень MIP карты
+
+    // Цикл по выборкам вокруг текущей координаты в пространстве света
+    for (int x = -halfSize; x <= halfSize; ++x)
+    {
+        for (int y = -halfSize; y <= halfSize; ++y)
+        {
+            float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize * filterRadius).r;
+            shadow += projCoords.z - shadowBias > pcfDepth ? 1.0 : 0.0;
+        }
+    }
+
+    return shadow / samleCount;
+}
+
+float ShadowCalculation(vec4 fragPosLightSpace)
+{
+    // Преобразование координат в проекционные
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    projCoords = projCoords * 0.5 + 0.5;
+
+    if (projCoords.z > 1.0)
+        return 0.0;
+
+    // Шаг 1: Оценка блокирующих объектов
+    float blockerDepth = SearchBlocker(projCoords, pcfRadius);
+
+    if (blockerDepth < 0.0)
+        return 0.0;
+
+    // Шаг 2: Оценка размера полутени
+    float penumbraSize = EstimatePenumbraSize(projCoords.z, blockerDepth);
+
+    // Шаг 3: Применение PCF с изменяемым радиусом
+    return PerformPCF(projCoords, penumbraSize);
+}
+
+void main()
+{
+    vec3 color = vec3(0.5);
+    vec3 ambient = 0.15 * color;
+
+    vec3 diffuse = computeLightColor(FragPos.xyz, Normal) * color;
+
+    float shadow = ShadowCalculation(FragPosLightSpace);                      
+    vec3 lighting = (ambient + (1.0 - shadow) * diffuse);
+
+    FragColor = vec4(lighting, 1.0);
+}
+\end{lstlisting}
+\end{center}
+
+Вариация реализации фрагментного шейдера рисования мягких теней с
+фильтрацией с ортогональной проекцией теней представлена в
+листинге~\ref{lst:shadow_map_pcss_ortho_frag}, конфигурация которой
+заключается только в функции \textit{ShadowCalculation()}.
+
+\begin{center}
+\captionsetup{justification=centering, singlelinecheck=off}
+\begin{lstlisting}[label=lst:shadow_map_pcss_ortho_frag, caption=Фрагментный шейдер с учетом ортогонального проецирония теней]
+// ...
+
+
+
+// ...
+\end{lstlisting}
+\end{center}
+    
+
+\subsection{Реализация алгоритма мягких теневых карт с фильтрацией шумом}
+
+В листинге~\ref{lst:} представлена реализация фрагментного шейдера заключительного
+этапа рисования с учетом перспективной проекции мягких теней с фильтрацией шумом и освещения.
+
+Вариация реализации фрагментного шейдера рисования мягких теней с
+фильтрацией шумом с ортогональной проекцией теней представлена в
+листинге~\ref{lst:}, конфигурация которой
+заключается только в функции \textit{ShadowCalculation()}.
+
+\subsection{Реализация алгоритма освещения}
+
+В каждых из выше
 
 \section*{Вывод}
