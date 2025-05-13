@@ -1,0 +1,163 @@
+\chapter{Исследовательский раздел}
+
+\section{Оценивание экранируемых теней}
+
+% Соответствие геометрии
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    ybar,
+    symbolic x coords={ShadowMap, ShadowMapPcf, ShadowMapNoise, ShadowMapPcss, ShadowMapPcssNoise},
+    xtick=data,
+    ylabel={Оценка},
+    xlabel={Алгоритм},
+    ymin=0, ymax=10,
+    grid=major,
+    bar width=60pt,
+    enlarge x limits=0.2,
+    nodes near coords,
+    every node near coord/.append style={font=\large},
+    legend style={at={(0.5,-0.15)}, anchor=north, legend columns=-1},
+    width=\textwidth,
+    height=5.25cm,
+    xlabel style={font=\large},
+    ylabel style={font=\large},
+    title style={font=\LARGE}
+]
+\addplot coordinates {(ShadowMap,8) (ShadowMapPcf,9) (ShadowMapNoise,7) (ShadowMapPcss,8) (ShadowMapPcssNoise,7)};
+\end{axis}
+\end{tikzpicture}
+\caption{Соответствие геометрии (Экранируемые перспективные тени)}
+\label{fig:geom_accuracy_screen}
+\end{figure}
+
+\FloatBarrier
+    
+% Отсутствие артефактов
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    ybar,
+    symbolic x coords={ShadowMap, ShadowMapPcf, ShadowMapNoise, ShadowMapPcss, ShadowMapPcssNoise},
+    xtick=data,
+    ylabel={Оценка},
+    xlabel={Алгоритм},
+    ymin=0, ymax=10,
+    grid=major,
+    bar width=60pt,
+    enlarge x limits=0.2,
+    nodes near coords,
+    every node near coord/.append style={font=\large},
+    legend style={at={(0.5,-0.15)}, anchor=north, legend columns=-1},
+    width=\textwidth,
+    height=5.25cm,
+    xlabel style={font=\large},
+    ylabel style={font=\large},
+    title style={font=\LARGE}
+]
+\addplot coordinates {(ShadowMap,8) (ShadowMapPcf,9) (ShadowMapNoise,7) (ShadowMapPcss,8) (ShadowMapPcssNoise,7)};
+\end{axis}
+\end{tikzpicture}
+\caption{Отсутствие артефактов (Экранируемые перспективные тени)}
+\label{fig:artefacts_screen}
+\end{figure}
+
+\FloatBarrier
+    
+% Плавность переходов (Penumbra)
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    ybar,
+    symbolic x coords={ShadowMap, ShadowMapPcf, ShadowMapNoise, ShadowMapPcss, ShadowMapPcssNoise},
+    xtick=data,
+    ylabel={Оценка},
+    xlabel={Алгоритм},
+    ymin=0, ymax=10,
+    grid=major,
+    bar width=60pt,
+    enlarge x limits=0.2,
+    nodes near coords,
+    every node near coord/.append style={font=\large},
+    legend style={at={(0.5,-0.15)}, anchor=north, legend columns=-1},
+    width=\textwidth,
+    height=5.25cm,
+    xlabel style={font=\large},
+    ylabel style={font=\large},
+    title style={font=\LARGE}
+]
+\addplot coordinates {(ShadowMap,8) (ShadowMapPcf,9) (ShadowMapNoise,7) (ShadowMapPcss,8) (ShadowMapPcssNoise,7)};
+\end{axis}
+\end{tikzpicture}
+\caption{Плавность переходов (Экранируемые перспективные тени)}
+\label{fig:penumbra_screen}
+\end{figure}
+
+\FloatBarrier
+    
+% Визуальная привлекательность
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    ybar,
+    symbolic x coords={ShadowMap, ShadowMapPcf, ShadowMapNoise, ShadowMapPcss, ShadowMapPcssNoise},
+    xtick=data,
+    ylabel={Оценка},
+    xlabel={Алгоритм},
+    ymin=0, ymax=10,
+    grid=major,
+    bar width=60pt,
+    enlarge x limits=0.2,
+    nodes near coords,
+    every node near coord/.append style={font=\large},
+    legend style={at={(0.5,-0.15)}, anchor=north, legend columns=-1},
+    width=\textwidth,
+    height=5.25cm,
+    xlabel style={font=\large},
+    ylabel style={font=\large},
+    title style={font=\LARGE}
+]
+\addplot coordinates {(ShadowMap,8) (ShadowMapPcf,9) (ShadowMapNoise,7) (ShadowMapPcss,8) (ShadowMapPcssNoise,7)};
+\end{axis}
+\end{tikzpicture}
+\caption{Визуальная привлекательность (Экранируемые перспективные тени)}
+\label{fig:attractive_screen}
+\end{figure}
+
+\FloatBarrier
+    
+% Соответствие реальности
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    ybar,
+    symbolic x coords={ShadowMap, ShadowMapPcf, ShadowMapNoise, ShadowMapPcss, ShadowMapPcssNoise},
+    xtick=data,
+    ylabel={Оценка},
+    xlabel={Алгоритм},
+    ymin=0, ymax=10,
+    grid=major,
+    bar width=60pt,
+    enlarge x limits=0.2,
+    nodes near coords,
+    every node near coord/.append style={font=\large},
+    legend style={at={(0.5,-0.15)}, anchor=north, legend columns=-1},
+    width=\textwidth,
+    height=5.25cm,
+    xlabel style={font=\large},
+    ylabel style={font=\large},
+    title style={font=\LARGE}
+]
+\addplot coordinates {(ShadowMap,8) (ShadowMapPcf,9) (ShadowMapNoise,7) (ShadowMapPcss,8) (ShadowMapPcssNoise,7)};
+\end{axis}
+\end{tikzpicture}
+\caption{Визуальная привлекательность (Экранируемые перспективные тени)}
+\label{fig:real_screen}
+\end{figure}
+
+\section{Оценивание собственных теней}

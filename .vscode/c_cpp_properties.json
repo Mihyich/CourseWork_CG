@@ -1,0 +1,26 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/app/inc/",
+                "${workspaceFolder}/GLSL/inc/",
+                "${workspaceFolder}/ShadowMap/inc/",
+                "${workspaceFolder}/RayTracing/inc/",
+                "${workspaceFolder}/LA/inc/",
+                "${workspaceFolder}/WINAPI/inc/",
+                "C:/assimp/include/"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "compilerPath": "c:/mingw64/bin/g++.exe",
+            "cStandard": "c99",
+            "cppStandard": "c++11",
+            "intelliSenseMode": "gcc-x64"
+        }
+    ],
+    "version": 4
+}

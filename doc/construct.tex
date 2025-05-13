@@ -1,0 +1,72 @@
+\chapter{Конструкторский раздел}
+\def \globalscale {1.0}
+
+В данном разделе представлены схемы алгоритмов.
+
+\section{Схемы алгоритмов модели освещения}
+
+Схемы алгоритмов модели освещения представлены ниже.
+
+\begin{enumerate}[label=\arabic*), labelsep=0.5em]
+    \item Схема алгоритма Ламбертового освещения для точечного источника света (рисунок~\ref{chart:lambert_point}).
+    \item Схема алгоритма Ламбертового освещения для прожекторного источника света (рисунок~\ref{chart:lambert_spot}).
+\end{enumerate}
+
+\input{charts/lambert_point.tex}
+\FloatBarrier
+\input{charts/lambert_spot.tex}
+\FloatBarrier
+
+\section{Схемы алгоритмов теневых карт}
+
+Схемы алгоритмов теневых карт представлены ниже.
+
+\begin{enumerate}[label=\arabic*), labelsep=0.5em]
+    \item Схема алгоритма теневых карт (\hbox{рисунок~\ref{chart:shadow_map}}).
+    \item Схема алгоритма теневых карт с фильтрацией (PCF) (\hbox{рисунок~\ref{chart:shadow_map_pcf}}).
+    \item Схема алгоритма теневых карт с фильтрацией шумом (NOISE) (\hbox{рисунок~\ref{chart:shadow_map_noise}}).
+    \item Схема алгоритма мягких теневых карт с фильтрацией (PCSS) (\hbox{рисунок~\ref{chart:shadow_map_pcss}}).
+    \item Схема алгоритма мягких теневых карт с фильтрацией шумом \hbox{(PCSS-NOISE)} (\hbox{рисунок~\ref{chart:shadow_map_pcss_noise}}).
+\end{enumerate}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{charts/shadow_map.pdf}
+    \caption{Схема алгоритма теневых карт}
+    \label{chart:shadow_map}
+\end{figure}
+\FloatBarrier
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{charts/shadow_map_pcf.pdf}
+    \caption{Схема алгоритма теневых карт с линейной фильтрацией (PCF)}
+    \label{chart:shadow_map_pcf}
+\end{figure}
+\FloatBarrier
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{charts/shadow_map_noise.pdf}
+    \caption{Схема алгоритма теневых карт с линейной фильтрацией шумом (NOISE)}
+    \label{chart:shadow_map_noise}
+\end{figure}
+\FloatBarrier
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{charts/shadow_map_pcss.pdf}
+    \caption{Схема алгоритма мягких теневых карт с фильтрацией (PCSS)}
+    \label{chart:shadow_map_pcss}
+\end{figure}
+\FloatBarrier
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{charts/shadow_map_pcss_noise.pdf}
+    \caption{Схема алгоритма мягких теневых карт с фильтрацией шумом (PCSS-NOISE)}
+    \label{chart:shadow_map_pcss_noise}
+\end{figure}
+\FloatBarrier
+
+\section*{Вывод}
+
+В данном разделе были представлены схемы алгоритмов модели освещения,
+поддерживающей два источника света: точечный и прожекторный -- а также
+схемы алгоритмов теневых карт.

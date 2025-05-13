@@ -1,0 +1,83 @@
+%% Creator: Inkscape 1.2.2 (b0a8486541, 2022-12-01), www.inkscape.org
+%% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
+%% Accompanies image file 'lambert_point_svg-tex.pdf' (pdf, eps, ps)
+%%
+%% To include the image in your LaTeX document, write
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics{<filename>.pdf}
+%% To scale the image, write
+%%   \def\svgwidth{<desired width>}
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics[width=<desired width>]{<filename>.pdf}
+%%
+%% Images with a different path to the parent latex file can
+%% be accessed with the `import' package (which may need to be
+%% installed) using
+%%   \usepackage{import}
+%% in the preamble, and then including the image with
+%%   \import{<path to file>}{<filename>.pdf_tex}
+%% Alternatively, one can specify
+%%   \graphicspath{{<path to file>/}}
+%% 
+%% For more information, please see info/svg-inkscape on CTAN:
+%%   http://tug.ctan.org/tex-archive/info/svg-inkscape
+%%
+\begingroup%
+  \makeatletter%
+  \providecommand\color[2][]{%
+    \errmessage{(Inkscape) Color is used for the text in Inkscape, but the package 'color.sty' is not loaded}%
+    \renewcommand\color[2][]{}%
+  }%
+  \providecommand\transparent[1]{%
+    \errmessage{(Inkscape) Transparency is used (non-zero) for the text in Inkscape, but the package 'transparent.sty' is not loaded}%
+    \renewcommand\transparent[1]{}%
+  }%
+  \providecommand\rotatebox[2]{#2}%
+  \newcommand*\fsize{\dimexpr\f@size pt\relax}%
+  \newcommand*\lineheight[1]{\fontsize{\fsize}{#1\fsize}\selectfont}%
+  \ifx\svgwidth\undefined%
+    \setlength{\unitlength}{412.32894097bp}%
+    \ifx\svgscale\undefined%
+      \relax%
+    \else%
+      \setlength{\unitlength}{\unitlength * \real{\svgscale}}%
+    \fi%
+  \else%
+    \setlength{\unitlength}{\svgwidth}%
+  \fi%
+  \global\let\svgwidth\undefined%
+  \global\let\svgscale\undefined%
+  \makeatother%
+  \begin{picture}(1,1.12786773)%
+    \lineheight{1}%
+    \setlength\tabcolsep{0pt}%
+    \put(0,0){\includegraphics[width=\unitlength,page=1]{lambert_point_svg-tex.pdf}}%
+    \put(0.20452118,1.02964518){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Начало\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=2]{lambert_point_svg-tex.pdf}}%
+    \put(0.35367395,1.02964518){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}Алгоритм Ламбертового освещения для точечных источников...\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=3]{lambert_point_svg-tex.pdf}}%
+    \put(0.20452118,0.89322497){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Обработка N пикселей\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=4]{lambert_point_svg-tex.pdf}}%
+    \put(0.20452118,0.18565882){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Пока остались необработанные пиксели\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=5]{lambert_point_svg-tex.pdf}}%
+    \put(0.20452118,0.75680476){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}L=normalize(Pl​−Pf​)\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=6]{lambert_point_svg-tex.pdf}}%
+    \put(0.20452118,0.61128987){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}d=max{0,N⋅L}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=7]{lambert_point_svg-tex.pdf}}%
+    \put(0.20452118,0.04923861){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Конец\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=8]{lambert_point_svg-tex.pdf}}%
+    \put(0.35367395,0.75680476){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}Вычисление направления от пикселя к источнику...\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=9]{lambert_point_svg-tex.pdf}}%
+    \put(0.35367395,0.61128987){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}Вычисление косинуса угла между нормалью и...\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=10]{lambert_point_svg-tex.pdf}}%
+    \put(0.20452118,0.46577498){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}A=max\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=11]{lambert_point_svg-tex.pdf}}%
+    \put(0.35367395,0.46395605){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}Уменьшение интенсивности с расстоянием\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=12]{lambert_point_svg-tex.pdf}}%
+    \put(0.20452118,0.32207903){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Color\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=13]{lambert_point_svg-tex.pdf}}%
+    \put(0.35367395,0.32026009){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}Уменьшение интенсивности с расстоянием\end{tabular}}}}%
+  \end{picture}%
+\endgroup%

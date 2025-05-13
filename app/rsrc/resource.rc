@@ -1,0 +1,104 @@
+// Reopen with encoding <Windows 1251> !!!
+// Using visual studio Code
+// Do not know other methods to fix it
+// But even compilator has strongest dependence on what encoding is compiling
+// Another words: You got some shit in running app instead of Russian letters
+
+#include <windows.h>
+#include "resource.h"
+
+// иконки
+IDI_ICON_APP_32 ICON "AppIcon32.ico"
+
+// Главное меню
+IDR_MAINMENU MENU
+BEGIN
+    POPUP "Файл"
+    BEGIN
+        MENUITEM "Новое окно", IDM_NEW_WINDOW
+        MENUITEM SEPARATOR
+        MENUITEM "Сделать снимок", IDM_TAKE_FOTO
+        MENUITEM "Сканировать тень", IDM_SCAN_SHADOW
+        MENUITEM SEPARATOR
+        MENUITEM "Запустить тестирование", IDM_LAUNCH_TESTING
+        MENUITEM SEPARATOR
+        MENUITEM "Выход", IDM_EXIT
+    END
+
+    POPUP "Графика"
+    BEGIN
+        POPUP "Камера"
+        BEGIN
+           
+        END
+        POPUP "Модель"
+        BEGIN
+            MENUITEM "Загрузить", IDB_LOAD_MODEL
+        END
+        MENUITEM SEPARATOR
+        POPUP "Отрисовка"
+        BEGIN
+            POPUP "Wireframe"
+            BEGIN
+                MENUITEM "Включить", IDB_WIREFRAME_ON
+                MENUITEM "Выключить", IDB_WIREFRAME_OFF
+            END
+            MENUITEM "Частота кадров", IDB_FRAME_PER_SECOND
+        END
+    END
+
+    POPUP "Вид"
+    BEGIN
+        POPUP "Окно интсрументов"
+        BEGIN
+            MENUITEM "Показать", IDB_SHOW_TOOLBAR
+            MENUITEM "Скрыть", IDB_HIDE_TOOLBAR
+        END
+        MENUITEM SEPARATOR
+        POPUP "Окно графики"
+        BEGIN
+            MENUITEM "Показать", IDB_SHOW_RENDERWND
+            MENUITEM "Скрыть", IDB_HIDE_RENDERWND
+        END
+    END
+
+    POPUP "О программе"
+    BEGIN
+        POPUP "Информация"
+        BEGIN
+            MENUITEM "Автор", IDM_AUTOR
+            POPUP "Инструкция"
+            BEGIN
+                
+            END
+        END
+    END
+END
+
+// Диалог загрузки модели
+IDD_MODEL_LOADER DIALOGEX 0, 0, 100, 100
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_CLIPCHILDREN | WS_CLIPSIBLINGS
+CAPTION "Загрузка модели"
+// FONT 10, "Arial"
+BEGIN
+    CONTROL "Выберите путь к модели", IDC_ML_PATH, "EDIT", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER | ES_AUTOHSCROLL, 0, 0, 0, 0
+    CONTROL "Обзор", IDC_ML_EXPLORE, "BUTTON", WS_CHILD | WS_VISIBLE | WS_TABSTOP, 0, 0, 0, 0
+
+    CONTROL "", IDC_ML_INVERSE_CB, "BUTTON", WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_AUTOCHECKBOX, 0, 0, 0, 0
+    CONTROL "Инвертировать порядок обхода вершин", IDC_ML_INVERTSE_STATIC, "STATIC", WS_CHILD | WS_VISIBLE, 0, 0, 0, 0
+
+    CONTROL "Отмена", IDC_ML_CANCEL, "BUTTON", WS_CHILD | WS_VISIBLE | WS_TABSTOP, 0, 0, 0, 0
+    CONTROL "Загрузить", IDC_ML_LOAD, "BUTTON", WS_CHILD | WS_VISIBLE | WS_TABSTOP, 0, 0, 0, 0
+END
+
+// Диалог изменения частоты кадров
+IDD_FPS_SETTER DIALOGEX 0, 0, 100, 100
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_CLIPCHILDREN | WS_CLIPSIBLINGS
+CAPTION "Установка частоты кадров"
+BEGIN
+    CONTROL "Количество кадров в секунду", IDC_FPS_STATIC, "STATIC", WS_CHILD | WS_VISIBLE, 0, 0, 0, 0
+    CONTROL "", IDC_FPS_EDIT, "EDIT", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER | ES_AUTOHSCROLL | ES_CENTER, 0, 0, 0, 0
+
+    CONTROL "Отмена", IDC_FPS_CANCEL, "BUTTON", WS_CHILD | WS_VISIBLE | WS_TABSTOP, 0, 0, 0, 0
+    CONTROL "Установить", IDC_FPS_SET, "BUTTON", WS_CHILD | WS_VISIBLE | WS_TABSTOP, 0, 0, 0, 0
+END
